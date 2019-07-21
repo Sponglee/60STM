@@ -39,12 +39,12 @@ public class NavMeshMover : MonoBehaviour
 
         if (gameObject.CompareTag("ExtraRocket"))
         {
-            dest = GameManager.Instance.rocketPoint.position;
+            //dest = GameManager.Instance.rocketPoint.position;
         }
         else
 
         {
-            dest = GameManager.Instance.humanPoint.position;
+            //dest = GameManager.Instance.humanPoint.position;
         }
         
         navMesh.enabled = true;

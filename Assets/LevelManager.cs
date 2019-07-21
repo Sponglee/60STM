@@ -6,8 +6,8 @@ public class LevelManager : MonoBehaviour
 {
     public GameObject nodePref;
     public GameObject tilePref;
+    public GameObject emptyTilePref;
     public GameObject exitPref;
-
     public Transform exitsHolder;
     public List<Transform> exits;
     public float nodeStep = 10.5f;
@@ -62,6 +62,10 @@ public class LevelManager : MonoBehaviour
 
                         GameObject tmpTile = Instantiate(exitPref, tmpNode.transform.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform);
                         exits.Add(tmpTile.transform);
+                    }
+                    else
+                    {
+                        GameObject tmpTile = Instantiate(emptyTilePref, tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
                     }
                 }
             }

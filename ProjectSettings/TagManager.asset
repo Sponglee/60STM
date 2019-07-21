@@ -7,6 +7,8 @@ TagManager:
   - Rocket
   - Office
   - ExtraRocket
+  - Tile
+  - Empty
   layers:
   - Default
   - TransparentFX
