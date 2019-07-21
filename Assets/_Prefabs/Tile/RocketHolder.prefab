@@ -10,14 +10,14 @@ GameObject:
   m_Component:
   - component: {fileID: 9148881476338513268}
   - component: {fileID: 1463418003}
-  - component: {fileID: 1463418004}
+  - component: {fileID: 6029535319390919968}
   m_Layer: 0
   m_Name: RocketHolder
   m_TagString: ExtraRocket
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &9148881476338513268
 Transform:
   m_ObjectHideFlags: 0
@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 9148881476338513271}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.07740416, y: 0.07740416, z: 0.77404153}
   m_Children:
   - {fileID: 9148881476357893309}
   - {fileID: 4291349851739478977}
@@ -56,7 +56,7 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 2
---- !u!114 &1463418004
+--- !u!114 &6029535319390919968
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -65,9 +65,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 9148881476338513271}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79202974388ddb14d92857d1151ecd49, type: 3}
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  outlineMode: 1
+  outlineColor: {r: 0, g: 0, b: 0, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &9148881476357893308
 GameObject:
   m_ObjectHideFlags: 0
@@ -96,7 +102,7 @@ Transform:
   m_GameObject: {fileID: 9148881476357893308}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.57}
-  m_LocalScale: {x: 3.529, y: 2.449, z: 0.681442}
+  m_LocalScale: {x: 5, y: 5, z: 0.681442}
   m_Children: []
   m_Father: {fileID: 9148881476338513268}
   m_RootOrder: 0
@@ -189,7 +195,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: e2a273b56b980c54aaa54824104898bd,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.25
+      value: 5.92
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: e2a273b56b980c54aaa54824104898bd,
         type: 3}
