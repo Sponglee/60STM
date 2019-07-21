@@ -15,6 +15,7 @@ public class NavMeshMover : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
         navMesh = GetComponent<NavMeshAgent>();
 
         Move();
@@ -33,10 +34,22 @@ public class NavMeshMover : MonoBehaviour
 
     public void Move()
     {
+        navMesh.speed = Random.Range(1f, 2f);
         navMesh.enabled = false;
-        dest = GameManager.Instance.rocket.position;
+
+        if (gameObject.CompareTag("ExtraRocket"))
+        {
+            dest = GameManager.Instance.rocketPoint.position;
+        }
+        else
+
+        {
+            dest = GameManager.Instance.humanPoint.position;
+        }
+        
         navMesh.enabled = true;
-        navMesh.SetDestination(dest);
+        if(navMesh != null)
+            navMesh.SetDestination(dest);
     }
 
 

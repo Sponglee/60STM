@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Rocket
   - Office
+  - ExtraRocket
   layers:
   - Default
   - TransparentFX

@@ -5,7 +5,10 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager>
 {
 
-    public Transform rocket;
+    public Transform humanPoint;
+    public Transform rocketPoint;
+
+
     public GameObject human;
     public Transform humanHolder;
     public Transform booths;
@@ -22,7 +25,7 @@ public class GameManager : Singleton<GameManager>
     {
         while(true)
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(Random.Range(0.2f,0.5f));
             Instantiate(human, humanHolder.GetChild(Random.Range(0, humanHolder.childCount)));
         }
     }
