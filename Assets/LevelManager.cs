@@ -54,6 +54,9 @@ public class LevelManager : MonoBehaviour
                         tmpTile.transform.GetChild(0).GetChild(roadIndex).gameObject.SetActive(true);
 
                     }
+
+                    //Build navMesh
+                    GameManager.Instance.BuildSurface();
                 }
                 else
                 {
@@ -61,15 +64,18 @@ public class LevelManager : MonoBehaviour
                     if (exits.Count<=0 || Random.Range(0,100)<10)
                     {
 
-                        GameObject tmpTile = Instantiate(exitPref, tmpNode.transform.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform);
-                        exits.Add(tmpTile.transform);
+                        GameObject tmpExit = Instantiate(exitPref, tmpNode.transform.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform);
+                        exits.Add(tmpExit.transform);
                     }
                     //Or leave blank
                     else
                     {
-                        GameObject tmpTile = Instantiate(emptyTilePref, tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
+                        GameObject tmpEmpty = Instantiate(emptyTilePref, tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
                     }
                 }
+
+
+                
             }
         }
 

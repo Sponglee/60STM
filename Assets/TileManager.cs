@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class TileManager : MonoBehaviour
 {
@@ -25,7 +26,14 @@ public class TileManager : MonoBehaviour
 
     private Vector3 oldPosition;
 
-  
+    
+
+
+
+   
+
+
+
     void OnMouseDown()
     {
         Selected = true;
@@ -41,13 +49,6 @@ public class TileManager : MonoBehaviour
     }
 
 
-    private void OnMouseUp()
-    {
-        if (!RotationInProgress && !DragActive)
-            StartCoroutine(StopRotate());
-      
-    }
-
 
     void OnMouseDrag()
     {
@@ -60,6 +61,15 @@ public class TileManager : MonoBehaviour
         }
       
     }
+
+
+    private void OnMouseUp()
+    {
+        if (!RotationInProgress && !DragActive)
+            StartCoroutine(StopRotate());
+      
+    }
+
     public IEnumerator StopRotate()
     {
         RotationInProgress = true;
@@ -78,6 +88,8 @@ public class TileManager : MonoBehaviour
             yield return null;
         }
         RotationInProgress = false;
+        //Build navMesh
+        GameManager.Instance.BuildSurface();
     }
 
 
@@ -101,9 +113,12 @@ public class TileManager : MonoBehaviour
 
             other.transform.position = tmpPosition;
             other.transform.SetParent(tmpParent);
+            //Build navMesh
+            GameManager.Instance.BuildSurface();
         }
         else if(!CollidedBool && Selected)
         {
+            DragActive = true;
             Debug.Log("OLD " + other.name);
             CollidedBool = true;
             transform.position = oldPosition;

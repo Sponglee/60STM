@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class GameManager : Singleton<GameManager>
 {
    public Transform selectedTile;
 
+    public NavMeshSurface surface;
 
 
 
@@ -19,4 +21,12 @@ public class GameManager : Singleton<GameManager>
             selectedTile = null;
         }
     }
+
+
+
+    public void BuildSurface()
+    {
+        surface.BuildNavMesh();
+    }
+
 }
