@@ -29,7 +29,7 @@ public class LevelManager : MonoBehaviour
                 tmpNode.GetComponent<NodeController>().Row = i;
                 tmpNode.GetComponent<NodeController>().Column = j;
 
-
+                //If center - or proc - Generate tile
                 if((i== levelDimention/2 && j == levelDimention/2) || Random.Range(0,100)>40)
                 {
                     GameObject tmpTile = Instantiate(tilePref,tmpNode.transform.position,  Quaternion.Euler(0,Random.Range(0,360)/90*90,0), tmpNode.transform);
@@ -57,12 +57,14 @@ public class LevelManager : MonoBehaviour
                 }
                 else
                 {
-                    if(exits.Count== 0 || Random.Range(0,100)<10)
+                    //Generate exit
+                    if (exits.Count<=0 || Random.Range(0,100)<10)
                     {
 
                         GameObject tmpTile = Instantiate(exitPref, tmpNode.transform.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform);
                         exits.Add(tmpTile.transform);
                     }
+                    //Or leave blank
                     else
                     {
                         GameObject tmpTile = Instantiate(emptyTilePref, tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
