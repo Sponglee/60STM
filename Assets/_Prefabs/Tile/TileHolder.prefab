@@ -3943,8 +3943,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c783d09e736c7647ae574411b062bf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CollidedBool: 0
-  Selected: 0
+  collidedBool: 0
+  selected: 0
+  drugActive: 0
+  tileAnim: {fileID: 0}
 --- !u!1 &8448882487926003332
 GameObject:
   m_ObjectHideFlags: 0
