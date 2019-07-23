@@ -5,23 +5,51 @@ using UnityEngine;
 public class LevelManager : Singleton<LevelManager>
 {
     public GameObject nodePref;
-    public GameObject tilePref;
-    public GameObject emptyTilePref;
-    public GameObject exitPref;
+    public GameObject[] tilePrefs;
+   
     public Transform exitsHolder;
     public List<Transform> exits;
-    public List<Transform> freeTiles;
+    public List<Transform> emptyTiles;
 
     public float nodeStep = 10.5f;
     
     public int levelDimention = 6;
 
+
+    [SerializeField]
+    private Transform selectedEmptyTile;
+
+    public Transform SelectedEmptyTile 
+    {
+        get
+        {
+            return selectedEmptyTile;
+        }
+        set
+        {
+            if(value != null && value != selectedEmptyTile)
+            {
+                value.GetComponent<EmptyTileController>().Toggle(true);
+            }
+            else if(selectedEmptyTile != null)
+            {
+                selectedEmptyTile.GetComponent<EmptyTileController>().Toggle(false);
+            }
+            selectedEmptyTile = value;
+        }
+
+    }
+
+
     // Start is called before the first frame update
     void Start()
     {
         exits = new List<Transform>();
-        freeTiles = new List<Transform>();
+        emptyTiles = new List<Transform>();
 
+
+        
+       
         for (int i = 0; i < levelDimention; i++)
         {
             for (int j = 0; j < levelDimention; j++)
@@ -31,69 +59,49 @@ public class LevelManager : Singleton<LevelManager>
                 tmpNode.GetComponent<NodeController>().Row = i;
                 tmpNode.GetComponent<NodeController>().Column = j;
 
-                if (i == 0 ^ j == 0 ^ i == levelDimention - 1 ^ j == levelDimention - 1)
-                {
+                //if (i == 0 ^ j == 0 ^ i == levelDimention - 1 ^ j == levelDimention - 1)
+                //{
 
-                    GameObject tmpExit = Instantiate(exitPref, tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
-                    tmpExit.transform.LookAt(Vector3.zero,Vector3.up);
-                    //Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
-                    tmpExit.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpExit.transform.eulerAngles.y / 90f) * 90f, 0);
-                    exits.Add(tmpExit.transform);
-                    
-                }
-                else if (i == 0 && j == 0 || i == levelDimention - 1 && j == levelDimention - 1 || i == 0 && j == levelDimention - 1 || j == 0 && i == levelDimention - 1)
-                {
-                    continue;
-                }
+
+
+                //}
+                //else if (i == 0 && j == 0 || i == levelDimention - 1 && j == levelDimention - 1 || i == 0 && j == levelDimention - 1 || j == 0 && i == levelDimention - 1)
+                //{
+                //    continue;
+                //}
                 //If center - or proc - Generate tile
-                else if ((i== levelDimention/2 && j == levelDimention/2) || Random.Range(0,100)>40)
+
+                if ((i== levelDimention/2 && j == levelDimention/2))
                 {
-                    GameObject tmpTile = Instantiate(tilePref,tmpNode.transform.position,  Quaternion.Euler(0,Random.Range(0,360)/90*90,0), tmpNode.transform);
-
+                    //Generate rocket
+                    GameObject tmpTile = Instantiate(tilePrefs[0], tmpNode.transform.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform);
                    
-                    //If center - enable rocket and disable buildings
-                    if(i == levelDimention/2 && j== levelDimention/2)
-                    {
-                        tmpTile.transform.GetChild(1).gameObject.SetActive(true);
-                        tmpTile.transform.GetChild(2).gameObject.SetActive(false);
-
-                        //Set Rocket reference
-                        GameManager.Instance.rocketHolder = tmpTile.transform;
-
-                        //Enable road layout
-                        tmpTile.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
-                        
-                    }
-                    else
-                    {
-                        //Generate building layout
-                        int buildingIndex = Random.Range(0, tmpTile.transform.GetChild(2).childCount);
-                        tmpTile.transform.GetChild(2).GetChild(buildingIndex).gameObject.SetActive(true);
-                        //Generate road layout
-                        int roadIndex = Random.Range(0, tmpTile.transform.GetChild(0).childCount);
-                        tmpTile.transform.GetChild(0).GetChild(roadIndex).gameObject.SetActive(true);
-
-                    }
-
                     
                 }
                 else
                 {
-
-                    //Add empty tile
-                    GameObject tmpEmpty = Instantiate(emptyTilePref, tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
-                    freeTiles.Add(tmpEmpty.transform);
-
-
                     //Generate exit
-                    if (exits.Count<=0 || Random.Range(0,100)<10)
+                    if (exits.Count <= 0 && Random.Range(0, 100) < 10)
                     {
 
+                        GameObject tmpExit = Instantiate(tilePrefs[1], tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
+                        tmpExit.transform.LookAt(Vector3.zero, Vector3.up);
+                        //Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
+                        tmpExit.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpExit.transform.eulerAngles.y / 90f) * 90f, 0);
+                        exits.Add(tmpExit.transform);
+
                     }
-                    //Or leave blank
                     else
                     {
+                        //Add empty tile
+                        GameObject tmpEmpty = Instantiate(tilePrefs[2], tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
+                        emptyTiles.Add(tmpEmpty.transform);
                     }
+                    
+
+
+                  
+
                 }
 
 
@@ -101,17 +109,35 @@ public class LevelManager : Singleton<LevelManager>
             }
         }
 
-     
+        
+
+
     }
 
+    public void BuildTile(int buildingIndex, Transform tmpNode)
+    {
+        //Generate rocket
+        GameObject tmpTile = Instantiate(tilePrefs[buildingIndex], tmpNode.transform.parent.position + new Vector3(0,2f,0), Quaternion.identity, tmpNode.parent);
+        //Generate building layout
+        int buildingRandomizer= Random.Range(0, tmpTile.transform.GetChild(2).childCount);
+        tmpTile.transform.GetChild(2).GetChild(buildingRandomizer).gameObject.SetActive(true);
 
+        tmpTile.GetComponent<TileManager>().BuildRotation = true;
+        // Disable ui enable button
+        tmpNode.GetChild(1).GetChild(0).gameObject.SetActive(false);
+        tmpNode.GetChild(1).GetChild(1).gameObject.SetActive(true);
+
+        tmpNode.GetComponent<EmptyTileController>().TileTemplate = tmpTile.transform;
+
+
+    }
 
     //Spawn new rocket
     public void SpawnRocket()
     {
-        Transform tmpNode = freeTiles[Random.Range(0, freeTiles.Count)];
+        Transform tmpNode = emptyTiles[Random.Range(0, emptyTiles.Count)];
 
-        GameObject tmpTile = Instantiate(tilePref, tmpNode.transform.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform);
+        GameObject tmpTile = Instantiate(tilePrefs[0], tmpNode.transform.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform);
 
         tmpTile.transform.GetChild(1).gameObject.SetActive(true);
         tmpTile.transform.GetChild(2).gameObject.SetActive(false);
@@ -160,8 +186,8 @@ public class LevelManager : Singleton<LevelManager>
 
 
         //Add empty tile
-        GameObject tmpEmpty = Instantiate(emptyTilePref, tmpTile.parent.transform.position, Quaternion.identity, tmpTile.parent.transform);
-        freeTiles.Add(tmpEmpty.transform);
+        GameObject tmpEmpty = Instantiate(tilePrefs[2], tmpTile.parent.transform.position, Quaternion.identity, tmpTile.parent.transform);
+        emptyTiles.Add(tmpEmpty.transform);
 
         Destroy(tmpTile.gameObject);
 

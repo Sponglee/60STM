@@ -71,7 +71,7 @@ public class GameManager : Singleton<GameManager>
     private void Start()
     {
         humanText.text = string.Format("{0}/{1}", HumanCount, levelGoal);
-        StartCoroutine(LevelSpawner());
+        //StartCoroutine(LevelSpawner());
     }
 
 

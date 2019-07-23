@@ -27,7 +27,9 @@ public class TileManager : MonoBehaviour
 
     private Vector3 oldPosition;
 
-    
+    [SerializeField]
+    private bool buildRotation;
+    public bool BuildRotation { get => buildRotation; set => buildRotation = value; }
 
 
     public void AgentToggle(bool enableToggle)
@@ -41,53 +43,53 @@ public class TileManager : MonoBehaviour
         }
     }
 
-   
 
 
 
-    void OnMouseDown()
-    {
-        
-            Selected = true;
-            GameManager.Instance.selectedTile = transform;
+
+    //void OnMouseDown()
+    //{
+
+    //        Selected = true;
+    //        GameManager.Instance.selectedTile = transform;
 
 
-            oldPosition = transform.parent.position;
+    //        oldPosition = transform.parent.position;
 
-            screenPoint = Camera.main.WorldToScreenPoint(gameObject.transform.position);
+    //        screenPoint = Camera.main.WorldToScreenPoint(gameObject.transform.position);
 
-            offset = gameObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
+    //        offset = gameObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
 
-            //Disable agents for movement
-            AgentToggle(false);
-      
-       
-    }
+    //        //Disable agents for movement
+    //        AgentToggle(false);
 
 
+    //}
 
-    void OnMouseDrag()
-    {
-        if(Selected && !CollidedBool)
-        {
-            if (transform.GetChild(4).childCount == 0)
-            {
-                Vector3 cursorScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z);
-                Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(cursorScreenPoint) + offset;
-                transform.position = new Vector3(cursorPosition.x, transform.position.y, cursorPosition.z);
-            }
-        }
-      
-    }
+
+
+    //void OnMouseDrag()
+    //{
+    //    if(Selected && !CollidedBool)
+    //    {
+    //        if (transform.GetChild(4).childCount == 0)
+    //        {
+    //            Vector3 cursorScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z);
+    //            Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(cursorScreenPoint) + offset;
+    //            transform.position = new Vector3(cursorPosition.x, transform.position.y, cursorPosition.z);
+    //        }
+    //    }
+
+    //}
 
 
     private void OnMouseUp()
     {
-        //if (transform.GetChild(4).childCount == 0)
-        //{
+        if (BuildRotation)
+        {
             if (!CollidedBool && !RotationInProgress && !DragActive)
                 StartCoroutine(StopRotate());
-        //}
+        }
     }
 
     public IEnumerator StopRotate()
