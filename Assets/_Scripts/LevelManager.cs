@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelManager : MonoBehaviour
+public class LevelManager : Singleton<LevelManager>
 {
     public GameObject nodePref;
     public GameObject tilePref;
@@ -12,7 +12,7 @@ public class LevelManager : MonoBehaviour
     public List<Transform> exits;
     public float nodeStep = 10.5f;
     
-    public int levelDimention = 3;
+    public int levelDimention = 6;
 
     // Start is called before the first frame update
     void Start()
@@ -29,17 +29,35 @@ public class LevelManager : MonoBehaviour
                 tmpNode.GetComponent<NodeController>().Row = i;
                 tmpNode.GetComponent<NodeController>().Column = j;
 
+                if (i == 0 ^ j == 0 ^ i == levelDimention - 1 ^ j == levelDimention - 1)
+                {
+
+                    GameObject tmpExit = Instantiate(exitPref, tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
+                    tmpExit.transform.LookAt(Vector3.zero,Vector3.up);
+                    Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
+                    tmpExit.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpExit.transform.eulerAngles.y / 90f) * 90f, 0);
+                    exits.Add(tmpExit.transform);
+                    
+                }
+                else if (i == 0 && j == 0 || i == levelDimention - 1 && j == levelDimention - 1 || i == 0 && j == levelDimention - 1 || j == 0 && i == levelDimention - 1)
+                {
+                    continue;
+                }
                 //If center - or proc - Generate tile
-                if((i== levelDimention/2 && j == levelDimention/2) || Random.Range(0,100)>40)
+                else if ((i== levelDimention/2 && j == levelDimention/2) || Random.Range(0,100)>40)
                 {
                     GameObject tmpTile = Instantiate(tilePref,tmpNode.transform.position,  Quaternion.Euler(0,Random.Range(0,360)/90*90,0), tmpNode.transform);
 
-
+                   
                     //If center - enable rocket and disable buildings
                     if(i == levelDimention/2 && j== levelDimention/2)
                     {
                         tmpTile.transform.GetChild(1).gameObject.SetActive(true);
                         tmpTile.transform.GetChild(2).gameObject.SetActive(false);
+
+                        //Set Rocket reference
+                        GameManager.Instance.rocketHolder = tmpTile.transform;
+
                         //Enable road layout
                         tmpTile.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
                         
@@ -55,22 +73,24 @@ public class LevelManager : MonoBehaviour
 
                     }
 
-                    //Build navMesh
-                    GameManager.Instance.BuildSurface();
+                    
                 }
                 else
                 {
+                        GameObject tmpEmpty = Instantiate(emptyTilePref, tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
+                   
+                    
+                    
+                    
+                    
                     //Generate exit
                     if (exits.Count<=0 || Random.Range(0,100)<10)
                     {
 
-                        GameObject tmpExit = Instantiate(exitPref, tmpNode.transform.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform);
-                        exits.Add(tmpExit.transform);
                     }
                     //Or leave blank
                     else
                     {
-                        GameObject tmpEmpty = Instantiate(emptyTilePref, tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
                     }
                 }
 

@@ -24,10 +24,10 @@ public class NavMeshMover : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Office"))
+        if (other.CompareTag("Rocket"))
         {
-            navMesh.SetDestination(other.transform.position);
-            other.transform.parent.GetComponent<OfficeController>().AddQueue(transform);
+            GameManager.Instance.HumanCount++;
+            Destroy(gameObject);
         }
     }
 
@@ -39,12 +39,12 @@ public class NavMeshMover : MonoBehaviour
 
         if (gameObject.CompareTag("ExtraRocket"))
         {
-            //dest = GameManager.Instance.rocketPoint.position;
+            dest = GameManager.Instance.rocketHolder.position;
         }
         else
 
         {
-            //dest = GameManager.Instance.humanPoint.position;
+            dest = GameManager.Instance.rocketHolder.position;
         }
         
         navMesh.enabled = true;

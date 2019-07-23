@@ -9,6 +9,7 @@ TagManager:
   - ExtraRocket
   - Tile
   - Empty
+  - Human
   layers:
   - Default
   - TransparentFX

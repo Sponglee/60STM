@@ -16,7 +16,8 @@ public class TileManager : MonoBehaviour
     public bool DragActive { get => dragActive; set => dragActive = value; }
 
     [SerializeField]
-    private bool RotationInProgress = false;
+    private bool rotationInProgress = false;
+    public bool RotationInProgress { get => rotationInProgress; set => rotationInProgress = value; }
 
     [SerializeField]
     private Animator tileAnim;
@@ -29,6 +30,16 @@ public class TileManager : MonoBehaviour
     
 
 
+    public void AgentToggle(bool enableToggle)
+    {
+        //Disable agents
+        foreach (Transform child in transform.GetChild(4))
+        {
+            child.GetComponent<NavMeshAgent>().enabled = enableToggle;
+            if(enableToggle)
+                child.GetComponent<NavMeshMover>().Move();
+        }
+    }
 
    
 
@@ -46,13 +57,15 @@ public class TileManager : MonoBehaviour
 
         offset = gameObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
 
+        //Disable agents for movement
+        AgentToggle(false);
     }
 
 
 
     void OnMouseDrag()
     {
-        if(!CollidedBool)
+        if(!CollidedBool && !RotationInProgress)
         {
             
             Vector3 cursorScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z);
@@ -78,11 +91,11 @@ public class TileManager : MonoBehaviour
         float elapsed = 0;
         Vector3 startEul = transform.eulerAngles;
         Vector3 destEul = startEul + new Vector3(0, angle, 0);
-        Debug.Log("HH");
+        //Debug.Log("HH");
         while (Mathf.Abs(transform.eulerAngles.y - destEul.y%360f) >= 0.05f)
         {
             transform.eulerAngles = Vector3.Lerp(startEul, destEul, elapsed / duration);
-            Debug.Log(">R> " + transform.eulerAngles + " " + destEul.y%360f);
+            //Debug.Log(">R> " + transform.eulerAngles + " " + destEul.y%360f);
             elapsed += Time.deltaTime;
 
             yield return null;
@@ -90,6 +103,9 @@ public class TileManager : MonoBehaviour
         RotationInProgress = false;
         //Build navMesh
         GameManager.Instance.BuildSurface();
+
+        //Enable agents for movement
+        AgentToggle(true);
     }
 
 
@@ -98,7 +114,7 @@ public class TileManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Empty") && !CollidedBool && Selected)
+        if(this.CompareTag("Tile") && other.CompareTag("Empty") && !CollidedBool && Selected)
         {
             DragActive = true;
             CollidedBool = true;
@@ -115,6 +131,10 @@ public class TileManager : MonoBehaviour
             other.transform.SetParent(tmpParent);
             //Build navMesh
             GameManager.Instance.BuildSurface();
+        }
+        else if(other.CompareTag("Human"))
+        {
+            other.transform.SetParent(transform.GetChild(4));
         }
         else if(!CollidedBool && Selected)
         {
