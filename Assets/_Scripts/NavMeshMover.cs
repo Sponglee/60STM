@@ -29,6 +29,10 @@ public class NavMeshMover : MonoBehaviour
             GameManager.Instance.HumanCount++;
             Destroy(gameObject);
         }
+        else if (other.CompareTag("Tile") || other.CompareTag("Exit"))
+        {
+            transform.SetParent(other.transform.GetChild(4));
+        }
     }
 
 

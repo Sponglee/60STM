@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2531881332359858748}
   - component: {fileID: 1554534332}
   - component: {fileID: 3754578034456318881}
+  - component: {fileID: 8882795427579601889}
   m_Layer: 0
   m_Name: Human
   m_TagString: Human
@@ -145,3 +146,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79202974388ddb14d92857d1151ecd49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!135 &8882795427579601889
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3017961435030651100}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.75
+  m_Center: {x: 0, y: 0, z: 0}

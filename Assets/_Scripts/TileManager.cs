@@ -47,30 +47,35 @@ public class TileManager : MonoBehaviour
 
     void OnMouseDown()
     {
-        Selected = true;
-        GameManager.Instance.selectedTile = transform;
+        
+            Selected = true;
+            GameManager.Instance.selectedTile = transform;
 
 
-        oldPosition = transform.parent.position;
+            oldPosition = transform.parent.position;
 
-        screenPoint = Camera.main.WorldToScreenPoint(gameObject.transform.position);
+            screenPoint = Camera.main.WorldToScreenPoint(gameObject.transform.position);
 
-        offset = gameObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
+            offset = gameObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
 
-        //Disable agents for movement
-        AgentToggle(false);
+            //Disable agents for movement
+            AgentToggle(false);
+      
+       
     }
 
 
 
     void OnMouseDrag()
     {
-        if(!CollidedBool && !RotationInProgress)
+        if(Selected && !CollidedBool)
         {
-            
-            Vector3 cursorScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z);
-            Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(cursorScreenPoint) + offset;
-            transform.position = new Vector3(cursorPosition.x, transform.position.y, cursorPosition.z);
+            if (transform.GetChild(4).childCount == 0)
+            {
+                Vector3 cursorScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z);
+                Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(cursorScreenPoint) + offset;
+                transform.position = new Vector3(cursorPosition.x, transform.position.y, cursorPosition.z);
+            }
         }
       
     }
@@ -78,9 +83,11 @@ public class TileManager : MonoBehaviour
 
     private void OnMouseUp()
     {
-        if (!RotationInProgress && !DragActive)
-            StartCoroutine(StopRotate());
-      
+        //if (transform.GetChild(4).childCount == 0)
+        //{
+            if (!CollidedBool && !RotationInProgress && !DragActive)
+                StartCoroutine(StopRotate());
+        //}
     }
 
     public IEnumerator StopRotate()
@@ -116,9 +123,10 @@ public class TileManager : MonoBehaviour
     {
         if(this.CompareTag("Tile") && other.CompareTag("Empty") && !CollidedBool && Selected)
         {
+           
             DragActive = true;
             CollidedBool = true;
-            Debug.Log("HERE");
+            //Debug.Log("HERE");
             //Remember tmp parent and position
             Vector3 tmpPosition = transform.parent.position;
             Transform tmpParent = transform.parent;
@@ -132,12 +140,10 @@ public class TileManager : MonoBehaviour
             //Build navMesh
             GameManager.Instance.BuildSurface();
         }
-        else if(other.CompareTag("Human"))
-        {
-            other.transform.SetParent(transform.GetChild(4));
-        }
         else if(!CollidedBool && Selected)
         {
+
+            
             DragActive = true;
             Debug.Log("OLD " + other.name);
             CollidedBool = true;
