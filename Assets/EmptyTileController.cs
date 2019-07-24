@@ -12,6 +12,8 @@ public class EmptyTileController : MonoBehaviour
     private Transform tileTemplate;
     public Transform TileTemplate { get => tileTemplate; set => tileTemplate = value; }
 
+    [SerializeField]
+    private bool TileBuildingProgress = false;
 
     private void OnMouseOver()
     {
@@ -39,11 +41,11 @@ public class EmptyTileController : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if(LevelManager.Instance.SelectedEmptyTile == null && LevelManager.Instance.SelectedEmptyTile != transform)
+        if(!TileBuildingProgress && LevelManager.Instance.SelectedEmptyTile == null && LevelManager.Instance.SelectedEmptyTile != transform)
         {
             LevelManager.Instance.SelectedEmptyTile = transform;
         }
-        else if(LevelManager.Instance.SelectedEmptyTile != null && LevelManager.Instance.SelectedEmptyTile == transform)
+        else if(!TileBuildingProgress && LevelManager.Instance.SelectedEmptyTile != null && LevelManager.Instance.SelectedEmptyTile == transform)
         {
             Debug.Log("HERE");
             LevelManager.Instance.SelectedEmptyTile = null;
@@ -70,13 +72,14 @@ public class EmptyTileController : MonoBehaviour
     public void BuildTile(int index)
     {
         LevelManager.Instance.BuildTile(index, transform);
-        
+        TileBuildingProgress = true;
 
     }
 
 
     public void ConfirmBuild()
     {
+        TileBuildingProgress = false;
         if(tileTemplate != null)
         {
             tileTemplate.transform.position = transform.position;
@@ -89,6 +92,7 @@ public class EmptyTileController : MonoBehaviour
 
     public void CancelBuild()
     {
+        TileBuildingProgress = false;
         if(tileTemplate != null)
         {
             Destroy(TileTemplate.gameObject);
