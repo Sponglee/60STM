@@ -37,6 +37,7 @@ public class TileManager : MonoBehaviour
         //Disable agents
         foreach (Transform child in transform.GetChild(4))
         {
+            child.GetComponent<NavMeshAgent>().enabled = !enableToggle;
             child.GetComponent<NavMeshAgent>().enabled = enableToggle;
             if(enableToggle)
                 child.GetComponent<NavMeshMover>().Move();
@@ -110,8 +111,8 @@ public class TileManager : MonoBehaviour
             yield return null;
         }
         RotationInProgress = false;
-        //Build navMesh
-        GameManager.Instance.BuildSurface();
+        ////Build navMesh
+        //GameManager.Instance.BuildSurface();
 
         //Enable agents for movement
         AgentToggle(true);
@@ -139,8 +140,8 @@ public class TileManager : MonoBehaviour
 
             other.transform.position = tmpPosition;
             other.transform.SetParent(tmpParent);
-            //Build navMesh
-            GameManager.Instance.BuildSurface();
+            ////Build navMesh
+            //GameManager.Instance.BuildSurface();
         }
         else if(!CollidedBool && Selected)
         {

@@ -27,7 +27,10 @@ public class EmptyTileController : MonoBehaviour
         if(LevelManager.Instance.SelectedEmptyTile == null)
         {
             transform.GetChild(0).gameObject.SetActive(false);
+            // Disable ui enable button
             transform.GetChild(1).gameObject.SetActive(false);
+            transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
+            transform.GetChild(1).GetChild(1).gameObject.SetActive(false);
         }
        
     }
@@ -53,8 +56,12 @@ public class EmptyTileController : MonoBehaviour
 
     public void Toggle(bool toggle)
     {
+
         transform.GetChild(0).gameObject.SetActive(toggle);
+        // Disable ui enable button
         transform.GetChild(1).gameObject.SetActive(toggle);
+        transform.GetChild(1).GetChild(0).gameObject.SetActive(toggle);
+        transform.GetChild(1).GetChild(1).gameObject.SetActive(!toggle);
     }
 
 
@@ -75,6 +82,21 @@ public class EmptyTileController : MonoBehaviour
             tileTemplate.transform.position = transform.position;
             tileTemplate.GetComponent<TileManager>().BuildRotation = false;
             Destroy(gameObject);
+        }
+        //Build navMesh
+        GameManager.Instance.BuildSurface();
+    }
+
+    public void CancelBuild()
+    {
+        if(tileTemplate != null)
+        {
+            Destroy(TileTemplate.gameObject);
+            Toggle(true);
+        }
+        else
+        {
+            LevelManager.Instance.SelectedEmptyTile = null;
         }
     }
 

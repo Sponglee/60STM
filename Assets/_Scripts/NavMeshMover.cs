@@ -29,7 +29,7 @@ public class NavMeshMover : MonoBehaviour
             GameManager.Instance.HumanCount++;
             Destroy(gameObject);
         }
-        else if (other.CompareTag("Tile") || other.CompareTag("Exit"))
+        else if (other.CompareTag("Tile") /*|| other.CompareTag("Exit")*/)
         {
             transform.SetParent(other.transform.GetChild(4));
         }
@@ -38,23 +38,51 @@ public class NavMeshMover : MonoBehaviour
 
     public void Move()
     {
+
         navMesh.speed = Random.Range(1f, 2f);
         navMesh.enabled = false;
 
-        if (gameObject.CompareTag("ExtraRocket"))
-        {
-            dest = GameManager.Instance.rocketHolder.position;
-        }
-        else
 
-        {
-            dest = GameManager.Instance.rocketHolder.position;
-        }
-        
+
+
+
         navMesh.enabled = true;
+        dest = CalculateNewPath();
+
+       
+
         if(navMesh != null)
             navMesh.SetDestination(dest);
     }
 
 
+
+    public Vector3 CalculateNewPath()
+    {
+        NavMeshPath path = new NavMeshPath();
+        float tmpDistance = 99999f;
+        Vector3 finalDest = Vector3.zero;
+
+        foreach (Transform holder in GameManager.Instance.rocketHolders)
+        {
+            //Find closest available rocket
+            dest = holder.position;
+            navMesh.SetDestination(dest);
+            navMesh.CalculatePath(dest, path);
+            if (path.status == NavMeshPathStatus.PathPartial)
+            {
+                Debug.Log("SKIP");
+                continue;
+            }
+
+            if (Vector3.Distance(dest,transform.position) < tmpDistance)
+            {
+                finalDest = dest;
+                tmpDistance = Vector3.Distance(dest, transform.position);
+            }
+            Debug.Log("<<< DIST >>>> : " + Vector3.Distance(dest, transform.position) + " : " + tmpDistance);
+        }
+
+        return finalDest;
+    }
 }

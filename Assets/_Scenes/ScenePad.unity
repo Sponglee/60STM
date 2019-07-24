@@ -311,7 +311,7 @@ Transform:
   - {fileID: 1721540750}
   - {fileID: 2107612810}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &133599051
 GameObject:
@@ -1305,7 +1305,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &511005366
 GameObject:
@@ -1519,7 +1519,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 30, y: 45, z: 0}
 --- !u!114 &765459750
 MonoBehaviour:
@@ -2057,11 +2057,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 901553375}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: -6.1, z: 0}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
   m_LocalScale: {x: 202.38226, y: 202.38226, z: 202.38226}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &913347736
 GameObject:
@@ -3022,7 +3022,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1243840069
 MonoBehaviour:
@@ -3050,6 +3050,7 @@ MonoBehaviour:
   emptyTiles: []
   nodeStep: 10.5
   levelDimention: 7
+  rocketCount: 0
   selectedEmptyTile: {fileID: 0}
 --- !u!1 &1244813897
 GameObject:
@@ -3515,7 +3516,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1409256526
 MonoBehaviour:
@@ -3531,14 +3532,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectedTile: {fileID: 0}
   surface: {fileID: 1034785168}
-  rocketHolder: {fileID: 0}
+  rocketIndex: 0
+  rocketHolders: []
   previousRocket: {fileID: 0}
   debugTarget: {fileID: 63922153}
   humanPref: {fileID: 3017961435030651100, guid: 129bc8ee29bf8d04cbb8f695dd4dc2ee,
     type: 3}
   levelCam: {fileID: 1439240130}
   spawnCount: 10
-  timer: 60
+  spawnTimer: 0
+  spawnTime: 15
+  timer: 15
   WinText: {fileID: 345982926}
   timerText: {fileID: 441942292}
   humanText: {fileID: 2037151447}
@@ -3910,7 +3914,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 1
-  m_FollowOffset: {x: -1023.1554, y: 840.84534, z: -1036.5253}
+  m_FollowOffset: {x: -1063.869, y: 880.1844, z: -963.8333}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
