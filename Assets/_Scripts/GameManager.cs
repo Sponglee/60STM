@@ -21,10 +21,14 @@ public class GameManager : Singleton<GameManager>
 
     public CinemachineVirtualCamera levelCam;
 
+    //Total spawned people
     public int spawnCount = 1;
+    //How many different spawns there is
+    public int spawnModifier = 1;
+    //Reference to count humans in rockets
+    public int spawnHumanCount = 0;
 
-
-
+    public bool SpawnedBool = false;
 
     [SerializeField]
     private float timer = 60;
@@ -118,25 +122,42 @@ public class GameManager : Singleton<GameManager>
 
             randomExits.Add(Random.Range(0, LevelManager.Instance.exits.Count));
         }
-        
+
+        yield return new WaitForSeconds(2f);
+
 
         while (Timer>0)
         {
             //Debug.Log(">>>>>>>>>>>" + levelGoal / LevelManager.Instance.freeTiles.Count);
             
-            if(spawnCount<levelGoal)
+            if(!SpawnedBool)
             {
-                for (int i = 0; i <Random.Range(0,3f); i++)
+                spawnHumanCount = humanCount;
+                spawnCount = 0;
+                for (int k = 0; k < spawnModifier; k++)
                 {
-                    Instantiate(humanPref, LevelManager.Instance.exits[randomExits[Random.Range(0, randomExits.Count)]].GetChild(2));
+                    int randomIndex = Random.Range(0, randomExits.Count);
+                    for (int i = 0; i < 15f; i++)
+                    {
+                        Instantiate(humanPref, LevelManager.Instance.exits[randomExits[randomIndex]].GetChild(2));
+                        spawnCount += 1;
+                        Debug.Log("SPAWN " + Timer);
+                    }
                 }
-                    spawnCount += 1;
+                SpawnedBool = true;
+                spawnModifier++;
             }
            
 
-           
             yield return new WaitForSecondsRealtime(1f);
             Timer -= 1f;
+           
+            if(humanCount-spawnHumanCount>=spawnCount)
+            {
+                SpawnedBool = false;
+            }
+
+
 
             if (HumanCount >= levelGoal)
             {

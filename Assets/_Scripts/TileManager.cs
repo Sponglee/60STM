@@ -70,12 +70,12 @@ public class TileManager : MonoBehaviour
     {
         if(Selected && !CollidedBool)
         {
-            if (transform.GetChild(4).childCount == 0)
-            {
+            //if (transform.GetChild(4).childCount == 0)
+            //{
                 Vector3 cursorScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z);
                 Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(cursorScreenPoint) + offset;
                 transform.position = new Vector3(cursorPosition.x, transform.position.y, cursorPosition.z);
-            }
+            //}
         }
       
     }
@@ -85,8 +85,8 @@ public class TileManager : MonoBehaviour
     {
         //if (transform.GetChild(4).childCount == 0)
         //{
-            if (!CollidedBool && !RotationInProgress && !DragActive)
-                StartCoroutine(StopRotate());
+                                    //if (!CollidedBool && !RotationInProgress && !DragActive)
+                                    //    StartCoroutine(StopRotate());
         //}
     }
 
