@@ -7,6 +7,7 @@ public class LevelManager : Singleton<LevelManager>
     public GameObject nodePref;
     public GameObject tilePref;
     public GameObject emptyTilePref;
+    public GameObject sidesPref;
     public GameObject exitPref;
     public Transform exitsHolder;
     public List<Transform> exits;
@@ -15,6 +16,9 @@ public class LevelManager : Singleton<LevelManager>
     public float nodeStep = 10.5f;
     
     public int levelDimention = 6;
+
+
+    public GameObject lastExit;
 
     // Start is called before the first frame update
     void Start()
@@ -34,12 +38,11 @@ public class LevelManager : Singleton<LevelManager>
                 if (i == 0 ^ j == 0 ^ i == levelDimention - 1 ^ j == levelDimention - 1)
                 {
 
-                    GameObject tmpExit = Instantiate(exitPref, tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
+                    GameObject tmpExit = Instantiate(sidesPref, tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
                     tmpExit.transform.LookAt(Vector3.zero,Vector3.up);
                     //Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
                     tmpExit.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpExit.transform.eulerAngles.y / 90f) * 90f, 0);
-                    exits.Add(tmpExit.transform);
-                    
+                   
                 }
                 else if (i == 0 && j == 0 || i == levelDimention - 1 && j == levelDimention - 1 || i == 0 && j == levelDimention - 1 || j == 0 && i == levelDimention - 1)
                 {
@@ -102,6 +105,67 @@ public class LevelManager : Singleton<LevelManager>
         }
 
      
+    }
+
+    //Spawnpoint
+    public void SpawnExit()
+    {
+        Transform tmpTile = freeTiles[Random.Range(0, freeTiles.Count)];
+        freeTiles.Remove(tmpTile);
+        GameObject tmpExit = Instantiate(exitPref, tmpTile.parent.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpTile.parent);
+        Destroy(tmpTile.gameObject);
+        lastExit = tmpExit;
+
+
+        //Shoot Ray to check if exit is blocked
+        RaycastHit hit;
+
+       
+        if(Physics.Raycast(tmpExit.transform.position, tmpExit.transform.TransformPoint(Vector3.forward*100f), out hit))
+        {
+
+            Debug.DrawRay(tmpExit.transform.position, tmpExit.transform.TransformPoint(Vector3.forward * 100f), Color.blue, 3f);
+            Debug.Log(hit.transform.parent.GetComponent<NodeController>().Column + " : " + hit.transform.parent.GetComponent<NodeController>().Row);
+
+
+            while (hit.transform.CompareTag("Exit") || hit.transform.CompareTag("Border"))
+            {
+                Debug.Log("ROTATING");
+                tmpExit.transform.Rotate(0, 90f, 0);
+                Debug.DrawRay(tmpExit.transform.position, tmpExit.transform.TransformPoint(Vector3.forward * 100f), Color.blue, 3f);
+                if (Physics.Raycast(tmpExit.transform.position, tmpExit.transform.TransformPoint(Vector3.forward * 100f), out hit))
+                {
+
+                    Debug.DrawLine(tmpExit.transform.position, tmpExit.transform.position + tmpExit.transform.TransformDirection(Vector3.forward) * 10f, Color.red, 3f);
+
+                }
+                else
+                    break;
+            }
+        }
+       
+
+
+        //OR
+        //look towards center
+        //tmpExit.transform.LookAt(Vector3.zero, Vector3.up);
+        //tmpExit.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpExit.transform.eulerAngles.y / 90f) * 90f, 0);
+
+        exits.Add(tmpExit.transform);
+
+        GameManager.Instance.BuildSurface();
+    }
+
+    //Despawn all exits
+    public void DespawnExits()
+    {
+        foreach (Transform exit in exits)
+        {
+            GameObject tmpEmpty = Instantiate(emptyTilePref, exit.parent);
+            freeTiles.Add(tmpEmpty.transform);
+            Destroy(exit.gameObject);
+        }
+        exits.Clear();
     }
 
 

@@ -90,11 +90,11 @@ public class TileManager : MonoBehaviour
         //}
     }
 
-    public IEnumerator StopRotate()
+    public IEnumerator StopRotate(float duration = 0.5f)
     {
         RotationInProgress = true;
         float angle = 90f;
-        float duration = 0.5f;
+       
         float elapsed = 0;
         Vector3 startEul = transform.eulerAngles;
         Vector3 destEul = startEul + new Vector3(0, angle, 0);
@@ -145,7 +145,7 @@ public class TileManager : MonoBehaviour
 
             
             DragActive = true;
-            Debug.Log("OLD " + other.name);
+            //Debug.Log("OLD " + other.name);
             CollidedBool = true;
             transform.position = oldPosition;
            

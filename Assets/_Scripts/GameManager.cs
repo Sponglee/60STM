@@ -97,7 +97,8 @@ public class GameManager : Singleton<GameManager>
         }
         else if(Input.GetMouseButtonDown(1))
         {
-            Instantiate(humanPref, debugTarget);
+            LevelManager.Instance.DespawnExits();
+            LevelManager.Instance.SpawnExit();
         }
         else if(Input.GetMouseButtonDown(2))
         {
@@ -132,18 +133,26 @@ public class GameManager : Singleton<GameManager>
             
             if(!SpawnedBool)
             {
-                spawnHumanCount = humanCount;
-                spawnCount = 0;
-                for (int k = 0; k < spawnModifier; k++)
+                for (int i = 0; i < spawnModifier; i++)
                 {
-                    int randomIndex = Random.Range(0, randomExits.Count);
+                    
+                    LevelManager.Instance.SpawnExit();
+                }
+                //Set reference for goal count
+                spawnHumanCount = humanCount;
+                //Set reference to spawnCOunt
+                spawnCount = 0;
+
+                foreach (Transform exit in LevelManager.Instance.exits)
+                {
+                  
                     for (int i = 0; i < 15f; i++)
                     {
-                        Instantiate(humanPref, LevelManager.Instance.exits[randomExits[randomIndex]].GetChild(2));
+                        Instantiate(humanPref, exit.GetChild(2));
                         spawnCount += 1;
-                        Debug.Log("SPAWN " + Timer);
                     }
                 }
+                Debug.Log("SPAWN " + spawnCount);
                 SpawnedBool = true;
                 spawnModifier++;
             }
@@ -152,12 +161,18 @@ public class GameManager : Singleton<GameManager>
             yield return new WaitForSecondsRealtime(1f);
             Timer -= 1f;
            
-            if(humanCount-spawnHumanCount>=spawnCount)
+            //Debug.Log(humanCount + "- " + spawnHumanCount + " ( " + spawnCount + ")");
+           
+
+
+           
+
+
+            if (humanCount - spawnHumanCount >= spawnCount)
             {
                 SpawnedBool = false;
+                LevelManager.Instance.DespawnExits();
             }
-
-
 
             if (HumanCount >= levelGoal)
             {
@@ -180,29 +195,41 @@ public class GameManager : Singleton<GameManager>
             }
         }
 
-       
-
-
+        //Reset the timer and spawn new rocket
         Timer = 60f;
-        
+
         rocketHolder.GetChild(1).GetComponent<Animator>().SetTrigger("TakeOff");
 
         LevelManager.Instance.SpawnRocket();
         LevelManager.Instance.DisablePrevious(previousRocket);
         BuildSurface();
         yield return new WaitForSeconds(2f);
-      
+
         yield return new WaitForSeconds(5f);
         LevelManager.Instance.RandomizePrevious(previousRocket);
         //LevelManager.Instance.DeletePrevious(previousRocket);
         randomExits.Clear();
         StartCoroutine(LevelSpawner());
+
+
     }
 
     //Rebake navmesh
     public void BuildSurface()
     {
         surface.BuildNavMesh();
+
+        foreach (Transform item in LevelManager.Instance.transform)
+        {
+            if(item.childCount>0)
+            {
+                if(item.GetChild(0).CompareTag("Tile"))
+                {
+                    //Debug.Log(item.name + item.GetChild(0).name);
+                    item.GetChild(0).GetComponent<TileManager>().AgentToggle(true);
+                }
+            }
+        }
     }
 
 
