@@ -85,8 +85,8 @@ public class TileManager : MonoBehaviour
     {
         //if (transform.GetChild(4).childCount == 0)
         //{
-                                    //if (!CollidedBool && !RotationInProgress && !DragActive)
-                                    //    StartCoroutine(StopRotate());
+        if (!CollidedBool && !RotationInProgress && !DragActive)
+            StartCoroutine(StopRotate());
         //}
     }
 

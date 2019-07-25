@@ -126,7 +126,7 @@ public class LevelManager : Singleton<LevelManager>
 
             Debug.DrawRay(tmpExit.transform.position, tmpExit.transform.TransformPoint(Vector3.forward * 100f), Color.blue, 3f);
             Debug.Log(hit.transform.parent.GetComponent<NodeController>().Column + " : " + hit.transform.parent.GetComponent<NodeController>().Row);
-
+            Debug.Log("T: " + hit.transform.tag);
 
             while (hit.transform.CompareTag("Exit") || hit.transform.CompareTag("Border"))
             {
@@ -136,6 +136,7 @@ public class LevelManager : Singleton<LevelManager>
                 if (Physics.Raycast(tmpExit.transform.position, tmpExit.transform.TransformPoint(Vector3.forward * 100f), out hit))
                 {
 
+                    Debug.Log("T: " + hit.transform.tag);
                     Debug.DrawLine(tmpExit.transform.position, tmpExit.transform.position + tmpExit.transform.TransformDirection(Vector3.forward) * 10f, Color.red, 3f);
 
                 }
@@ -177,6 +178,10 @@ public class LevelManager : Singleton<LevelManager>
 
         GameObject tmpTile = Instantiate(tilePref, tmpNode.transform.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform);
 
+
+        tmpTile.transform.GetChild(1).GetComponent<Animator>().SetTrigger("Return");
+
+
         tmpTile.transform.GetChild(1).gameObject.SetActive(true);
         tmpTile.transform.GetChild(2).gameObject.SetActive(false);
 
@@ -208,6 +213,8 @@ public class LevelManager : Singleton<LevelManager>
         //Generate road layout
         int roadIndex = Random.Range(0, tmpTile.transform.GetChild(0).childCount);
         tmpTile.transform.GetChild(0).GetChild(roadIndex).gameObject.SetActive(true);
+
+
     }
 
     public void DisablePrevious(Transform tmpTile)

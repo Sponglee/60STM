@@ -44,8 +44,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AgentTypeID: 0
-  m_StartPoint: {x: 0.00000002145726, y: 0, z: -0.76641196}
-  m_EndPoint: {x: 0.000000021457252, y: 0, z: 1.1299472}
+  m_StartPoint: {x: 0.0000007179998, y: 0, z: -0.4805907}
+  m_EndPoint: {x: 0.0000014833658, y: 0, z: 1.0990528}
   m_Width: 0.73230267
   m_CostModifier: -1
   m_Bidirectional: 1
@@ -483,7 +483,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 10, y: 1, z: 10}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &3121124132589845007
 Rigidbody:

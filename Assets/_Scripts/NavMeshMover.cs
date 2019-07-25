@@ -38,7 +38,7 @@ public class NavMeshMover : MonoBehaviour
 
     public void Move()
     {
-        navMesh.speed = Random.Range(1f, 2f);
+        navMesh.speed = Random.Range(3f, 4f);
         navMesh.enabled = false;
 
         if (gameObject.CompareTag("ExtraRocket"))

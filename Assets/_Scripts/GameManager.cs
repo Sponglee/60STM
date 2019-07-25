@@ -69,7 +69,7 @@ public class GameManager : Singleton<GameManager>
 
     private void Awake()
     {
-        levelGoal = PlayerPrefs.GetInt("Level", 1)*50;
+        levelGoal = PlayerPrefs.GetInt("Level", 1)*15;
     }
 
     private void Start()
@@ -98,6 +98,7 @@ public class GameManager : Singleton<GameManager>
         else if(Input.GetMouseButtonDown(1))
         {
             LevelManager.Instance.DespawnExits();
+            spawnModifier++;
             LevelManager.Instance.SpawnExit();
         }
         else if(Input.GetMouseButtonDown(2))
@@ -109,7 +110,7 @@ public class GameManager : Singleton<GameManager>
             levelCam.m_Follow = rocketHolder.GetChild(1).GetChild(1);
             levelCam.m_LookAt = rocketHolder.GetChild(1).GetChild(1);
             rocketHolder.GetChild(1).GetComponent<Animator>().SetTrigger("TakeOff");
-
+            
         }
 
     }
@@ -152,7 +153,7 @@ public class GameManager : Singleton<GameManager>
                         spawnCount += 1;
                     }
                 }
-                Debug.Log("SPAWN " + spawnCount);
+                Debug.Log("SPAWN " + spawnModifier);
                 SpawnedBool = true;
                 spawnModifier++;
             }
@@ -204,9 +205,10 @@ public class GameManager : Singleton<GameManager>
         LevelManager.Instance.DisablePrevious(previousRocket);
         BuildSurface();
         yield return new WaitForSeconds(2f);
-
+       
         yield return new WaitForSeconds(5f);
         LevelManager.Instance.RandomizePrevious(previousRocket);
+        BuildSurface();
         //LevelManager.Instance.DeletePrevious(previousRocket);
         randomExits.Clear();
         StartCoroutine(LevelSpawner());
