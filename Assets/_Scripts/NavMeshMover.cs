@@ -11,11 +11,12 @@ public class NavMeshMover : MonoBehaviour
     private int roadIndex;
     public int RoadIndex { get => roadIndex; set => roadIndex = value; }
 
-
+    public Transform exitRef;
+    public ExitManager exitManager;
     // Start is called before the first frame update
     void Start()
     {
-        
+         //exitManager = exitRef.GetComponent<ExitManager>();
         navMesh = GetComponent<NavMeshAgent>();
 
         Move();
@@ -27,6 +28,9 @@ public class NavMeshMover : MonoBehaviour
         if (other.CompareTag("Rocket"))
         {
             GameManager.Instance.HumanCount++;
+            //delete this human reference from exit tile
+            exitManager.DespawnCheck();
+            exitManager.humansRef.Remove(transform);
             Destroy(gameObject);
         }
         else if (other.CompareTag("Tile") || other.CompareTag("Exit"))

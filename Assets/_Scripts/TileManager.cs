@@ -36,12 +36,15 @@ public class TileManager : MonoBehaviour
         foreach (Transform child in transform.GetChild(4))
         {
             child.GetComponent<NavMeshAgent>().enabled = enableToggle;
-            if(enableToggle)
+            if (enableToggle)
                 child.GetComponent<NavMeshMover>().Move();
+            else
+                child.position = child.parent.position;
         }
     }
 
    
+
 
 
 
@@ -58,10 +61,11 @@ public class TileManager : MonoBehaviour
 
             offset = gameObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
 
-            //Disable agents for movement
-            AgentToggle(false);
-      
-       
+
+        //Disable agents for movement
+        AgentToggle(false);
+
+
     }
 
 

@@ -106,9 +106,9 @@ public class LevelManager : Singleton<LevelManager>
 
      
     }
-
+    
     //Spawnpoint
-    public void SpawnExit()
+    public Transform SpawnExit()
     {
         Transform tmpTile = freeTiles[Random.Range(0, freeTiles.Count)];
         freeTiles.Remove(tmpTile);
@@ -142,10 +142,13 @@ public class LevelManager : Singleton<LevelManager>
                 }
                 else
                     break;
+                
             }
-        }
-       
 
+          
+
+
+        }
 
         //OR
         //look towards center
@@ -155,26 +158,28 @@ public class LevelManager : Singleton<LevelManager>
         exits.Add(tmpExit.transform);
 
         GameManager.Instance.BuildSurface();
+
+        return tmpExit.transform;
     }
 
-    //Despawn all exits
-    public void DespawnExits()
-    {
-        foreach (Transform exit in exits)
-        {
-            GameObject tmpEmpty = Instantiate(emptyTilePref, exit.parent);
-            freeTiles.Add(tmpEmpty.transform);
-            Destroy(exit.gameObject);
-        }
-        exits.Clear();
-    }
+    ////Despawn all exits
+    //public void DespawnExits()
+    //{
+    //    foreach (Transform exit in exits)
+    //    {
+    //        GameObject tmpEmpty = Instantiate(emptyTilePref, exit.parent);
+    //        freeTiles.Add(tmpEmpty.transform);
+    //        Destroy(exit.gameObject);
+    //    }
+    //    exits.Clear();
+    //}
 
 
 
     //Spawn new rocket
     public void SpawnRocket()
     {
-        Transform tmpNode = freeTiles[Random.Range(0, freeTiles.Count)];
+        Transform tmpNode = freeTiles[Random.Range(0, freeTiles.Count)].parent;
 
         GameObject tmpTile = Instantiate(tilePref, tmpNode.transform.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform);
 

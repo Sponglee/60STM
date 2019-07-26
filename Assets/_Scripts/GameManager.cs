@@ -28,7 +28,8 @@ public class GameManager : Singleton<GameManager>
     //Reference to count humans in rockets
     public int spawnHumanCount = 0;
 
-    public bool SpawnedBool = false;
+    //Trigger To spawn
+    public bool SpawnAlreadyTrigger = false;
 
     [SerializeField]
     private float timer = 60;
@@ -97,7 +98,7 @@ public class GameManager : Singleton<GameManager>
         }
         else if(Input.GetMouseButtonDown(1))
         {
-            LevelManager.Instance.DespawnExits();
+            //LevelManager.Instance.DespawnExits();
             spawnModifier++;
             LevelManager.Instance.SpawnExit();
         }
@@ -132,29 +133,40 @@ public class GameManager : Singleton<GameManager>
         {
             //Debug.Log(">>>>>>>>>>>" + levelGoal / LevelManager.Instance.freeTiles.Count);
             
-            if(!SpawnedBool)
+            if(!SpawnAlreadyTrigger)
             {
-                for (int i = 0; i < spawnModifier; i++)
-                {
-                    
-                    LevelManager.Instance.SpawnExit();
-                }
                 //Set reference for goal count
                 spawnHumanCount = humanCount;
                 //Set reference to spawnCOunt
                 spawnCount = 0;
 
-                foreach (Transform exit in LevelManager.Instance.exits)
+                for (int i = 0; i < Mathf.Clamp(spawnModifier,0,2); i++)
                 {
-                  
-                    for (int i = 0; i < 15f; i++)
+                    Transform thisExit = LevelManager.Instance.SpawnExit();
+                    for (int j = 0; j < 15f; j++)
                     {
-                        Instantiate(humanPref, exit.GetChild(2));
+                        GameObject tmpHuman = Instantiate(humanPref, thisExit.GetChild(2));
                         spawnCount += 1;
+
+                        //Add an exit reference to human
+                        tmpHuman.GetComponent<NavMeshMover>().exitManager = thisExit.GetComponent<ExitManager>();
+                        //Add a human reference
+                        thisExit.GetComponent<ExitManager>().humansRef.Add(tmpHuman.transform);
                     }
                 }
+
+                //foreach (Transform exit in LevelManager.Instance.exits)
+                //{
+                  
+                //    for (int i = 0; i < 15f; i++)
+                //    {
+                //       GameObject tmpHuman =  Instantiate(humanPref, exit.GetChild(2));
+                //       spawnCount += 1;
+                //        tmpHuman.GetComponent<NavMeshMover>().exitRef = thisExit; 
+                //    }
+                //}
                 Debug.Log("SPAWN " + spawnModifier);
-                SpawnedBool = true;
+                SpawnAlreadyTrigger = true;
                 spawnModifier++;
             }
            
@@ -168,12 +180,12 @@ public class GameManager : Singleton<GameManager>
 
            
 
-
-            if (humanCount - spawnHumanCount >= spawnCount)
-            {
-                SpawnedBool = false;
-                LevelManager.Instance.DespawnExits();
-            }
+            //Check to spawn new Exits
+            //if (humanCount - spawnHumanCount >= spawnCount && Timer >0)
+            //{
+            //    SpawnAlreadyTrigger = false;
+            //    //LevelManager.Instance.DespawnExits();
+            //}
 
             if (HumanCount >= levelGoal)
             {
