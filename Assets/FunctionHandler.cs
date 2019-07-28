@@ -13,11 +13,41 @@ public class FunctionHandler : Singleton<FunctionHandler>
     public Sprite[] muskImages;
     public bool MuskInProgress = false;
 
+
+    public bool MenuActive = false;
+    public GameObject menuCanvas;
+    public GameObject uiCanvas;
+
     public void StartLevel()
     {
         SceneManager.LoadScene("Main");
     }
 
+
+    public void Exit()
+    {
+        Application.Quit();
+    }
+
+
+    public void ToggleMenu()
+    {
+        if(menuCanvas.activeSelf == false)
+        {
+            MenuActive = true;
+            Time.timeScale = 0;
+        }
+        else
+        {
+            MenuActive = false;
+            Time.timeScale = 1;
+        }
+
+
+        menuCanvas.SetActive(!menuCanvas.activeSelf);
+        uiCanvas.SetActive(!uiCanvas.activeSelf);
+       
+    }
 
 
 
@@ -110,6 +140,7 @@ public class FunctionHandler : Singleton<FunctionHandler>
                 //Mars hi
                 case 4:
                     {
+                        MuskInProgress = false;
                         muskReference.GetComponentInChildren<Image>().sprite = muskImages[index];
 
                         StartCoroutine(StopMusk(index));

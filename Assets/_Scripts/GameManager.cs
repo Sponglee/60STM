@@ -110,8 +110,12 @@ public class GameManager : Singleton<GameManager>
             timerText.gameObject.SetActive(false);
             FunctionHandler.Instance.LevelComplete();
 
-           
-            
+            //Win sequence
+            levelCam.gameObject.SetActive(true);
+            levelCam.m_Follow = rocketHolder.GetChild(1).GetChild(1);
+            levelCam.m_LookAt = rocketHolder.GetChild(1).GetChild(1);
+
+
         }
 
     }
@@ -171,7 +175,7 @@ public class GameManager : Singleton<GameManager>
             }
            
 
-            yield return new WaitForSecondsRealtime(1f);
+            yield return new WaitForSeconds(1f);
             Timer -= 1f;
            
             if( Timer % 10 == 0)
@@ -244,7 +248,7 @@ public class GameManager : Singleton<GameManager>
             {
                 if(EndGameBool)
                 {
-                    item.GetChild(0).GetComponent<TileManager>().AgentToggle(false, Vector3.zero);
+                    //item.GetChild(0).GetComponent<TileManager>().AgentToggle(false, Vector3.zero);
                 }
                 if(item.GetChild(0).CompareTag("Tile"))
                 {

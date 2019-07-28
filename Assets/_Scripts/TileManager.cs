@@ -73,7 +73,7 @@ public class TileManager : MonoBehaviour
 
     void OnMouseDown()
     {
-        if(transform.CompareTag("Tile") && Movable)
+        if( Movable && !FunctionHandler.Instance.MenuActive)
         {
             Selected = true;
             GameManager.Instance.selectedTile = transform;
@@ -115,7 +115,7 @@ public class TileManager : MonoBehaviour
     {
         //if (transform.GetChild(4).childCount == 0)
         //{
-        if (/*transform.CompareTag("Tile") &&*/ !CollidedBool && !RotationInProgress && !DragActive)
+        if (/*transform.CompareTag("Tile") &&*/ Selected && !CollidedBool && !RotationInProgress && !DragActive)
             StartCoroutine(StopRotate());
         else if(transform.CompareTag("Tile"))
             //Build navMesh
