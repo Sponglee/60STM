@@ -38,10 +38,11 @@ public class LevelManager : Singleton<LevelManager>
                 if (i == 0 ^ j == 0 ^ i == levelDimention - 1 ^ j == levelDimention - 1)
                 {
 
-                    GameObject tmpExit = Instantiate(sidesPref, tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
-                    tmpExit.transform.LookAt(Vector3.zero,Vector3.up);
-                    //Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
-                    tmpExit.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpExit.transform.eulerAngles.y / 90f) * 90f, 0);
+                    GameObject tmpSide = Instantiate(sidesPref, tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
+                    //tmpSide.transform.LookAt(Vector3.zero,Vector3.up);
+                    ////Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
+
+                    //tmpSide.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpSide.transform.eulerAngles.y / 90f) * 90f, 0);
                    
                 }
                 else if (i == 0 && j == 0 || i == levelDimention - 1 && j == levelDimention - 1 || i == 0 && j == levelDimention - 1 || j == 0 && i == levelDimention - 1)
@@ -49,7 +50,7 @@ public class LevelManager : Singleton<LevelManager>
                     continue;
                 }
                 //If center - or proc - Generate tile
-                else if ((i== levelDimention/2 && j == levelDimention/2) || Random.Range(0,100)>40)
+                else if ((i== levelDimention/2 && j == levelDimention/2) || Random.Range(0,100)<40)
                 {
                     GameObject tmpTile = Instantiate(tilePref,tmpNode.transform.position,  Quaternion.Euler(0,Random.Range(0,360)/90*90,0), tmpNode.transform);
 
@@ -110,10 +111,16 @@ public class LevelManager : Singleton<LevelManager>
     //Spawnpoint
     public Transform SpawnExit()
     {
-        Transform tmpTile = freeTiles[Random.Range(0, freeTiles.Count)];
-        freeTiles.Remove(tmpTile);
-        GameObject tmpExit = Instantiate(exitPref, tmpTile.parent.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpTile.parent);
-        Destroy(tmpTile.gameObject);
+        if(freeTiles.Count == 0)
+        {
+            FunctionHandler.Instance.GameOver();
+        }
+        int tmpFree = Random.Range(0, freeTiles.Count);
+        Debug.Log(">>>>" + tmpFree);
+        Transform tmpFreeTile = freeTiles[tmpFree];
+        freeTiles.Remove(tmpFreeTile);
+        GameObject tmpExit = Instantiate(exitPref, tmpFreeTile.parent.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpFreeTile.parent);
+        Destroy(tmpFreeTile.gameObject);
         lastExit = tmpExit;
 
 
@@ -125,24 +132,17 @@ public class LevelManager : Singleton<LevelManager>
         {
 
             Debug.DrawRay(tmpExit.transform.position, tmpExit.transform.TransformPoint(Vector3.forward * 100f), Color.blue, 3f);
-            Debug.Log(hit.transform.parent.GetComponent<NodeController>().Column + " : " + hit.transform.parent.GetComponent<NodeController>().Row);
-            Debug.Log("T: " + hit.transform.tag);
-
-            while (hit.transform.CompareTag("Exit") || hit.transform.CompareTag("Border"))
+            //Debug.Log(hit.transform.parent.GetComponent<NodeController>().Column + " : " + hit.transform.parent.GetComponent<NodeController>().Row);
+            //Debug.Log("T: " + hit.transform.tag);
+            
+            if (hit.transform.CompareTag("Exit") || hit.transform.CompareTag("Border"))
             {
-                Debug.Log("ROTATING");
-                tmpExit.transform.Rotate(0, 90f, 0);
-                Debug.DrawRay(tmpExit.transform.position, tmpExit.transform.TransformPoint(Vector3.forward * 100f), Color.blue, 3f);
-                if (Physics.Raycast(tmpExit.transform.position, tmpExit.transform.TransformPoint(Vector3.forward * 100f), out hit))
-                {
+                Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
+                tmpExit.transform.LookAt(Vector3.zero, Vector3.up);
+                Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
 
-                    Debug.Log("T: " + hit.transform.tag);
-                    Debug.DrawLine(tmpExit.transform.position, tmpExit.transform.position + tmpExit.transform.TransformDirection(Vector3.forward) * 10f, Color.red, 3f);
-
-                }
-                else
-                    break;
-                
+                tmpExit.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpExit.transform.eulerAngles.y / 90f) * 90f, 0);
+                Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
             }
 
           
@@ -179,9 +179,9 @@ public class LevelManager : Singleton<LevelManager>
     //Spawn new rocket
     public void SpawnRocket()
     {
-        Transform tmpNode = freeTiles[Random.Range(0, freeTiles.Count)].parent;
+        Transform tmpNode = freeTiles[Random.Range(0, freeTiles.Count)];
 
-        GameObject tmpTile = Instantiate(tilePref, tmpNode.transform.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform);
+        GameObject tmpTile = Instantiate(tilePref, tmpNode.transform.parent.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform.parent);
 
 
         tmpTile.transform.GetChild(1).GetComponent<Animator>().SetTrigger("Return");
@@ -196,6 +196,10 @@ public class LevelManager : Singleton<LevelManager>
 
         //Enable road layout
         tmpTile.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
+
+
+        freeTiles.Remove(tmpNode);
+        Destroy(tmpNode.gameObject);   
     }
 
 

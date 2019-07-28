@@ -36,7 +36,7 @@ public class OfficeController : MonoBehaviour
                 Transform tmpHuman = humans.Dequeue();
 
                 tmpHuman.position = exitPoint.position;
-                tmpHuman.GetComponent<NavMeshMover>().Move();
+                //tmpHuman.GetComponent<NavMeshMover>().Move();
             }
         }
     }

@@ -70,7 +70,7 @@ public class GameManager : Singleton<GameManager>
 
     private void Awake()
     {
-        levelGoal = PlayerPrefs.GetInt("Level", 1)*15;
+        levelGoal = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1)*15,50,1000);
     }
 
     private void Start()
@@ -93,7 +93,7 @@ public class GameManager : Singleton<GameManager>
             selectedTile = null;
             //Enable Agent movement
             if(!selectedTileManager.RotationInProgress)
-                selectedTileManager.AgentToggle(true);
+                selectedTileManager.AgentToggle(true, GameManager.Instance.rocketHolder.position);
             
         }
         else if(Input.GetMouseButtonDown(1))
@@ -140,16 +140,16 @@ public class GameManager : Singleton<GameManager>
                 //Set reference to spawnCOunt
                 spawnCount = 0;
 
-                for (int i = 0; i < Mathf.Clamp(spawnModifier,0,2); i++)
+                for (int i = 0; i < Mathf.Clamp(spawnModifier,0,1); i++)
                 {
                     Transform thisExit = LevelManager.Instance.SpawnExit();
                     for (int j = 0; j < 15f; j++)
                     {
-                        GameObject tmpHuman = Instantiate(humanPref, thisExit.GetChild(2));
+                        GameObject tmpHuman = Instantiate(humanPref, thisExit.GetChild(4));
                         spawnCount += 1;
 
                         //Add an exit reference to human
-                        tmpHuman.GetComponent<NavMeshMover>().exitManager = thisExit.GetComponent<ExitManager>();
+                        tmpHuman.GetComponent<HumanController>().exitManager = thisExit.GetComponent<ExitManager>();
                         //Add a human reference
                         thisExit.GetComponent<ExitManager>().humansRef.Add(tmpHuman.transform);
                     }
@@ -167,13 +167,18 @@ public class GameManager : Singleton<GameManager>
                 //}
                 Debug.Log("SPAWN " + spawnModifier);
                 SpawnAlreadyTrigger = true;
-                spawnModifier++;
+               
             }
            
 
             yield return new WaitForSecondsRealtime(1f);
             Timer -= 1f;
            
+            if( Timer % 10 == 0)
+            {
+                
+                SpawnAlreadyTrigger = false;
+            }
             //Debug.Log(humanCount + "- " + spawnHumanCount + " ( " + spawnCount + ")");
            
 
@@ -189,27 +194,17 @@ public class GameManager : Singleton<GameManager>
 
             if (HumanCount >= levelGoal)
             {
-                WinText.SetActive(true);
-                timerText.gameObject.SetActive(false);
-                //DIsable collider
-                rocketHolder.GetChild(1).GetChild(0).GetComponent<BoxCollider>().enabled = false;
-                //Win sequence
-
-                WinText.SetActive(true);
-                timerText.gameObject.SetActive(false);
-                //Win sequence
-                //levelCam.gameObject.SetActive(true);
-                //levelCam.m_Follow = rocketHolder.GetChild(1).GetChild(1);
-                //levelCam.m_LookAt = rocketHolder.GetChild(1).GetChild(1);
-                rocketHolder.GetChild(1).GetComponent<Animator>().SetTrigger("TakeOff");
-                PlayerPrefs.SetInt("Level", PlayerPrefs.GetInt("Level", 1) + 1);
-
+                FunctionHandler.Instance.LevelComplete();
+                LevelManager.Instance.DisablePrevious(previousRocket);
+                BuildSurface();
                 yield break;
             }
         }
 
         //Reset the timer and spawn new rocket
         Timer = 60f;
+        spawnModifier++;
+
 
         rocketHolder.GetChild(1).GetComponent<Animator>().SetTrigger("TakeOff");
 
@@ -229,7 +224,7 @@ public class GameManager : Singleton<GameManager>
     }
 
     //Rebake navmesh
-    public void BuildSurface()
+    public void BuildSurface(bool EndGameBool = false)
     {
         surface.BuildNavMesh();
 
@@ -237,10 +232,19 @@ public class GameManager : Singleton<GameManager>
         {
             if(item.childCount>0)
             {
+                if(EndGameBool)
+                {
+                    item.GetChild(0).GetComponent<TileManager>().AgentToggle(false, rocketHolder.position);
+                }
                 if(item.GetChild(0).CompareTag("Tile"))
                 {
-                    //Debug.Log(item.name + item.GetChild(0).name);
-                    item.GetChild(0).GetComponent<TileManager>().AgentToggle(true);
+                    Debug.Log(item.name + item.GetChild(0).name);
+                    item.GetChild(0).GetComponent<TileManager>().AgentToggle(true, rocketHolder.position);
+                }
+                else if(item.GetChild(0).CompareTag("Exit"))
+                {
+                    Debug.Log("EXIT TOGGLE");
+                    item.GetChild(0).GetComponent<ExitManager>().AgentToggle(true, rocketHolder.position);
                 }
             }
         }

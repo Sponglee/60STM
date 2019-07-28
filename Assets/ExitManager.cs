@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ExitManager : MonoBehaviour
+public class ExitManager : TileManager
 {
    public List<Transform> humansRef;
 
@@ -23,11 +23,11 @@ public class ExitManager : MonoBehaviour
             LevelManager.Instance.freeTiles.Add(tmpEmpty.transform);
             LevelManager.Instance.exits.Remove(transform);
 
-            //Check to spawn new Exits
-            if (GameManager.Instance.Timer > 0)
-            {
-                GameManager.Instance.SpawnAlreadyTrigger = false;
-            }
+            ////Check to spawn new Exits
+            //if (GameManager.Instance.Timer > 0)
+            //{
+            //    GameManager.Instance.SpawnAlreadyTrigger = false;
+            //}
 
 
 

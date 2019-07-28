@@ -30,14 +30,17 @@ public class TileManager : MonoBehaviour
     
 
 
-    public void AgentToggle(bool enableToggle)
+    public void AgentToggle(bool enableToggle, Vector3 toggleDesto)
     {
+        //Debug.Log("MOVE " + transform.GetChild(4).childCount);
         //Disable agents
         foreach (Transform child in transform.GetChild(4))
         {
             child.GetComponent<NavMeshAgent>().enabled = enableToggle;
             if (enableToggle)
-                child.GetComponent<NavMeshMover>().Move();
+            {
+                child.GetComponent<HumanController>().Move(toggleDesto);
+            }
             else
                 child.position = child.parent.position;
         }
@@ -50,7 +53,8 @@ public class TileManager : MonoBehaviour
 
     void OnMouseDown()
     {
-        
+        if(transform.CompareTag("Tile"))
+        {
             Selected = true;
             GameManager.Instance.selectedTile = transform;
 
@@ -60,10 +64,12 @@ public class TileManager : MonoBehaviour
             screenPoint = Camera.main.WorldToScreenPoint(gameObject.transform.position);
 
             offset = gameObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
+        }
+          
 
 
         //Disable agents for movement
-        AgentToggle(false);
+        AgentToggle(false, GameManager.Instance.rocketHolder.position);
 
 
     }
@@ -72,7 +78,7 @@ public class TileManager : MonoBehaviour
 
     void OnMouseDrag()
     {
-        if(Selected && !CollidedBool)
+        if(transform.CompareTag("Tile") && Selected && !CollidedBool)
         {
             //if (transform.GetChild(4).childCount == 0)
             //{
@@ -89,9 +95,14 @@ public class TileManager : MonoBehaviour
     {
         //if (transform.GetChild(4).childCount == 0)
         //{
-        if (!CollidedBool && !RotationInProgress && !DragActive)
+        if (/*transform.CompareTag("Tile") &&*/ !CollidedBool && !RotationInProgress && !DragActive)
             StartCoroutine(StopRotate());
+        else if(transform.CompareTag("Tile"))
+            //Build navMesh
+            GameManager.Instance.BuildSurface();
+
         //}
+
     }
 
     public IEnumerator StopRotate(float duration = 0.5f)
@@ -116,7 +127,7 @@ public class TileManager : MonoBehaviour
         GameManager.Instance.BuildSurface();
 
         //Enable agents for movement
-        AgentToggle(true);
+        AgentToggle(true, GameManager.Instance.rocketHolder.position);
     }
 
 
