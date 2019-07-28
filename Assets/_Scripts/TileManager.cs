@@ -73,7 +73,7 @@ public class TileManager : MonoBehaviour
 
     void OnMouseDown()
     {
-        if( Movable && !FunctionHandler.Instance.MenuActive)
+        if(/* Movable &&*/ !FunctionHandler.Instance.MenuActive)
         {
             Selected = true;
             GameManager.Instance.selectedTile = transform;

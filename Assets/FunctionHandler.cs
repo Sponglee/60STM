@@ -20,6 +20,7 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
     public void StartLevel()
     {
+        Time.timeScale = 1;
         SceneManager.LoadScene("Main");
     }
 
