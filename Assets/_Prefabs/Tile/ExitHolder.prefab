@@ -355,7 +355,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8d86fc2be6b5ddd419bbd9050c54c637, type: 2}
+  - {fileID: 2100000, guid: d88397af94a2f744fafa80b86c0c2f17, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -514,4 +514,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b4407d8efe33c54db9bbde71fc7fff8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collidedBool: 0
+  selected: 0
+  dragActive: 0
+  movable: 1
+  rotationInProgress: 0
+  tileAnim: {fileID: 0}
   humansRef: []

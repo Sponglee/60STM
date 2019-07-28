@@ -11,7 +11,7 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
     public Transform muskReference;
     public Sprite[] muskImages;
-
+    public bool MuskInProgress = false;
 
     public void StartLevel()
     {
@@ -23,6 +23,10 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
     public void GameOver()
     {
+        //Sad emote
+        FunctionHandler.Instance.MuskEmote(1);
+
+
         menuText.gameObject.SetActive(true);
         menuText.text = "GAME OVER";
         GameManager.Instance.timerText.gameObject.SetActive(false);
@@ -36,6 +40,10 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
     public void LevelComplete()
     {
+
+        //Hi mote
+        FunctionHandler.Instance.MuskEmote(4);
+
         menuText.gameObject.SetActive(true);
         menuText.text = "LEVEL COMPLETE";
         GameManager.Instance.timerText.gameObject.SetActive(false);
@@ -43,11 +51,11 @@ public class FunctionHandler : Singleton<FunctionHandler>
         GameManager.Instance.rocketHolder.GetChild(1).GetChild(0).GetComponent<BoxCollider>().enabled = false;
         //Win sequence
 
-  
+
         //Win sequence
-        //levelCam.gameObject.SetActive(true);
-        //levelCam.m_Follow = rocketHolder.GetChild(1).GetChild(1);
-        //levelCam.m_LookAt = rocketHolder.GetChild(1).GetChild(1);
+       
+
+
         GameManager.Instance.rocketHolder.GetChild(1).GetComponent<Animator>().SetTrigger("TakeOff");
         PlayerPrefs.SetInt("Level", PlayerPrefs.GetInt("Level", 1) + 1);
 
@@ -56,37 +64,94 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
     public void MuskEmote(int index)
     {
-        switch (index)
+        if (!MuskInProgress)
         {
-            //Exiced
-            case 0:
-                {
-                    StopAllCoroutines();
-                    muskReference.GetComponentInChildren<Image>().sprite = muskImages[index];
-                    StartCoroutine(StopMusk(index));
-                }
-                break;
-            //Sad
-            case 1:
-                break;
-            //Thumbs up
-            case 2:
-                break;
-            //Pointy
-            case 3:
-                break;
-            //Mars hi
-            case 4:
-                break;
-            default:
-                break;
+            switch (index)
+            {
+                //Excited
+                case 0:
+                    {
+                        int muskRandomizer = Random.Range(0, 100);
+                        if(muskRandomizer<50)
+                        {
+                            muskReference.GetComponentInChildren<Image>().sprite = muskImages[index];
+
+                            StartCoroutine(StopMusk(index));
+                        }
+                        
+
+                      
+                    }
+                    break;
+                //Sad
+                case 1:
+                    {
+                        muskReference.GetComponentInChildren<Image>().sprite = muskImages[index];
+
+                        StartCoroutine(StopMusk(index));
+                    }
+                    break;
+                //Thumbs
+                case 2:
+                    {
+                        muskReference.GetComponentInChildren<Image>().sprite = muskImages[index];
+
+                        StartCoroutine(StopMusk(index));
+                    }
+                    break;
+                //Pointy
+                case 3:
+                    {
+                        muskReference.GetComponentInChildren<Image>().sprite = muskImages[index];
+
+                        StartCoroutine(StopMusk(index));
+                    }
+                    break;
+                //Mars hi
+                case 4:
+                    {
+                        muskReference.GetComponentInChildren<Image>().sprite = muskImages[index];
+
+                        StartCoroutine(StopMusk(index));
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
+
     }
 
     public IEnumerator StopMusk(int index)
     {
-        
-        yield return null;
+        MuskInProgress = true;
+        Vector3 from = muskReference.GetChild(1).localPosition;
+
+        float duration = 0.5f;
+        //smooth lerp rotation loop
+        float elapsed = 0.0f;
+        while (elapsed < duration)
+        {
+            muskReference.GetChild(0).localPosition = Vector3.Lerp(from, Vector3.zero, elapsed / duration);
+            elapsed += Time.fixedDeltaTime;
+
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(Random.Range(1f,1.5f));
+
+        elapsed = 0.0f;
+        while (elapsed < duration)
+        {
+            muskReference.GetChild(0).localPosition = Vector3.Lerp(Vector3.zero, from, elapsed / duration);
+            elapsed += Time.fixedDeltaTime;
+
+            yield return null;
+        }
+
+
+        muskReference.GetChild(0).localPosition = muskReference.GetChild(1).localPosition;   
+        MuskInProgress = false;
     }
 
 }

@@ -86,7 +86,7 @@ public class HumanController : MonoBehaviour
     {
         humanCanvas.gameObject.SetActive(false);
         int probability = Random.Range(0, 100);
-        Debug.Log(probability);
+        //Debug.Log(probability);
         if(probability>70)
         {
             humanCanvas.gameObject.SetActive(true);

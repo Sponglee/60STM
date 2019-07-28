@@ -30,6 +30,8 @@ public class ExitManager : TileManager
             //}
 
 
+            //Randomized emote
+            FunctionHandler.Instance.MuskEmote(Random.Range(2, 4));
 
             Destroy(gameObject);
         }

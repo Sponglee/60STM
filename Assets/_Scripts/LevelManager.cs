@@ -13,6 +13,11 @@ public class LevelManager : Singleton<LevelManager>
     public List<Transform> exits;
     public List<Transform> freeTiles;
 
+
+    public Material[] materials;
+
+
+
     public float nodeStep = 10.5f;
     
     public int levelDimention = 6;
@@ -30,7 +35,7 @@ public class LevelManager : Singleton<LevelManager>
         {
             for (int j = 0; j < levelDimention; j++)
             {
-                GameObject tmpNode = Instantiate(nodePref, new Vector3(nodeStep*j-nodeStep * (levelDimention / 2), 0, -nodeStep * i + nodeStep*(levelDimention/2)), Quaternion.identity, transform);
+                GameObject tmpNode = Instantiate(nodePref, new Vector3(nodeStep * j - nodeStep * (levelDimention / 2), 0, -nodeStep * i + nodeStep * (levelDimention / 2)), Quaternion.identity, transform);
 
                 tmpNode.GetComponent<NodeController>().Row = i;
                 tmpNode.GetComponent<NodeController>().Column = j;
@@ -43,21 +48,25 @@ public class LevelManager : Singleton<LevelManager>
                     ////Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
 
                     //tmpSide.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpSide.transform.eulerAngles.y / 90f) * 90f, 0);
-                   
+
                 }
                 else if (i == 0 && j == 0 || i == levelDimention - 1 && j == levelDimention - 1 || i == 0 && j == levelDimention - 1 || j == 0 && i == levelDimention - 1)
                 {
                     continue;
                 }
                 //If center - or proc - Generate tile
-                else if ((i== levelDimention/2 && j == levelDimention/2) || Random.Range(0,100)<40)
+                else if ((i == levelDimention / 2 && j == levelDimention / 2) || Random.Range(0, 100) < 40)
                 {
-                    GameObject tmpTile = Instantiate(tilePref,tmpNode.transform.position,  Quaternion.Euler(0,Random.Range(0,360)/90*90,0), tmpNode.transform);
+                    GameObject tmpTile = Instantiate(tilePref, tmpNode.transform.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform);
 
-                   
+                  
+
                     //If center - enable rocket and disable buildings
                     if(i == levelDimention/2 && j== levelDimention/2)
                     {
+                        //Disable moving
+                        tmpTile.GetComponent<TileManager>().Movable = false;
+
                         tmpTile.transform.GetChild(1).gameObject.SetActive(true);
                         tmpTile.transform.GetChild(2).gameObject.SetActive(false);
 
@@ -70,6 +79,14 @@ public class LevelManager : Singleton<LevelManager>
                     }
                     else
                     {
+                        //If procced - disable moving
+                        if (PlayerPrefs.GetInt("Level", 1) > 4 && (Random.Range(0, 100) < 10 + Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) % 5, 1, 30)))
+                        {
+                            tmpTile.GetComponent<TileManager>().Movable = false;
+
+
+                        }
+
                         //Generate building layout
                         int buildingIndex = Random.Range(0, tmpTile.transform.GetChild(2).childCount);
                         tmpTile.transform.GetChild(2).GetChild(buildingIndex).gameObject.SetActive(true);
@@ -183,6 +200,8 @@ public class LevelManager : Singleton<LevelManager>
 
         GameObject tmpTile = Instantiate(tilePref, tmpNode.transform.parent.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform.parent);
 
+        //Disable moving
+        tmpTile.GetComponent<TileManager>().Movable = false;
 
         tmpTile.transform.GetChild(1).GetComponent<Animator>().SetTrigger("Return");
 
@@ -205,6 +224,9 @@ public class LevelManager : Singleton<LevelManager>
 
     public void RandomizePrevious(Transform tmpTile)
     {
+
+        tmpTile.GetComponent<TileManager>().Movable = true;
+
         //Enable roads/buildings
         tmpTile.GetChild(0).gameObject.SetActive(true);
         tmpTile.GetChild(2).gameObject.SetActive(true);
@@ -229,8 +251,8 @@ public class LevelManager : Singleton<LevelManager>
     public void DisablePrevious(Transform tmpTile)
     {
         tmpTile.GetChild(0).gameObject.SetActive(false);
-        tmpTile.GetChild(2).gameObject.SetActive(false);
-        tmpTile.GetChild(3).gameObject.SetActive(false);
+        //tmpTile.GetChild(2).gameObject.SetActive(false);
+        //tmpTile.GetChild(3).gameObject.SetActive(false);
         tmpTile.GetChild(4).gameObject.SetActive(false);
     }
 

@@ -15,6 +15,26 @@ public class TileManager : MonoBehaviour
     private bool dragActive = false;
     public bool DragActive { get => dragActive; set => dragActive = value; }
 
+
+    [SerializeField]
+    private bool movable = true;
+    public bool Movable
+    {
+        get => movable;
+        set
+        {
+            if(value == false && movable == true)
+            {
+                transform.GetChild(3).GetComponent<Renderer>().material = LevelManager.Instance.materials[1];
+            }
+            else if(value == true && movable == false)
+            {
+                transform.GetChild(3).GetComponent<Renderer>().material = LevelManager.Instance.materials[0];
+            }
+            movable = value;
+        }
+    }
+
     [SerializeField]
     private bool rotationInProgress = false;
     public bool RotationInProgress { get => rotationInProgress; set => rotationInProgress = value; }
@@ -53,7 +73,7 @@ public class TileManager : MonoBehaviour
 
     void OnMouseDown()
     {
-        if(transform.CompareTag("Tile"))
+        if(transform.CompareTag("Tile") && Movable)
         {
             Selected = true;
             GameManager.Instance.selectedTile = transform;
@@ -78,7 +98,7 @@ public class TileManager : MonoBehaviour
 
     void OnMouseDrag()
     {
-        if(transform.CompareTag("Tile") && Selected && !CollidedBool)
+        if(transform.CompareTag("Tile") && Selected && !CollidedBool && Movable)
         {
             //if (transform.GetChild(4).childCount == 0)
             //{
