@@ -576,6 +576,11 @@ PrefabInstance:
       propertyPath: m_RenderMode
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 199060068147303238, guid: 66c0e26bbecd8a04db1c2429485f09f0,
+        type: 3}
+      propertyPath: m_RenderAlignment
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 198912781043867620, guid: 66c0e26bbecd8a04db1c2429485f09f0,
         type: 3}
       propertyPath: lengthInSec
