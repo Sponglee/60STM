@@ -13,6 +13,7 @@ public class GameManager : Singleton<GameManager>
 
     public Transform rocketHolder;
     public Transform previousRocket;
+    public Transform nextRocket;
 
     public Transform debugTarget;
 
@@ -79,6 +80,9 @@ public class GameManager : Singleton<GameManager>
     {
         humanText.text = string.Format("{0}/{1}", HumanCount, levelGoal);
         StartCoroutine(LevelSpawner());
+
+
+        AudioManager.Instance.PlaySound("Music");
     }
 
 
@@ -139,6 +143,8 @@ public class GameManager : Singleton<GameManager>
             
             if(!SpawnAlreadyTrigger && !GameOverBool)
             {
+              
+               
                 //Set reference for goal count
                 spawnHumanCount = humanCount;
                 //Set reference to spawnCOunt
@@ -177,10 +183,21 @@ public class GameManager : Singleton<GameManager>
 
             yield return new WaitForSeconds(1f);
             Timer -= 1f;
-           
-            if( Timer % 10 == 0)
+            AudioManager.Instance.PlaySound("TickTock");
+
+            if (Timer == 11)
             {
-                
+                AudioManager.Instance.PlaySound("Countdown");
+                LevelManager.Instance.SpawnRocket();
+                LevelManager.Instance.DisableRocket(nextRocket);
+                //Build navMesh
+                GameManager.Instance.BuildSurface();
+            }
+
+           
+            if ( Timer % 10 == 0)
+            {
+               
                 SpawnAlreadyTrigger = false;
             }
             //Debug.Log(humanCount + "- " + spawnHumanCount + " ( " + spawnCount + ")");
@@ -198,13 +215,17 @@ public class GameManager : Singleton<GameManager>
 
             if (HumanCount >= levelGoal)
             {
+
+                AudioManager.Instance.StopSound("All");
+                AudioManager.Instance.PlaySound("FireWall");
+                AudioManager.Instance.PlaySound("FlareUp");
                 //Win sequence
                 levelCam.gameObject.SetActive(true);
                 levelCam.m_Follow = rocketHolder.GetChild(1).GetChild(1);
                 levelCam.m_LookAt = rocketHolder.GetChild(1).GetChild(1);
                 
                 FunctionHandler.Instance.LevelComplete();
-                LevelManager.Instance.DisablePrevious(previousRocket);
+                //LevelManager.Instance.DisableNextRocket(previousRocket);
                 BuildSurface(true);
                 GameOverBool = true;
                 StopAllCoroutines();
@@ -213,8 +234,8 @@ public class GameManager : Singleton<GameManager>
             }
         }
 
-        //Excited emote
-        FunctionHandler.Instance.MuskEmote(0);
+        //Launch emote
+        FunctionHandler.Instance.MuskEmote(2);
 
         //Reset the timer and spawn new rocket
         Timer = 60f;
@@ -224,16 +245,26 @@ public class GameManager : Singleton<GameManager>
         GameManager.Instance.rocketHolder.GetChild(1).GetChild(2).gameObject.SetActive(false);
         //Launch rocket
         rocketHolder.GetChild(1).GetComponent<Animator>().SetTrigger("TakeOff");
+        nextRocket.GetChild(1).GetComponent<Animator>().SetTrigger("Return");
+        nextRocket.GetChild(1).GetChild(1).gameObject.SetActive(true);
 
-        LevelManager.Instance.SpawnRocket();
+
+        //Play Sound
+        AudioManager.Instance.PlaySound("FlareUp");
+        AudioManager.Instance.PlaySound("FireWall");
+
+
+
+
         //BuildSurface(true);
-        LevelManager.Instance.DisablePrevious(previousRocket);
+        LevelManager.Instance.DisableRocket(rocketHolder);
+        LevelManager.Instance.EnableRocket(nextRocket);
         BuildSurface();
 
 
 
         yield return new WaitForSeconds(10f);
-        LevelManager.Instance.RandomizePrevious(previousRocket);
+        LevelManager.Instance.RandomizePrevious(rocketHolder);
         BuildSurface();
         //LevelManager.Instance.DeletePrevious(previousRocket);
         randomExits.Clear();

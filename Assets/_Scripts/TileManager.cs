@@ -125,6 +125,13 @@ public class TileManager : MonoBehaviour
             //Build navMesh
             GameManager.Instance.BuildSurface();
 
+
+
+
+        if(DragActive)
+        {
+            AudioManager.Instance.PlaySound("Bump");
+        }
         //}
 
     }
@@ -133,7 +140,7 @@ public class TileManager : MonoBehaviour
     {
         RotationInProgress = true;
         float angle = 90f;
-       
+        AudioManager.Instance.PlaySound("Swipe");
         float elapsed = 0;
         Vector3 startEul = transform.eulerAngles;
         Vector3 destEul = startEul + new Vector3(0, angle, 0);
@@ -147,11 +154,11 @@ public class TileManager : MonoBehaviour
             yield return null;
         }
         RotationInProgress = false;
-        //Build navMesh
-        GameManager.Instance.BuildSurface();
 
         //Enable agents for movement
         AgentToggle(true, GameManager.Instance.rocketHolder.position);
+        //Build navMesh
+        GameManager.Instance.BuildSurface();
     }
 
 

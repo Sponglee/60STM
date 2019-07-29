@@ -1,0 +1,151 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6959444220982268228
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6959444220982268229}
+  - component: {fileID: 6959444220982268234}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6959444220982268229
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6959444220982268228}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6959444220982268234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6959444220982268228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fc2f7b799eed9d4ebaebdc154a25ea9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: Key
+    clip: {fileID: 8300000, guid: dede8b57b6424f043a48b4eb4bf03fee, type: 3}
+    volume: 0.5
+    pitch: 1
+    randomPitch: 0.1
+    Looped: 0
+    Acceleration: 0
+  - name: Hit
+    clip: {fileID: 8300000, guid: 6cdf3e787d96e2d489d28727b9fd3fef, type: 3}
+    volume: 1
+    pitch: 1
+    randomPitch: 0
+    Looped: 0
+    Acceleration: 0
+  - name: Gem
+    clip: {fileID: 8300000, guid: b5126a0204f8e1542a29cf28cec9879f, type: 3}
+    volume: 0.24
+    pitch: 0.5
+    randomPitch: 0
+    Looped: 0
+    Acceleration: 0
+  - name: End
+    clip: {fileID: 8300000, guid: def0380bcb452e449a0db990ee4a79ef, type: 3}
+    volume: 1
+    pitch: 1
+    randomPitch: 0.1
+    Looped: 0
+    Acceleration: 0
+  - name: Danger
+    clip: {fileID: 8300000, guid: 3524079dbc1b27d45887dca117b8ebed, type: 3}
+    volume: 1
+    pitch: 1
+    randomPitch: 0.5
+    Looped: 0
+    Acceleration: 0
+  - name: Finish
+    clip: {fileID: 8300000, guid: 1530d5f8b5a7b6246a19c39e32c9d05b, type: 3}
+    volume: 1
+    pitch: 1
+    randomPitch: 0
+    Looped: 0
+    Acceleration: 0
+  - name: Bump
+    clip: {fileID: 8300000, guid: 1f83730964f115649b3fce7a7dd1e19d, type: 3}
+    volume: 0.3
+    pitch: 1.2
+    randomPitch: 0.5
+    Looped: 0
+    Acceleration: 0
+  - name: Chest
+    clip: {fileID: 8300000, guid: 1ba2b7d2156f6f445a4bc42fcbb3f75b, type: 3}
+    volume: 1
+    pitch: 1
+    randomPitch: 0.1
+    Looped: 0
+    Acceleration: 0
+  - name: FireUp
+    clip: {fileID: 8300000, guid: e43f6185ef60caa4d97c59adc315e608, type: 3}
+    volume: 1
+    pitch: 1
+    randomPitch: 0
+    Looped: 0
+    Acceleration: 0
+  - name: MenuSmash
+    clip: {fileID: 8300000, guid: 1f83730964f115649b3fce7a7dd1e19d, type: 3}
+    volume: 1
+    pitch: 1
+    randomPitch: 0.1
+    Looped: 0
+    Acceleration: 0
+  - name: MenuSwoop
+    clip: {fileID: 8300000, guid: 821a925e6fbd04a47be4169e81c5de96, type: 3}
+    volume: 0.4
+    pitch: 1
+    randomPitch: 0
+    Looped: 0
+    Acceleration: 0
+  - name: FireTrail
+    clip: {fileID: 8300000, guid: 12c00e18b36102c4e946108384d65519, type: 3}
+    volume: 0.5
+    pitch: 1
+    randomPitch: 0
+    Looped: 1
+    Acceleration: 0
+  - name: No
+    clip: {fileID: 8300000, guid: 8e33c00048c139c44a15658d3b001635, type: 3}
+    volume: 0.5
+    pitch: 1
+    randomPitch: 0
+    Looped: 0
+    Acceleration: 0
+  - name: Wind
+    clip: {fileID: 8300000, guid: 45bd50f25480bbd498772a719e72deb2, type: 3}
+    volume: 1
+    pitch: 1
+    randomPitch: 0.5
+    Looped: 0
+    Acceleration: 0
+  - name: Accelerate
+    clip: {fileID: 0}
+    volume: 0.5
+    pitch: 0.5
+    randomPitch: 0
+    Looped: 0
+    Acceleration: 0

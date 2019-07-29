@@ -38,6 +38,7 @@ public class HumanController : MonoBehaviour
             //delete this human reference from exit tile
             exitManager.DespawnCheck();
             exitManager.humansRef.Remove(transform);
+            AudioManager.Instance.PlaySound("Human");
             Destroy(gameObject);
         }
         else if(other.CompareTag("Human") && exitRef != other.GetComponent<HumanController>().exitRef)

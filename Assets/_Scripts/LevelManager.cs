@@ -74,8 +74,8 @@ public class LevelManager : Singleton<LevelManager>
                     {
                         //Disable moving
                         tmpTile.GetComponent<TileManager>().Movable = false;
-
                         tmpTile.transform.GetChild(1).gameObject.SetActive(true);
+                        tmpTile.transform.GetChild(1).GetComponent<Animator>().Play("IdleRocket");
                         tmpTile.transform.GetChild(2).gameObject.SetActive(false);
 
                         //Set Rocket reference
@@ -147,7 +147,7 @@ public class LevelManager : Singleton<LevelManager>
         GameObject tmpExit = Instantiate(exitPref, tmpFreeTile.parent.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpFreeTile.parent);
         Destroy(tmpFreeTile.gameObject);
         lastExit = tmpExit;
-
+        AudioManager.Instance.PlaySound("Bump");
 
         //Shoot Ray to check if exit is blocked
         RaycastHit hit;
@@ -204,6 +204,9 @@ public class LevelManager : Singleton<LevelManager>
     //Spawn new rocket
     public void SpawnRocket()
     {
+       
+
+
         if (freeTiles.Count == 0)
         {
             FunctionHandler.Instance.GameOver();
@@ -212,19 +215,22 @@ public class LevelManager : Singleton<LevelManager>
 
         GameObject tmpTile = Instantiate(tilePref, tmpNode.transform.parent.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform.parent);
 
+        if (GameManager.Instance.nextRocket == null)
+        {
+            GameManager.Instance.nextRocket = tmpTile.transform;
+           
+        }
+
         //Disable moving
         tmpTile.GetComponent<TileManager>().Movable = false;
 
-        tmpTile.transform.GetChild(1).GetComponent<Animator>().SetTrigger("Return");
-
-
+        //Enable cube disable rocket
         tmpTile.transform.GetChild(1).gameObject.SetActive(true);
+        tmpTile.transform.GetChild(1).GetChild(1).gameObject.SetActive(false);
         tmpTile.transform.GetChild(2).gameObject.SetActive(false);
 
-        GameManager.Instance.previousRocket = GameManager.Instance.rocketHolder;
-        //Set Rocket reference
-        GameManager.Instance.rocketHolder = tmpTile.transform;
-
+       
+     
         //Enable road layout
         tmpTile.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
 
@@ -236,7 +242,7 @@ public class LevelManager : Singleton<LevelManager>
 
     public void RandomizePrevious(Transform tmpTile)
     {
-
+      
         tmpTile.GetComponent<TileManager>().Movable = true;
 
         //Enable roads/buildings
@@ -257,11 +263,14 @@ public class LevelManager : Singleton<LevelManager>
         int roadIndex = Random.Range(0, tmpTile.transform.GetChild(0).childCount);
         tmpTile.transform.GetChild(0).GetChild(roadIndex).gameObject.SetActive(true);
 
+        GameManager.Instance.rocketHolder = GameManager.Instance.nextRocket;
+        GameManager.Instance.nextRocket = null;
 
     }
 
-    public void DisablePrevious(Transform tmpTile)
+    public void DisableRocket(Transform tmpTile)
     {
+
         tmpTile.GetChild(0).gameObject.SetActive(false);
         //tmpTile.GetChild(2).gameObject.SetActive(false);
         //tmpTile.GetChild(3).gameObject.SetActive(false);
@@ -270,11 +279,18 @@ public class LevelManager : Singleton<LevelManager>
         GameManager.Instance.BuildSurface(false, true);
     }
 
+
+    public void EnableRocket(Transform tmpTile)
+    {
+        tmpTile.GetChild(0).gameObject.SetActive(true);
+        tmpTile.GetChild(4).gameObject.SetActive(true);
+
+        GameManager.Instance.BuildSurface(false);
+    }
     public void DeletePrevious(Transform tmpTile)
     {
-        
 
-
+       
         //Add empty tile
         GameObject tmpEmpty = Instantiate(emptyTilePref, tmpTile.parent.transform.position, Quaternion.identity, tmpTile.parent.transform);
         freeTiles.Add(tmpEmpty.transform);
