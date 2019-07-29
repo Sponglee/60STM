@@ -104,23 +104,8 @@ public class AudioManager : Singleton<AudioManager>
         {
             if (sounds[i].name == _name)
             {
-                if (sounds[i].name == "Hit" )
-                {
-                  
-                    sounds[i].Play(true);
-                }
-                else if (sounds[i].name == "FireTrail")
-                {
-                   
-                    sounds[i].Play();
-                }
-                else if(sounds[i].name == "Accelerate")
-                {
-                   
-                    sounds[i].Play();
-                }
-                else
-                    sounds[i].Play();
+               
+                sounds[i].Play();
 
                 return;
             }
@@ -141,17 +126,8 @@ public class AudioManager : Singleton<AudioManager>
             }
             else if (sounds[i].name == _name)
             {
-                if (sounds[i].name == "Hit" /*|| sounds[i].name == "Gem"*/)
-                {
-                    sounds[i].Stop();
-                }
-                else if (sounds[i].name == "FireTrail")
-                {
-
-                    sounds[i].Stop();
-                }
-                else
-                    sounds[i].Stop();
+               
+                 sounds[i].Stop();
 
                 return;
             }
@@ -189,8 +165,12 @@ public class AudioManager : Singleton<AudioManager>
             {
                 foreach (Transform child in transform)
                 {
-                    Debug.Log("MUTE");
-                    child.GetComponent<AudioSource>().mute = true;
+                    if(child.name != "Sound_4_Music")
+                    {
+                        Debug.Log("MUTE");
+                        child.GetComponent<AudioSource>().mute = true;
+                    }
+                  
                 }
                 PlayerPrefs.SetInt("VolumeMute", 1);
             }
@@ -214,8 +194,13 @@ public class AudioManager : Singleton<AudioManager>
             {
                 foreach (Transform child in transform)
                 {
-                    Debug.Log("MUTE");
-                    child.GetComponent<AudioSource>().mute = false;
+
+                    if (child.name != "Sound_4_Music")
+                    {
+                        Debug.Log("MUTE");
+                        child.GetComponent<AudioSource>().mute = false;
+                    }
+
                 }
                 PlayerPrefs.SetInt("VolumeMute", 1);
             }

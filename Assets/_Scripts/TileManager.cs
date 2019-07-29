@@ -35,6 +35,8 @@ public class TileManager : MonoBehaviour
         }
     }
 
+
+    public float rotationCheck = 0;
     [SerializeField]
     private bool rotationInProgress = false;
     public bool RotationInProgress { get => rotationInProgress; set => rotationInProgress = value; }
@@ -59,7 +61,7 @@ public class TileManager : MonoBehaviour
             child.GetComponent<NavMeshAgent>().enabled = enableToggle;
             if(swear)
             {
-                StartCoroutine(child.GetComponent<HumanController>().StopShowMessage("!@#$@",true));
+                StartCoroutine(child.GetComponent<HumanController>().StopShowMessage(":O",true));
             }
             else if (enableToggle)
             {
@@ -70,9 +72,20 @@ public class TileManager : MonoBehaviour
         }
     }
 
-   
 
 
+    private void Update()
+    {
+        if(RotationInProgress)
+        {
+            rotationCheck += Time.deltaTime;
+            if(rotationCheck>2f)
+            {
+                rotationCheck = 0;
+                RotationInProgress = false;
+            }
+        }
+    }
 
 
     void OnMouseDown()
@@ -102,7 +115,7 @@ public class TileManager : MonoBehaviour
 
     void OnMouseDrag()
     {
-        if(transform.CompareTag("Tile") && Selected && !CollidedBool && Movable)
+        if(transform.CompareTag("Tile") && Selected && !CollidedBool && Movable && !RotationInProgress)
         {
             //if (transform.GetChild(4).childCount == 0)
             //{
@@ -120,10 +133,13 @@ public class TileManager : MonoBehaviour
         //if (transform.GetChild(4).childCount == 0)
         //{
         if (/*transform.CompareTag("Tile") &&*/ Selected && !CollidedBool && !RotationInProgress && !DragActive)
+        {
+
             StartCoroutine(StopRotate());
+        }
         else if(transform.CompareTag("Tile"))
             //Build navMesh
-            GameManager.Instance.BuildSurface();
+            //GameManager.Instance.BuildSurface();
 
 
 
@@ -136,8 +152,9 @@ public class TileManager : MonoBehaviour
 
     }
 
-    public IEnumerator StopRotate(float duration = 0.5f)
+    public IEnumerator StopRotate(float duration = 0.3f)
     {
+        transform.position = transform.parent.position;
         RotationInProgress = true;
         float angle = 90f;
         AudioManager.Instance.PlaySound("Swipe");
@@ -145,14 +162,15 @@ public class TileManager : MonoBehaviour
         Vector3 startEul = transform.eulerAngles;
         Vector3 destEul = startEul + new Vector3(0, angle, 0);
         //Debug.Log("HH");
-        while (Mathf.Abs(transform.eulerAngles.y - destEul.y%360f) >= 0.05f)
+        while (elapsed < duration)
         {
             transform.eulerAngles = Vector3.Lerp(startEul, destEul, elapsed / duration);
-            //Debug.Log(">R> " + transform.eulerAngles + " " + destEul.y%360f);
+            Debug.Log(">R> " + transform.eulerAngles + " " + destEul.y % 360f);
             elapsed += Time.deltaTime;
 
             yield return null;
         }
+        transform.eulerAngles = destEul;
         RotationInProgress = false;
 
         //Enable agents for movement

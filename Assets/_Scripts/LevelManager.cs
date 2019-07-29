@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : Singleton<LevelManager>
 {
@@ -72,6 +73,11 @@ public class LevelManager : Singleton<LevelManager>
                     //If center - enable rocket and disable buildings
                     if(i == levelDimention/2 && j== levelDimention/2)
                     {
+                        if(SceneManager.GetActiveScene().name == "Tittle")
+                        {
+                            TittleManager.Instance.rocketAnim = tmpTile.transform.GetChild(1).GetComponent<Animator>();
+                            TittleManager.Instance.rocketAnim.Play("IdleRocket");
+                        }
                         //Disable moving
                         tmpTile.GetComponent<TileManager>().Movable = false;
                         tmpTile.transform.GetChild(1).gameObject.SetActive(true);
@@ -285,7 +291,7 @@ public class LevelManager : Singleton<LevelManager>
         tmpTile.GetChild(0).gameObject.SetActive(true);
         tmpTile.GetChild(4).gameObject.SetActive(true);
 
-        GameManager.Instance.BuildSurface(false);
+      
     }
     public void DeletePrevious(Transform tmpTile)
     {

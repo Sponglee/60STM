@@ -7,7 +7,10 @@ using Cinemachine;
 
 public class GameManager : Singleton<GameManager>
 {
-   public Transform selectedTile;
+    
+
+
+    public Transform selectedTile;
 
     public NavMeshSurface surface;
 
@@ -78,6 +81,13 @@ public class GameManager : Singleton<GameManager>
 
     private void Start()
     {
+
+        if(PlayerPrefs.GetInt("FirstLaunch", 1) == 1)
+        {
+            FunctionHandler.Instance.tutorialCanvas.SetActive(true);
+            FunctionHandler.Instance.TutorialStep();
+        }
+
         humanText.text = string.Format("{0}/{1}", HumanCount, levelGoal);
         StartCoroutine(LevelSpawner());
 
@@ -104,20 +114,18 @@ public class GameManager : Singleton<GameManager>
         }
         else if(Input.GetMouseButtonDown(1))
         {
-            //LevelManager.Instance.DespawnExits();
-            spawnModifier++;
-            LevelManager.Instance.SpawnExit();
+            FunctionHandler.Instance.MuskEmote(Random.Range(0, 4));
         }
         else if(Input.GetMouseButtonDown(2))
         {
-            WinText.SetActive(true);
-            timerText.gameObject.SetActive(false);
-            FunctionHandler.Instance.LevelComplete();
+            //WinText.SetActive(true);
+            //timerText.gameObject.SetActive(false);
+            //FunctionHandler.Instance.LevelComplete();
 
-            //Win sequence
-            levelCam.gameObject.SetActive(true);
-            levelCam.m_Follow = rocketHolder.GetChild(1).GetChild(1);
-            levelCam.m_LookAt = rocketHolder.GetChild(1).GetChild(1);
+            ////Win sequence
+            //levelCam.gameObject.SetActive(true);
+            //levelCam.m_Follow = rocketHolder.GetChild(1).GetChild(1);
+            //levelCam.m_LookAt = rocketHolder.GetChild(1).GetChild(1);
 
 
         }
@@ -165,6 +173,7 @@ public class GameManager : Singleton<GameManager>
                     }
                 }
 
+                BuildSurface();
                 //foreach (Transform exit in LevelManager.Instance.exits)
                 //{
                   
@@ -177,13 +186,18 @@ public class GameManager : Singleton<GameManager>
                 //}
                 Debug.Log("SPAWN " + spawnModifier);
                 SpawnAlreadyTrigger = true;
-               
+
             }
            
 
             yield return new WaitForSeconds(1f);
-            Timer -= 1f;
-            AudioManager.Instance.PlaySound("TickTock");
+            if(!GameOverBool)
+            {
+                Timer -= 1f;
+                AudioManager.Instance.PlaySound("TickTock");
+            }
+
+           
 
             if (Timer == 11)
             {
@@ -191,7 +205,7 @@ public class GameManager : Singleton<GameManager>
                 LevelManager.Instance.SpawnRocket();
                 LevelManager.Instance.DisableRocket(nextRocket);
                 //Build navMesh
-                GameManager.Instance.BuildSurface();
+                BuildSurface();
             }
 
            
@@ -215,7 +229,7 @@ public class GameManager : Singleton<GameManager>
 
             if (HumanCount >= levelGoal)
             {
-
+                HumanCount = levelGoal;
                 AudioManager.Instance.StopSound("All");
                 AudioManager.Instance.PlaySound("FireWall");
                 AudioManager.Instance.PlaySound("FlareUp");
@@ -235,17 +249,19 @@ public class GameManager : Singleton<GameManager>
         }
 
         //Launch emote
-        FunctionHandler.Instance.MuskEmote(2);
+        FunctionHandler.Instance.MuskEmote(0);
 
         //Reset the timer and spawn new rocket
         Timer = 60f;
         spawnModifier++;
 
         //Disable Tower
-        GameManager.Instance.rocketHolder.GetChild(1).GetChild(2).gameObject.SetActive(false);
+        rocketHolder.GetChild(1).GetChild(2).gameObject.SetActive(false);
         //Launch rocket
         rocketHolder.GetChild(1).GetComponent<Animator>().SetTrigger("TakeOff");
         nextRocket.GetChild(1).GetComponent<Animator>().SetTrigger("Return");
+        //Disable Tower
+        nextRocket.GetChild(1).GetChild(2).gameObject.SetActive(false);
         nextRocket.GetChild(1).GetChild(1).gameObject.SetActive(true);
 
 
@@ -264,6 +280,8 @@ public class GameManager : Singleton<GameManager>
 
 
         yield return new WaitForSeconds(10f);
+        //Enable tower
+        nextRocket.GetChild(1).GetChild(2).gameObject.SetActive(true);
         LevelManager.Instance.RandomizePrevious(rocketHolder);
         BuildSurface();
         //LevelManager.Instance.DeletePrevious(previousRocket);
@@ -289,7 +307,7 @@ public class GameManager : Singleton<GameManager>
                     {
 
                         Debug.Log(node.GetChild(0).name);
-                        node.GetChild(0).GetComponent<TileManager>().AgentToggle(false, Vector3.zero, swear);
+                        node.GetChild(0).GetComponent<TileManager>().AgentToggle(true, Vector3.zero, swear);
 
                     }
                     else if (EndGameBool)

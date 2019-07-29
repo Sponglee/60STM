@@ -43,7 +43,7 @@ public class HumanController : MonoBehaviour
         }
         else if(other.CompareTag("Human") && exitRef != other.GetComponent<HumanController>().exitRef)
         {
-            if(Random.Range(1, 100)>90)
+            if(Random.Range(1, 100)>60)
                 StartCoroutine(StopShowMessage("!@#$%"));
         }
         else if (other.CompareTag("Tile") || other.CompareTag("Exit"))

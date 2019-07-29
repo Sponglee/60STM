@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class FunctionHandler : Singleton<FunctionHandler>
 {
     public Text menuText;
 
+    //Tutorial
+    public GameObject tutorialCanvas;
+    public int tutorialStep = 0;
+    public string[] messages;
+    public bool TutInProgress = false;
 
     public Transform muskReference;
     public Sprite[] muskImages;
@@ -57,7 +63,7 @@ public class FunctionHandler : Singleton<FunctionHandler>
         AudioManager.Instance.StopSound("All");
         AudioManager.Instance.PlaySound("GameOver");
         //Sad emote
-        FunctionHandler.Instance.MuskEmote(0);
+        Instance.MuskEmote(0);
 
 
         menuText.gameObject.SetActive(true);
@@ -75,8 +81,11 @@ public class FunctionHandler : Singleton<FunctionHandler>
     {
 
         //Hi mote
-        FunctionHandler.Instance.MuskEmote(3);
-
+        Instance.MuskEmote(2);
+        GameManager.Instance.GameOverBool = true;
+        AudioManager.Instance.StopSound("All");
+        AudioManager.Instance.PlaySound("Win");
+        AudioManager.Instance.PlaySound("FireWall");
         menuText.gameObject.SetActive(true);
         menuText.text = "LEVEL COMPLETE";
         GameManager.Instance.timerText.gameObject.SetActive(false);
@@ -98,7 +107,7 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
     public void MuskEmote(int index)
     {
-        if (!MuskInProgress)
+        if (!MuskInProgress && !tutorialCanvas.activeSelf)
         {
             switch (index)
             {
@@ -197,25 +206,83 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
 
     //Mute sounds
-    public bool volumeMuted = false;
-   
+    public bool musicMuted = false;
+    public bool soundMuted = false;
 
     public void MuteSound(Transform reference)
     {
-        volumeMuted = !volumeMuted;
+        
         if(reference.gameObject.name == "Music")
         {
+            musicMuted = !musicMuted;
             Debug.Log("MMMMMMMMMMMUUUUUUUUUUUUUUSIC");
-            AudioManager.Instance.VolumeMute(volumeMuted,true);
+            AudioManager.Instance.VolumeMute(musicMuted,true);
+            reference.GetChild(0).GetChild(0).gameObject.SetActive(!musicMuted);
+            reference.GetChild(0).GetChild(1).gameObject.SetActive(musicMuted);
         }
         else
         {
-            AudioManager.Instance.VolumeMute(volumeMuted);
+            soundMuted = !soundMuted;
+            AudioManager.Instance.VolumeMute(soundMuted);
+            reference.GetChild(0).GetChild(0).gameObject.SetActive(!soundMuted);
+            reference.GetChild(0).GetChild(1).gameObject.SetActive(soundMuted);
         }
-        reference.GetChild(0).GetChild(0).gameObject.SetActive(!volumeMuted);
-        reference.GetChild(0).GetChild(1).gameObject.SetActive(volumeMuted);
+       
 
     }
+
+
+
+    public void TutorialStep()
+    {
+        if(!TutInProgress)
+        {
+            GameManager.Instance.GameOverBool = true;
+            TextMeshProUGUI tmpText = tutorialCanvas.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>();
+
+            tmpText.text = "";
+            StartCoroutine(StopTutStep(tmpText));
+
+        }
+       
+    }
+
+
+    public IEnumerator StopTutStep(TextMeshProUGUI text)
+    {
+        TutInProgress = true;
+        if(tutorialStep>messages.Length-1)
+        {
+           
+            if (tutorialStep > messages.Length-1)
+            {
+                GameManager.Instance.GameOverBool = false;
+                PlayerPrefs.SetInt("FirstLaunch", 0);
+                tutorialCanvas.SetActive(false);
+                yield break;
+            }
+        }
+
+        for (int i = 0; i < messages[tutorialStep].Length; i++)
+        {
+            text.text += messages[tutorialStep][i];
+            yield return new WaitForEndOfFrame();
+        }
+
+        tutorialStep++;
+
+        TutInProgress = false;
+        yield return null;
+    }
+
+
+
+    public void ResetPrefs()
+    {
+        PlayerPrefs.DeleteAll();
+        SceneManager.LoadScene("Tittle");
+    }
+
 
 
 }
