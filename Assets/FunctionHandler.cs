@@ -55,7 +55,7 @@ public class FunctionHandler : Singleton<FunctionHandler>
     public void GameOver()
     {
         //Sad emote
-        FunctionHandler.Instance.MuskEmote(1);
+        FunctionHandler.Instance.MuskEmote(0);
 
 
         menuText.gameObject.SetActive(true);
@@ -84,9 +84,10 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
 
         //Win sequence
-       
 
-
+        //Disable Tower
+        GameManager.Instance.rocketHolder.GetChild(1).GetChild(2).gameObject.SetActive(false);
+        //Launch rocket
         GameManager.Instance.rocketHolder.GetChild(1).GetComponent<Animator>().SetTrigger("TakeOff");
         PlayerPrefs.SetInt("Level", PlayerPrefs.GetInt("Level", 1) + 1);
 
@@ -99,8 +100,16 @@ public class FunctionHandler : Singleton<FunctionHandler>
         {
             switch (index)
             {
-                //Excited
+                //Sad
                 case 0:
+                    {
+                        muskReference.GetComponentInChildren<Image>().sprite = muskImages[index];
+
+                        StartCoroutine(StopMusk(index,true));
+                    }
+                    break;
+                //Excited
+                case 1:
                     {
                         int muskRandomizer = Random.Range(0, 100);
                         if(muskRandomizer<50)
@@ -112,14 +121,6 @@ public class FunctionHandler : Singleton<FunctionHandler>
                         
 
                       
-                    }
-                    break;
-                //Sad
-                case 1:
-                    {
-                        muskReference.GetComponentInChildren<Image>().sprite = muskImages[index];
-
-                        StartCoroutine(StopMusk(index));
                     }
                     break;
                 //Thumbs
@@ -144,7 +145,7 @@ public class FunctionHandler : Singleton<FunctionHandler>
                         MuskInProgress = false;
                         muskReference.GetComponentInChildren<Image>().sprite = muskImages[index];
 
-                        StartCoroutine(StopMusk(index));
+                        StartCoroutine(StopMusk(index,true));
                     }
                     break;
                 default:
@@ -154,7 +155,7 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
     }
 
-    public IEnumerator StopMusk(int index)
+    public IEnumerator StopMusk(int index, bool stay = false)
     {
         MuskInProgress = true;
         Vector3 from = muskReference.GetChild(1).localPosition;
@@ -170,7 +171,12 @@ public class FunctionHandler : Singleton<FunctionHandler>
             yield return null;
         }
 
-        yield return new WaitForSeconds(Random.Range(1f,1.5f));
+       
+
+        if(stay)
+            yield return new WaitForSeconds(Random.Range(3f, 5f));
+        else
+            yield return new WaitForSeconds(Random.Range(1f, 1.5f));
 
         elapsed = 0.0f;
         while (elapsed < duration)

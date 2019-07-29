@@ -1835,7 +1835,7 @@ GameObject:
   - component: {fileID: 2796843704202692124}
   m_Layer: 0
   m_Name: 4HumanHolder
-  m_TagString: Untagged
+  m_TagString: Tile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4497,6 +4497,7 @@ MonoBehaviour:
   collidedBool: 0
   selected: 0
   dragActive: 0
+  movable: 1
   rotationInProgress: 0
   tileAnim: {fileID: 0}
 --- !u!1 &8448882487926003332

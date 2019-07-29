@@ -13,6 +13,9 @@ public class LevelManager : Singleton<LevelManager>
     public List<Transform> exits;
     public List<Transform> freeTiles;
 
+    public Transform ground;
+    public Material[] groundMats;
+    
 
     public Material[] materials;
 
@@ -30,6 +33,11 @@ public class LevelManager : Singleton<LevelManager>
     {
         exits = new List<Transform>();
         freeTiles = new List<Transform>();
+
+
+        //Randomize ground
+        ground.eulerAngles = new Vector3(0, Random.Range(0, 360), 0);
+        ground.GetChild(0).GetComponent<Renderer>().material = groundMats[Random.Range(0, groundMats.Length)];
 
         for (int i = 0; i < levelDimention; i++)
         {
@@ -196,6 +204,10 @@ public class LevelManager : Singleton<LevelManager>
     //Spawn new rocket
     public void SpawnRocket()
     {
+        if (freeTiles.Count == 0)
+        {
+            FunctionHandler.Instance.GameOver();
+        }
         Transform tmpNode = freeTiles[Random.Range(0, freeTiles.Count)];
 
         GameObject tmpTile = Instantiate(tilePref, tmpNode.transform.parent.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform.parent);
@@ -254,6 +266,8 @@ public class LevelManager : Singleton<LevelManager>
         //tmpTile.GetChild(2).gameObject.SetActive(false);
         //tmpTile.GetChild(3).gameObject.SetActive(false);
         tmpTile.GetChild(4).gameObject.SetActive(false);
+
+        GameManager.Instance.BuildSurface(false, true);
     }
 
     public void DeletePrevious(Transform tmpTile)

@@ -25,7 +25,7 @@ public class HumanController : MonoBehaviour
     {
          //exitManager = exitRef.GetComponent<ExitManager>();
         navMesh = GetComponent<NavMeshAgent>();
-        
+        exitRef = transform.parent.parent;
         Move(GameManager.Instance.rocketHolder.position);
 
     }
@@ -39,6 +39,11 @@ public class HumanController : MonoBehaviour
             exitManager.DespawnCheck();
             exitManager.humansRef.Remove(transform);
             Destroy(gameObject);
+        }
+        else if(other.CompareTag("Human") && exitRef != other.GetComponent<HumanController>().exitRef)
+        {
+            if(Random.Range(1, 100)>90)
+                StartCoroutine(StopShowMessage("!@#$%"));
         }
         else if (other.CompareTag("Tile") || other.CompareTag("Exit"))
         {
@@ -66,7 +71,7 @@ public class HumanController : MonoBehaviour
             StartCoroutine(StopShowMessage(":)"));
 
         }
-        else
+        else if(navMeshPath.status == NavMeshPathStatus.PathPartial)
         {
 
             //Debug.Log("DESTO IS " + dest);
@@ -82,16 +87,23 @@ public class HumanController : MonoBehaviour
     }
    
 
-    public IEnumerator StopShowMessage(string message)
+    public IEnumerator StopShowMessage(string message, bool longerDuration = false)
     {
         humanCanvas.gameObject.SetActive(false);
         int probability = Random.Range(0, 100);
         //Debug.Log(probability);
-        if(probability>70)
+        if(probability>80)
         {
             humanCanvas.gameObject.SetActive(true);
             humanCanvas.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = message;
-            yield return new WaitForSeconds(Random.Range(0.5f, 1.5f));
+            if(longerDuration)
+            {
+                yield return new WaitForSeconds(Random.Range(1.5f, 3f));
+            }
+            else
+            {
+                yield return new WaitForSeconds(Random.Range(0.5f, 1.5f));
+            }
             humanCanvas.gameObject.SetActive(false);
 
         }

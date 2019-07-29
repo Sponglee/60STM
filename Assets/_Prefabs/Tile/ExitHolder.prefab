@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7998395633644862211}
   m_Layer: 8
   m_Name: Link
-  m_TagString: Untagged
+  m_TagString: Exit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -65,7 +65,7 @@ GameObject:
   - component: {fileID: 1627530995179015035}
   m_Layer: 8
   m_Name: Quad (3)
-  m_TagString: Untagged
+  m_TagString: Exit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 8
@@ -154,7 +154,7 @@ GameObject:
   - component: {fileID: 8192583325254361699}
   m_Layer: 0
   m_Name: 4HumanHolder
-  m_TagString: Untagged
+  m_TagString: Exit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -187,7 +187,7 @@ GameObject:
   - component: {fileID: 3096388286003533100}
   m_Layer: 8
   m_Name: Quad (2)
-  m_TagString: Untagged
+  m_TagString: Exit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 8
@@ -200,8 +200,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3096388286003533090}
   m_LocalRotation: {x: 0.50002265, y: -0.49997738, z: 0.49997738, w: 0.50002265}
-  m_LocalPosition: {x: 0.050345, y: 0.6, z: -1.632}
-  m_LocalScale: {x: 6.613622, y: 0.9771671, z: 9.771671}
+  m_LocalPosition: {x: 0.05, y: 0.6, z: -1.632}
+  m_LocalScale: {x: 6.613622, y: 1.6191659, z: 9.771671}
   m_Children:
   - {fileID: 7015464902156937671}
   m_Father: {fileID: 3096388286403905013}
@@ -386,7 +386,7 @@ GameObject:
   - component: {fileID: 7627739427098034499}
   m_Layer: 0
   m_Name: 2EmptyObject
-  m_TagString: Untagged
+  m_TagString: Exit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -416,7 +416,7 @@ GameObject:
   - component: {fileID: 5039467629295323270}
   m_Layer: 0
   m_Name: 3EmptyObject
-  m_TagString: Untagged
+  m_TagString: Exit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

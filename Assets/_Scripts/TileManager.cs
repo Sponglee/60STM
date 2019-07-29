@@ -50,14 +50,18 @@ public class TileManager : MonoBehaviour
     
 
 
-    public void AgentToggle(bool enableToggle, Vector3 toggleDesto)
+    public void AgentToggle(bool enableToggle, Vector3 toggleDesto, bool swear = false)
     {
         //Debug.Log("MOVE " + transform.GetChild(4).childCount);
         //Disable agents
         foreach (Transform child in transform.GetChild(4))
         {
             child.GetComponent<NavMeshAgent>().enabled = enableToggle;
-            if (enableToggle)
+            if(swear)
+            {
+                StartCoroutine(child.GetComponent<HumanController>().StopShowMessage("!@#$@",true));
+            }
+            else if (enableToggle)
             {
                 child.GetComponent<HumanController>().Move(toggleDesto);
             }
