@@ -7933,7 +7933,7 @@ MonoBehaviour:
     Acceleration: 0
   - name: Swipe
     clip: {fileID: 8300000, guid: a029fd1608e78a44ca67ba46ebf5de2d, type: 3}
-    volume: 0.5
+    volume: 0.3
     pitch: 1
     randomPitch: 0.3
     Looped: 0
@@ -7947,7 +7947,7 @@ MonoBehaviour:
     Acceleration: 0
   - name: Music
     clip: {fileID: 8300000, guid: 00b247f67af9a2c4095d21ed45b3b93a, type: 3}
-    volume: 0.1
+    volume: 0.3
     pitch: 1
     randomPitch: 0
     Looped: 0
@@ -7968,7 +7968,7 @@ MonoBehaviour:
     Acceleration: 0
   - name: Human
     clip: {fileID: 8300000, guid: 57436bbd05f9ad540a5c6f918118fd79, type: 3}
-    volume: 0.5
+    volume: 0.2
     pitch: 1
     randomPitch: 0.101
     Looped: 0

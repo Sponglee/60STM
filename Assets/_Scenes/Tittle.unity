@@ -4912,7 +4912,7 @@ MonoBehaviour:
   sounds:
   - name: Music
     clip: {fileID: 8300000, guid: 00b247f67af9a2c4095d21ed45b3b93a, type: 3}
-    volume: 0.2
+    volume: 0.4
     pitch: 1
     randomPitch: 0.1
     Looped: 0

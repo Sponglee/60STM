@@ -191,10 +191,11 @@ public class GameManager : Singleton<GameManager>
            
 
             yield return new WaitForSeconds(1f);
-            if(!GameOverBool)
+            if(!GameOverBool )
             {
                 Timer -= 1f;
-                AudioManager.Instance.PlaySound("TickTock");
+                if(Timer<=20 || (Timer<=60 && Timer>56))
+                    AudioManager.Instance.PlaySound("TickTock");
             }
 
            
