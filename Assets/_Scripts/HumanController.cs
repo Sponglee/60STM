@@ -19,6 +19,7 @@ public class HumanController : MonoBehaviour
     public NavMeshPath navMeshPath;
 
     public Canvas humanCanvas;
+    public Animator humanAnim;
 
     // Start is called before the first frame update
     void Start()
@@ -34,6 +35,7 @@ public class HumanController : MonoBehaviour
     {
         if (other.CompareTag("Rocket"))
         {
+            GameManager.Instance.RocketFilling++;
             GameManager.Instance.HumanCount++;
             //delete this human reference from exit tile
             exitManager.DespawnCheck();
@@ -56,18 +58,21 @@ public class HumanController : MonoBehaviour
     public void Move(Vector3 toggleDesto)
     {
         navMeshPath = new NavMeshPath();
+        if(navMesh != null)
+        {
+            navMesh.speed = Random.Range(3f, 4f);
 
-        navMesh.speed = Random.Range(3f, 4f);
-      
-        //navMesh.enabled = true;
-        navMesh.CalculatePath(dest, navMeshPath);
+            //navMesh.enabled = true;
+            navMesh.CalculatePath(dest, navMeshPath);
+        }
+    
 
         //Debug.Log("S: "+navMeshPath.status);
         if(navMeshPath.status == NavMeshPathStatus.PathComplete)
         {
 
             dest = toggleDesto;
-
+           
             StopAllCoroutines();
             StartCoroutine(StopShowMessage(":)"));
 

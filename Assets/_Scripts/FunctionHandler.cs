@@ -162,7 +162,7 @@ public class FunctionHandler : Singleton<FunctionHandler>
     public IEnumerator StopMusk(int index, bool stay = false)
     {
         MuskInProgress = true;
-        Vector3 from = muskReference.GetChild(1).localPosition;
+        Vector3 from = muskReference.GetChild(0).localPosition;
 
         float duration = 0.5f;
         //smooth lerp rotation loop
@@ -192,7 +192,7 @@ public class FunctionHandler : Singleton<FunctionHandler>
         }
 
 
-        muskReference.GetChild(0).localPosition = muskReference.GetChild(1).localPosition;   
+        muskReference.GetChild(0).localPosition = muskReference.GetChild(0).localPosition;   
         MuskInProgress = false;
     }
 

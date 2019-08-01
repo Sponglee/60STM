@@ -62,13 +62,18 @@ public class TileManager : MonoBehaviour
             if(swear)
             {
                 StartCoroutine(child.GetComponent<HumanController>().StopShowMessage(":O",true));
+                child.GetComponent<HumanController>().humanAnim.SetTrigger("Stop");
             }
             else if (enableToggle)
             {
                 child.GetComponent<HumanController>().Move(toggleDesto);
+                child.GetComponent<HumanController>().humanAnim.SetTrigger("Start");
             }
             else
-                child.position = child.parent.position;
+            {
+                child.position = child.parent.position + new Vector3(Random.Range(0,0.5f),0,Random.Range(0,0.5f));
+                child.GetComponent<HumanController>().humanAnim.SetTrigger("Stop");
+            }
         }
     }
 

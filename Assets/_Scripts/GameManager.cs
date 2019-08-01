@@ -56,6 +56,7 @@ public class GameManager : Singleton<GameManager>
     public Text timerText;
     public Text humanText;
     public Text LevelText;
+    public Slider progressSlider;
 
     public int levelGoal;
     [SerializeField]
@@ -69,18 +70,53 @@ public class GameManager : Singleton<GameManager>
         set
         {
             humanCount = value;
-            humanText.text = string.Format("{0}/{1}",value,levelGoal);
+            //humanText.text = string.Format("{0}/{1}",value,levelGoal);
+            progressSlider.value = (float)value / (float)levelGoal;
+            
         }
     }
+
+    //Rocket capacity
+    public int rocketCap = 100;
+    public Slider rocketSlider;
+    [SerializeField]
+    private int rocketFilling = 0;
+    public int RocketFilling
+    {
+        get
+        {
+            return rocketFilling;
+        }
+        set
+        {
+            rocketSlider = rocketHolder.transform.GetChild(1).GetChild(3).GetChild(0).GetComponent<Slider>();
+            if (rocketFilling == 0 && value != 0)
+            {
+                rocketHolder.transform.GetChild(1).GetChild(3).gameObject.SetActive(true);
+              
+            }
+            else if(rocketFilling >= 100 && value != 0)
+            {
+                rocketHolder.transform.GetChild(1).GetChild(3).gameObject.SetActive(false);
+            }
+            rocketFilling = value;
+            //humanText.text = string.Format("{0}/{1}",value,levelGoal);
+            rocketSlider.value = (float)value / (float)rocketCap;
+
+
+        }
+    }
+
 
     private void Awake()
     {
         levelGoal = 100 + PlayerPrefs.GetInt("Level", 1)*15;
-        LevelText.text = string.Format("LEVEL {0}:   ", PlayerPrefs.GetInt("Level", 1).ToString());
+        LevelText.text = string.Format("Level {0}", PlayerPrefs.GetInt("Level", 1).ToString());
     }
 
     private void Start()
     {
+        HumanCount = 0;
 
         if(PlayerPrefs.GetInt("FirstLaunch", 1) == 1)
         {
