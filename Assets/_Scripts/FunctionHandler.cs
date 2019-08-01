@@ -24,10 +24,19 @@ public class FunctionHandler : Singleton<FunctionHandler>
     public GameObject menuCanvas;
     public GameObject uiCanvas;
 
-    public void StartLevel()
+    public void StartLevel(bool TimedToggle)
     {
         Time.timeScale = 1;
-        SceneManager.LoadScene("Main");
+        //Debug modes
+        if(TimedToggle || SceneManager.GetActiveScene().name == "Main")
+        {
+            SceneManager.LoadScene("Main");
+        }
+        else if(!TimedToggle || SceneManager.GetActiveScene().name == "Relax")
+        {
+            SceneManager.LoadScene("Relax");
+        }
+       
     }
 
 
@@ -36,6 +45,10 @@ public class FunctionHandler : Singleton<FunctionHandler>
         Application.Quit();
     }
 
+    public void QuitToTittle()
+    {
+        SceneManager.LoadScene("Tittle");
+    }
 
     public void ToggleMenu()
     {
