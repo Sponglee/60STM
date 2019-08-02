@@ -27,6 +27,9 @@ public class GameManager : Singleton<GameManager>
 
     public CinemachineVirtualCamera levelCam;
 
+    public CinemachineVirtualCamera vertCam;
+    public CinemachineVirtualCamera horizCam;
+
     //Total spawned people
     public int spawnCount = 1;
     //How many different spawns there is
@@ -111,6 +114,21 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    private void OnGUI()
+    {
+        if (Screen.orientation == ScreenOrientation.Portrait)
+        {
+            levelCam = vertCam;
+            vertCam.Priority = 60;
+            horizCam.Priority = 40;
+        }
+        else if(Screen.orientation == ScreenOrientation.Landscape)
+        {
+            levelCam = horizCam;
+            vertCam.Priority = 40;
+            horizCam.Priority = 60;
+        }
+    }
 
     private void Awake()
     {
