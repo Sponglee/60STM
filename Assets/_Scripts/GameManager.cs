@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : Singleton<GameManager>
 {
 
+    public ScreenOrientation currentOrientation;
 
     private bool TimedMode = true;
 
@@ -24,7 +25,7 @@ public class GameManager : Singleton<GameManager>
 
     public GameObject humanPref;
 
-
+    
     public CinemachineVirtualCamera levelCam;
 
     public CinemachineVirtualCamera vertCam;
@@ -121,6 +122,7 @@ public class GameManager : Singleton<GameManager>
     {
         levelGoal = 100 + PlayerPrefs.GetInt("Level", 1)*15;
         LevelText.text = string.Format("Level {0}", PlayerPrefs.GetInt("Level", 1).ToString());
+        currentOrientation = Screen.orientation;
     }
 
     private void Start()
@@ -186,6 +188,20 @@ public class GameManager : Singleton<GameManager>
 
         }
 
+        if (Screen.orientation != currentOrientation  && Screen.orientation == ScreenOrientation.Portrait)
+        {
+            currentOrientation = Screen.orientation;
+            levelCam = vertCam;
+            vertCam.Priority = 60;
+            horizCam.Priority = 40;
+        }
+        else if (Screen.orientation != currentOrientation && Screen.orientation == ScreenOrientation.Landscape)
+        {
+            currentOrientation = Screen.orientation;
+            levelCam = horizCam;
+            vertCam.Priority = 40;
+            horizCam.Priority = 60;
+        }
     }
 
     public IEnumerator LevelSpawnerTimed()

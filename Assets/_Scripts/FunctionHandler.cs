@@ -95,6 +95,7 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
         //Hi mote
         Instance.MuskEmote(2);
+        
         GameManager.Instance.GameOverBool = true;
         AudioManager.Instance.StopSound("All");
         AudioManager.Instance.PlaySound("Win");

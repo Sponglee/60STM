@@ -3279,8 +3279,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 765459746}
-  m_LocalRotation: {x: 0.38271442, y: 0.41386187, z: -0.114050895, w: 0.8180712}
-  m_LocalPosition: {x: -44.437717, y: 55.751762, z: -27.873154}
+  m_LocalRotation: {x: 0.17509474, y: 0.87277365, z: -0.30220187, w: 0.3410016}
+  m_LocalPosition: {x: -42.917717, y: 65.60176, z: 52.38684}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -5589,6 +5589,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89594adeac5900043ad9904f1564d45f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentOrientation: 0
   selectedTile: {fileID: 0}
   surface: {fileID: 1034785168}
   rocketHolder: {fileID: 0}
@@ -5731,7 +5732,7 @@ MonoBehaviour:
   - m_Script
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
-  m_Priority: 100
+  m_Priority: 200
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:

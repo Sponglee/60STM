@@ -45,19 +45,5 @@ public class LookAtCam : MonoBehaviour
 
 
     public GameManager gameManager;
-    private void OnRectTransformDimensionsChange()
-    {
-        if (Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.PortraitUpsideDown)
-        {
-            gameManager.levelCam = gameManager.vertCam;
-            gameManager.vertCam.Priority = 60;
-            gameManager.horizCam.Priority = 40;
-        }
-        else if (Screen.orientation == ScreenOrientation.Landscape)
-        {
-            gameManager.levelCam = gameManager.horizCam;
-            gameManager.vertCam.Priority = 40;
-            gameManager.horizCam.Priority = 60;
-        }
-    }
+  
 }
