@@ -9,6 +9,9 @@ public class LookAtCam : MonoBehaviour
     public bool Y = false;
     public bool Z = false;
 
+
+    public bool LookAtBool = true;
+
     public Quaternion initialRotation;
 
     private void Awake()
@@ -18,18 +21,43 @@ public class LookAtCam : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.LookAt(Camera.main.transform.position);
-        if(X)
+        if(LookAtBool)
         {
-            transform.rotation = Quaternion.Euler(initialRotation.x, transform.rotation.y, transform.rotation.z);
+            transform.LookAt(Camera.main.transform.position);
+            if (X)
+            {
+                transform.rotation = Quaternion.Euler(initialRotation.x, transform.rotation.y, transform.rotation.z);
+            }
+            if (Y)
+            {
+                transform.rotation = Quaternion.Euler(transform.rotation.x, initialRotation.y, transform.rotation.z);
+            }
+            if (Z)
+            {
+                transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, initialRotation.z);
+            }
         }
-        if (Y)
+     
+    }
+
+
+
+
+
+    public GameManager gameManager;
+    private void OnRectTransformDimensionsChange()
+    {
+        if (Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.PortraitUpsideDown)
         {
-            transform.rotation = Quaternion.Euler(transform.rotation.x, initialRotation.y, transform.rotation.z);
+            gameManager.levelCam = gameManager.vertCam;
+            gameManager.vertCam.Priority = 60;
+            gameManager.horizCam.Priority = 40;
         }
-        if (Z)
+        else if (Screen.orientation == ScreenOrientation.Landscape)
         {
-            transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, initialRotation.z);
+            gameManager.levelCam = gameManager.horizCam;
+            gameManager.vertCam.Priority = 40;
+            gameManager.horizCam.Priority = 60;
         }
     }
 }

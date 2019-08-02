@@ -114,21 +114,8 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    private void OnGUI()
-    {
-        if (Screen.orientation == ScreenOrientation.Portrait)
-        {
-            levelCam = vertCam;
-            vertCam.Priority = 60;
-            horizCam.Priority = 40;
-        }
-        else if(Screen.orientation == ScreenOrientation.Landscape)
-        {
-            levelCam = horizCam;
-            vertCam.Priority = 40;
-            horizCam.Priority = 60;
-        }
-    }
+
+ 
 
     private void Awake()
     {
