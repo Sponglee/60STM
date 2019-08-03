@@ -192,15 +192,15 @@ public class GameManager : Singleton<GameManager>
         {
             currentOrientation = Screen.orientation;
             levelCam = horizCam;
-            vertCam.Priority = 60;
-            horizCam.Priority = 40;
+            horizCam.Priority = 60;
+            vertCam.Priority = 40;
         }
         else if (Screen.orientation != currentOrientation && Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.PortraitUpsideDown)
         {
             currentOrientation = Screen.orientation;
             levelCam = vertCam;
-            vertCam.Priority = 40;
-            horizCam.Priority = 60;
+            vertCam.Priority = 60;
+            horizCam.Priority = 40;
         }
     }
 
