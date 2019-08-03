@@ -160,7 +160,7 @@ public class TileManager : MonoBehaviour
     public IEnumerator StopRotate(float duration = 0.3f)
     {
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, Mathf.Round(transform.eulerAngles.y) / 90 * 90, transform.eulerAngles.z);
-        //Debug.Log(transform.eulerAngles.y/90);
+        Debug.Log(Mathf.Round(transform.eulerAngles.y));
         transform.position = transform.parent.position;
         RotationInProgress = true;
         float angle = 90f;
