@@ -123,6 +123,20 @@ public class GameManager : Singleton<GameManager>
         levelGoal = 100 + PlayerPrefs.GetInt("Level", 1)*15;
         LevelText.text = string.Format("Level {0}", PlayerPrefs.GetInt("Level", 1).ToString());
         currentOrientation = Screen.orientation;
+        if (Screen.orientation == ScreenOrientation.Landscape || Screen.orientation == ScreenOrientation.LandscapeLeft || Screen.orientation == ScreenOrientation.LandscapeRight)
+        {
+            currentOrientation = Screen.orientation;
+            levelCam = horizCam;
+            horizCam.Priority = 60;
+            vertCam.Priority = 40;
+        }
+        else if (Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.PortraitUpsideDown)
+        {
+            currentOrientation = Screen.orientation;
+            levelCam = vertCam;
+            vertCam.Priority = 60;
+            horizCam.Priority = 40;
+        }
     }
 
     private void Start()
