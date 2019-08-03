@@ -188,17 +188,17 @@ public class GameManager : Singleton<GameManager>
 
         }
 
-        if (Screen.orientation != currentOrientation  && (Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.LandscapeLeft || Screen.orientation == ScreenOrientation.LandscapeRight))
-        {
-            currentOrientation = Screen.orientation;
-            levelCam = vertCam;
-            vertCam.Priority = 60;
-            horizCam.Priority = 40;
-        }
-        else if (Screen.orientation != currentOrientation && Screen.orientation == ScreenOrientation.Landscape || Screen.orientation == ScreenOrientation.PortraitUpsideDown)
+        if (Screen.orientation != currentOrientation  && (Screen.orientation == ScreenOrientation.Landscape || Screen.orientation == ScreenOrientation.LandscapeLeft || Screen.orientation == ScreenOrientation.LandscapeRight))
         {
             currentOrientation = Screen.orientation;
             levelCam = horizCam;
+            vertCam.Priority = 60;
+            horizCam.Priority = 40;
+        }
+        else if (Screen.orientation != currentOrientation && Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.PortraitUpsideDown)
+        {
+            currentOrientation = Screen.orientation;
+            levelCam = vertCam;
             vertCam.Priority = 40;
             horizCam.Priority = 60;
         }
