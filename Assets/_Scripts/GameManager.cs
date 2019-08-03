@@ -176,26 +176,26 @@ public class GameManager : Singleton<GameManager>
         }
         else if(Input.GetMouseButtonDown(2))
         {
-            //WinText.SetActive(true);
-            //timerText.gameObject.SetActive(false);
-            //FunctionHandler.Instance.LevelComplete();
+            WinText.SetActive(true);
+            timerText.gameObject.SetActive(false);
+            FunctionHandler.Instance.LevelComplete();
 
-            ////Win sequence
-            //levelCam.gameObject.SetActive(true);
-            //levelCam.m_Follow = rocketHolder.GetChild(1).GetChild(1);
-            //levelCam.m_LookAt = rocketHolder.GetChild(1).GetChild(1);
+            //Win sequence
+            levelCam.gameObject.SetActive(true);
+            levelCam.m_Follow = rocketHolder.GetChild(1).GetChild(1);
+            levelCam.m_LookAt = rocketHolder.GetChild(1).GetChild(1);
 
 
         }
 
-        if (Screen.orientation != currentOrientation  && Screen.orientation == ScreenOrientation.Portrait)
+        if (Screen.orientation != currentOrientation  && (Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.LandscapeLeft || Screen.orientation == ScreenOrientation.LandscapeRight))
         {
             currentOrientation = Screen.orientation;
             levelCam = vertCam;
             vertCam.Priority = 60;
             horizCam.Priority = 40;
         }
-        else if (Screen.orientation != currentOrientation && Screen.orientation == ScreenOrientation.Landscape)
+        else if (Screen.orientation != currentOrientation && Screen.orientation == ScreenOrientation.Landscape || Screen.orientation == ScreenOrientation.PortraitUpsideDown)
         {
             currentOrientation = Screen.orientation;
             levelCam = horizCam;

@@ -169,7 +169,7 @@ PlayerSettings:
     iPhone: com.SolidHinken.60Seconds
   buildNumber:
     Standalone: 1
-    iPhone: 2
+    iPhone: 5
   AndroidBundleVersionCode: 3
   AndroidMinSdkVersion: 16
   AndroidTargetSdkVersion: 0
