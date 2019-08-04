@@ -112,6 +112,7 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
         //Disable Tower
         GameManager.Instance.rocketHolder.GetChild(1).GetChild(2).gameObject.SetActive(false);
+        GameManager.Instance.rocketHolder.GetChild(1).GetChild(3).gameObject.SetActive(false);
         //Launch rocket
         GameManager.Instance.rocketHolder.GetChild(1).GetComponent<Animator>().SetTrigger("TakeOff");
         PlayerPrefs.SetInt("Level", PlayerPrefs.GetInt("Level", 1) + 1);

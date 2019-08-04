@@ -346,7 +346,7 @@ public class GameManager : Singleton<GameManager>
         rocketHolder.GetChild(1).GetChild(2).gameObject.SetActive(false);
         //Launch rocket
         rocketHolder.GetChild(1).GetComponent<Animator>().SetTrigger("TakeOff");
-        rocketHolder.GetChild(3).gameObject.SetActive(false);
+        rocketHolder.GetChild(1).GetChild(3).gameObject.SetActive(false);
         nextRocket.GetChild(1).GetComponent<Animator>().SetTrigger("Return");
         //Disable Tower
         nextRocket.GetChild(1).GetChild(2).gameObject.SetActive(false);
@@ -509,7 +509,7 @@ public class GameManager : Singleton<GameManager>
         rocketHolder.GetChild(1).GetChild(2).gameObject.SetActive(false);
         //Launch rocket
         rocketHolder.GetChild(1).GetComponent<Animator>().SetTrigger("TakeOff");
-        rocketHolder.GetChild(3).gameObject.SetActive(false);
+        rocketHolder.GetChild(1).GetChild(3).gameObject.SetActive(false);
         nextRocket.GetChild(1).GetComponent<Animator>().SetTrigger("Return");
         //Disable Tower
         nextRocket.GetChild(1).GetChild(2).gameObject.SetActive(false);
