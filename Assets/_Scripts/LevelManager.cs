@@ -46,29 +46,30 @@ public class LevelManager : Singleton<LevelManager>
         {
             for (int j = 0; j < levelDimention; j++)
             {
-                if(Mathf.Abs(i - j) <= 2)
+                if(true/*Mathf.Abs(i - j) <= 2*/)
                 {
                     GameObject tmpNode = Instantiate(nodePref, new Vector3(nodeStep * j - nodeStep * (levelDimention / 2), 0, -nodeStep * i + nodeStep * (levelDimention / 2)), Quaternion.identity, transform);
                     Instantiate(boardTilePref, tmpNode.transform.position, tmpNode.transform.rotation, boardHolder);
                     tmpNode.GetComponent<NodeController>().Row = i;
                     tmpNode.GetComponent<NodeController>().Column = j;
 
-                    //if (i == 0 ^ j == 0 ^ i == levelDimention - 1 ^ j == levelDimention - 1)
-                    //{
+                    if (i == 0 ^ j == 0 ^ i == levelDimention - 1 ^ j == levelDimention - 1)
+                    {
 
-                    //    GameObject tmpSide = Instantiate(sidesPref, tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
-                    //    tmpSide.transform.LookAt(Vector3.zero, Vector3.up);
-                    //    //Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
+                        GameObject tmpSide = Instantiate(sidesPref, tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
+                        tmpSide.transform.LookAt(Vector3.zero, Vector3.up);
+                        //Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
 
-                    //    tmpSide.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpSide.transform.eulerAngles.y / 90f) * 90f, 0);
+                        tmpSide.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpSide.transform.eulerAngles.y / 90f) * 90f, 0);
 
-                    //}
-                    //else if (i == 0 && j == 0 || i == levelDimention - 1 && j == levelDimention - 1 || i == 0 && j == levelDimention - 1 || j == 0 && i == levelDimention - 1)
-                    //{
-                    //    continue;
-                    //}
+                    }
+                    else if (i == 0 && j == 0 || i == levelDimention - 1 && j == levelDimention - 1 || i == 0 && j == levelDimention - 1 || j == 0 && i == levelDimention - 1)
+                    {
+                        continue;
+                    }
                     //If center - or proc - Generate tile
-                    /*else*/ if ((i == levelDimention / 2 && j == levelDimention / 2) || (Mathf.Abs(i - j) <= 2 && Random.Range(0, 100) < 40))
+                    else
+                    if ((i == levelDimention / 2 && j == levelDimention / 2) || (Mathf.Abs(i - j) <= 2 && Random.Range(0, 100) < 40))
                     {
                         GameObject tmpTile = Instantiate(tilePref, tmpNode.transform.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform);
 
