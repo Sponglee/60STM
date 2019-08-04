@@ -62,16 +62,20 @@ public class TileManager : MonoBehaviour
             if(swear)
             {
                 StartCoroutine(child.GetComponent<HumanController>().StopShowMessage(":O",true));
-                child.GetComponent<HumanController>().humanAnim.SetTrigger("Stop");
+               
             }
             else if (enableToggle)
             {
                 child.GetComponent<HumanController>().Move(toggleDesto);
-                child.GetComponent<HumanController>().humanAnim.SetTrigger("Start");
+                
             }
             else
             {
                 child.position = child.parent.position + new Vector3(Random.Range(0,0.5f),0,Random.Range(0,0.5f));
+                
+            }
+            if(child.GetComponent<NavMeshAgent>().enabled == false)
+            {
                 child.GetComponent<HumanController>().humanAnim.SetTrigger("Stop");
             }
         }
@@ -159,8 +163,8 @@ public class TileManager : MonoBehaviour
 
     public IEnumerator StopRotate(float duration = 0.3f)
     {
-        transform.eulerAngles = new Vector3(transform.eulerAngles.x, Mathf.Round(transform.eulerAngles.y) / 90 * 90, transform.eulerAngles.z);
-        Debug.Log(Mathf.Round(transform.eulerAngles.y));
+        transform.eulerAngles = new Vector3(transform.eulerAngles.x, (int)Mathf.Round(transform.eulerAngles.y) / 90 * 90, transform.eulerAngles.z);
+        Debug.Log((int)Mathf.Round(transform.eulerAngles.y)/90);
         transform.position = transform.parent.position;
         RotationInProgress = true;
         float angle = 90f;

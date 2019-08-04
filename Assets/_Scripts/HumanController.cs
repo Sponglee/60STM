@@ -45,11 +45,12 @@ public class HumanController : MonoBehaviour
         }
         else if(other.CompareTag("Human") && exitRef != other.GetComponent<HumanController>().exitRef)
         {
-            if(Random.Range(1, 100)>60)
+            if(Random.Range(1, 100)>30)
                 StartCoroutine(StopShowMessage("!@#$%"));
         }
         else if (other.CompareTag("Tile") || other.CompareTag("Exit"))
         {
+            Debug.Log(other.gameObject.name);
             transform.SetParent(other.transform.GetChild(4));
         }
     }
@@ -65,7 +66,7 @@ public class HumanController : MonoBehaviour
             //navMesh.enabled = true;
             navMesh.CalculatePath(dest, navMeshPath);
         }
-    
+
 
         //Debug.Log("S: "+navMeshPath.status);
         if(navMeshPath.status == NavMeshPathStatus.PathComplete)
@@ -87,14 +88,23 @@ public class HumanController : MonoBehaviour
             StartCoroutine(StopShowMessage("???"));
         }
 
-        
+      
+        StartCoroutine(StopDelayAnim());
+
         if (navMesh != null)
             navMesh.SetDestination(dest);
     }
    
 
+    public IEnumerator StopDelayAnim()
+    {
+        yield return new WaitForSeconds(Random.Range(0.1f, 0.3f));
+        humanAnim.SetTrigger("Start");
+    }
+
     public IEnumerator StopShowMessage(string message, bool longerDuration = false)
     {
+     
         humanCanvas.gameObject.SetActive(false);
         int probability = Random.Range(0, 100);
         //Debug.Log(probability);

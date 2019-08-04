@@ -25,9 +25,9 @@ public class GameManager : Singleton<GameManager>
 
     public GameObject humanPref;
 
-    
     public CinemachineVirtualCamera levelCam;
-
+    
+    public CinemachineVirtualCamera endCam;
     public CinemachineVirtualCamera vertCam;
     public CinemachineVirtualCamera horizCam;
 
@@ -195,9 +195,9 @@ public class GameManager : Singleton<GameManager>
             FunctionHandler.Instance.LevelComplete();
 
             //Win sequence
-            levelCam.gameObject.SetActive(true);
-            levelCam.m_Follow = rocketHolder.GetChild(1).GetChild(1);
-            levelCam.m_LookAt = rocketHolder.GetChild(1).GetChild(1);
+            endCam.gameObject.SetActive(true);
+            endCam.m_Follow = rocketHolder.GetChild(1).GetChild(1);
+            endCam.m_LookAt = rocketHolder.GetChild(1).GetChild(1);
 
 
         }
@@ -321,9 +321,9 @@ public class GameManager : Singleton<GameManager>
                 AudioManager.Instance.PlaySound("FireWall");
                 AudioManager.Instance.PlaySound("FlareUp");
                 //Win sequence
-                levelCam.gameObject.SetActive(true);
-                levelCam.m_Follow = rocketHolder.GetChild(1).GetChild(1);
-                levelCam.m_LookAt = rocketHolder.GetChild(1).GetChild(1);
+                endCam.gameObject.SetActive(true);
+                endCam.m_Follow = rocketHolder.GetChild(1).GetChild(1);
+                endCam.m_LookAt = rocketHolder.GetChild(1).GetChild(1);
                 
                 FunctionHandler.Instance.LevelComplete();
                 //LevelManager.Instance.DisableNextRocket(previousRocket);
@@ -346,6 +346,7 @@ public class GameManager : Singleton<GameManager>
         rocketHolder.GetChild(1).GetChild(2).gameObject.SetActive(false);
         //Launch rocket
         rocketHolder.GetChild(1).GetComponent<Animator>().SetTrigger("TakeOff");
+        rocketHolder.GetChild(3).gameObject.SetActive(false);
         nextRocket.GetChild(1).GetComponent<Animator>().SetTrigger("Return");
         //Disable Tower
         nextRocket.GetChild(1).GetChild(2).gameObject.SetActive(false);
@@ -457,7 +458,7 @@ public class GameManager : Singleton<GameManager>
                 BuildSurface();
             }
 
-            Debug.Log(RocketFilling);
+            //Debug.Log(RocketFilling);
             if (LevelManager.Instance.exits.Count < 3 && RocketFilling != 0 && SpawnAlreadyTrigger)
             {
 
@@ -483,9 +484,9 @@ public class GameManager : Singleton<GameManager>
                 AudioManager.Instance.PlaySound("FireWall");
                 AudioManager.Instance.PlaySound("FlareUp");
                 //Win sequence
-                levelCam.gameObject.SetActive(true);
-                levelCam.m_Follow = rocketHolder.GetChild(1).GetChild(1);
-                levelCam.m_LookAt = rocketHolder.GetChild(1).GetChild(1);
+                endCam.gameObject.SetActive(true);
+                endCam.m_Follow = rocketHolder.GetChild(1).GetChild(1);
+                endCam.m_LookAt = rocketHolder.GetChild(1).GetChild(1);
 
                 FunctionHandler.Instance.LevelComplete();
                 //LevelManager.Instance.DisableNextRocket(previousRocket);
@@ -508,6 +509,7 @@ public class GameManager : Singleton<GameManager>
         rocketHolder.GetChild(1).GetChild(2).gameObject.SetActive(false);
         //Launch rocket
         rocketHolder.GetChild(1).GetComponent<Animator>().SetTrigger("TakeOff");
+        rocketHolder.GetChild(3).gameObject.SetActive(false);
         nextRocket.GetChild(1).GetComponent<Animator>().SetTrigger("Return");
         //Disable Tower
         nextRocket.GetChild(1).GetChild(2).gameObject.SetActive(false);
@@ -565,12 +567,12 @@ public class GameManager : Singleton<GameManager>
                     }
                     else if(node.GetChild(0).CompareTag("Tile"))
                     {
-                        Debug.Log("I AM HERE");
+                        //Debug.Log("I AM HERE");
                         node.GetChild(0).GetComponent<TileManager>().AgentToggle(true, rocketHolder.position);
                     }
                     else if (node.GetChild(0).CompareTag("Exit"))
                     {
-                        Debug.Log("I AM HERE");
+                        //Debug.Log("I AM HERE");
                         node.GetChild(0).GetComponent<ExitManager>().AgentToggle(true, rocketHolder.position);
                     }
                 }
