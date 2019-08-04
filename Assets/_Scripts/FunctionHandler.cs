@@ -24,10 +24,19 @@ public class FunctionHandler : Singleton<FunctionHandler>
     public GameObject menuCanvas;
     public GameObject uiCanvas;
 
-    public void StartLevel()
+    public void StartLevel(bool TimedToggle)
     {
         Time.timeScale = 1;
-        SceneManager.LoadScene("Main");
+        //Debug modes
+        if(TimedToggle || SceneManager.GetActiveScene().name == "Main")
+        {
+            SceneManager.LoadScene("Main");
+        }
+        else if(!TimedToggle || SceneManager.GetActiveScene().name == "Relax")
+        {
+            SceneManager.LoadScene("Relax");
+        }
+       
     }
 
 
@@ -36,6 +45,10 @@ public class FunctionHandler : Singleton<FunctionHandler>
         Application.Quit();
     }
 
+    public void QuitToTittle()
+    {
+        SceneManager.LoadScene("Tittle");
+    }
 
     public void ToggleMenu()
     {
@@ -82,6 +95,7 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
         //Hi mote
         Instance.MuskEmote(2);
+        
         GameManager.Instance.GameOverBool = true;
         AudioManager.Instance.StopSound("All");
         AudioManager.Instance.PlaySound("Win");
@@ -162,7 +176,7 @@ public class FunctionHandler : Singleton<FunctionHandler>
     public IEnumerator StopMusk(int index, bool stay = false)
     {
         MuskInProgress = true;
-        Vector3 from = muskReference.GetChild(1).localPosition;
+        Vector3 from = muskReference.GetChild(0).localPosition;
 
         float duration = 0.5f;
         //smooth lerp rotation loop
@@ -192,7 +206,7 @@ public class FunctionHandler : Singleton<FunctionHandler>
         }
 
 
-        muskReference.GetChild(0).localPosition = muskReference.GetChild(1).localPosition;   
+        muskReference.GetChild(0).localPosition = muskReference.GetChild(0).localPosition;   
         MuskInProgress = false;
     }
 

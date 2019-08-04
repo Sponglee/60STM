@@ -19,6 +19,7 @@ public class HumanController : MonoBehaviour
     public NavMeshPath navMeshPath;
 
     public Canvas humanCanvas;
+    public Animator humanAnim;
 
     // Start is called before the first frame update
     void Start()
@@ -34,6 +35,7 @@ public class HumanController : MonoBehaviour
     {
         if (other.CompareTag("Rocket"))
         {
+            GameManager.Instance.RocketFilling++;
             GameManager.Instance.HumanCount++;
             //delete this human reference from exit tile
             exitManager.DespawnCheck();
@@ -43,11 +45,12 @@ public class HumanController : MonoBehaviour
         }
         else if(other.CompareTag("Human") && exitRef != other.GetComponent<HumanController>().exitRef)
         {
-            if(Random.Range(1, 100)>60)
+            if(Random.Range(1, 100)>30)
                 StartCoroutine(StopShowMessage("!@#$%"));
         }
         else if (other.CompareTag("Tile") || other.CompareTag("Exit"))
         {
+            Debug.Log(other.gameObject.name);
             transform.SetParent(other.transform.GetChild(4));
         }
     }
@@ -56,18 +59,21 @@ public class HumanController : MonoBehaviour
     public void Move(Vector3 toggleDesto)
     {
         navMeshPath = new NavMeshPath();
+        if(navMesh != null)
+        {
+            navMesh.speed = Random.Range(3f, 4f);
 
-        navMesh.speed = Random.Range(3f, 4f);
-      
-        //navMesh.enabled = true;
-        navMesh.CalculatePath(dest, navMeshPath);
+            //navMesh.enabled = true;
+            navMesh.CalculatePath(dest, navMeshPath);
+        }
+
 
         //Debug.Log("S: "+navMeshPath.status);
         if(navMeshPath.status == NavMeshPathStatus.PathComplete)
         {
 
             dest = toggleDesto;
-
+           
             StopAllCoroutines();
             StartCoroutine(StopShowMessage(":)"));
 
@@ -82,14 +88,23 @@ public class HumanController : MonoBehaviour
             StartCoroutine(StopShowMessage("???"));
         }
 
-        
+      
+        StartCoroutine(StopDelayAnim());
+
         if (navMesh != null)
             navMesh.SetDestination(dest);
     }
    
 
+    public IEnumerator StopDelayAnim()
+    {
+        yield return new WaitForSeconds(Random.Range(0.1f, 0.3f));
+        humanAnim.SetTrigger("Start");
+    }
+
     public IEnumerator StopShowMessage(string message, bool longerDuration = false)
     {
+     
         humanCanvas.gameObject.SetActive(false);
         int probability = Random.Range(0, 100);
         //Debug.Log(probability);
