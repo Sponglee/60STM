@@ -846,7 +846,7 @@ Light:
   serializedVersion: 9
   m_Type: 1
   m_Color: {r: 1, g: 0.98607916, b: 0.9481132, a: 1}
-  m_Intensity: 0.88
+  m_Intensity: 0.5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -1838,7 +1838,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -11.800781, y: -2.4999084}
+  m_AnchoredPosition: {x: -11.800781, y: -2.499878}
   m_SizeDelta: {x: 181.9, y: 168.7}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &441942292
@@ -2059,7 +2059,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -12.699921}
+  m_AnchoredPosition: {x: 0, y: -12.699951}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &512083366
@@ -2846,14 +2846,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 620983681}
-  m_LocalRotation: {x: 0.2792877, y: 0.4184715, z: -0.12257089, w: 0.8554861}
-  m_LocalPosition: {x: 1.66, y: -14.95, z: 43.38}
+  m_LocalRotation: {x: 0.38057843, y: 0.38259795, z: -0.108309306, w: 0.834894}
+  m_LocalPosition: {x: 5.97, y: -9.53, z: 46.95}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1829200041}
   m_Father: {fileID: 119293727}
   m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 35.481003, y: 52.673004, z: 1.6910001}
+  m_LocalEulerAnglesHint: {x: 45.920002, y: 53.114002, z: 9.128}
 --- !u!114 &620983683
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2875,7 +2875,7 @@ MonoBehaviour:
   m_Follow: {fileID: 0}
   m_Lens:
     FieldOfView: 40
-    OrthographicSize: 57
+    OrthographicSize: 70
     NearClipPlane: 0.01
     FarClipPlane: 5000
     Dutch: 0
@@ -5634,7 +5634,7 @@ MonoBehaviour:
   humanPref: {fileID: 3017961435030651100, guid: 129bc8ee29bf8d04cbb8f695dd4dc2ee,
     type: 3}
   levelCam: {fileID: 0}
-  endCam: {fileID: 273081408}
+  endCam: {fileID: 1439240130}
   vertCam: {fileID: 620983683}
   horizCam: {fileID: 1806448303}
   spawnCount: 10
