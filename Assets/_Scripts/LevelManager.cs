@@ -86,13 +86,13 @@ public class LevelManager : Singleton<LevelManager>
                             }
                             else
                             {
-                                ////If procced - disable moving
-                                //if (PlayerPrefs.GetInt("Level", 1) > 4 && (Random.Range(0, 100) < 10 + Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) % 5, 1, 30)))
-                                //{
-                                //    tmpTile.GetComponent<TileManager>().Movable = false;
+                                //If procced - disable moving
+                                if (PlayerPrefs.GetInt("Level", 1) > 4 && (Random.Range(0, 100) < 10 + Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) % 5, 1, 30)))
+                                {
+                                    tmpTile.GetComponent<TileManager>().Movable = false;
 
 
-                                //}
+                                }
 
                                 //Generate building layout
                                 int buildingIndex = Random.Range(0, tmpTile.transform.GetChild(2).childCount);
