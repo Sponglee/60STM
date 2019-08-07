@@ -153,11 +153,13 @@ public class GameManager : Singleton<GameManager>
 
         if(SceneManager.GetActiveScene().name == "Main")
         {
-            StartCoroutine(LevelSpawnerTimed());
+            //StartCoroutine(LevelSpawnerTimed());
+            StartCoroutine(LevelSpawnerRelax());
+            LevelManager.Instance.SpawnRocket();
+         
         }
         else
         {
-            StartCoroutine(LevelSpawnerRelax());
            
             
         }
@@ -385,14 +387,16 @@ public class GameManager : Singleton<GameManager>
     {
         List<int> randomExits = new List<int>();
 
-        for (int i = 0; i < 3; i++)
+        //spawn rocket
+
+        for (int i = 0; i < 1; i++)
         {
 
             randomExits.Add(Random.Range(0, LevelManager.Instance.exits.Count));
         }
 
         yield return new WaitForSeconds(2f);
-
+         
 
         while (rocketFilling<rocketCap)
         {
@@ -451,7 +455,7 @@ public class GameManager : Singleton<GameManager>
 
             if (RocketFilling >= rocketCap - 15 && nextRocket == null) 
             {
-                //AudioManager.Instance.PlaySound("Countdown");
+                //AudioManager.Instance.PlaySound("Countdown");`
                 LevelManager.Instance.SpawnRocket();
                 LevelManager.Instance.DisableRocket(nextRocket);
                 //Build navMesh
@@ -459,7 +463,7 @@ public class GameManager : Singleton<GameManager>
             }
 
             //Debug.Log(RocketFilling);
-            if (LevelManager.Instance.exits.Count < 3 && RocketFilling != 0 && SpawnAlreadyTrigger)
+            if (LevelManager.Instance.exits.Count < 2 && RocketFilling != 0 && SpawnAlreadyTrigger)
             {
 
                 SpawnAlreadyTrigger = false;
@@ -563,7 +567,7 @@ public class GameManager : Singleton<GameManager>
                     }
                     else if (EndGameBool)
                     {
-                        node.GetChild(0).GetComponent<TileManager>().AgentToggle(false, Vector3.zero, swear);
+                        //node.GetChild(0).GetComponent<TileManager>().AgentToggle(false, Vector3.zero, swear);
                     }
                     else if(node.GetChild(0).CompareTag("Tile"))
                     {

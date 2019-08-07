@@ -21,8 +21,9 @@ public class ExitManager : TileManager
         {
             if(transform.parent != null)
             {
-                GameObject tmpEmpty = Instantiate(LevelManager.Instance.emptyTilePref, transform.parent);
+                GameObject tmpEmpty = Instantiate(LevelManager.Instance.sidesPref, transform.parent);
                 LevelManager.Instance.freeTiles.Add(tmpEmpty.transform);
+            
                 LevelManager.Instance.exits.Remove(transform);
 
             }
@@ -38,6 +39,8 @@ public class ExitManager : TileManager
             //Excited emote
             FunctionHandler.Instance.MuskEmote(1);
 
+           
+            
             Destroy(gameObject);
         }
     }

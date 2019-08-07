@@ -1592,9 +1592,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8078b475e8dfb57479857b6f5bebbcdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  X: 1
-  Y: 1
-  Z: 1
+  X: 0
+  Y: 0
+  Z: 0
   LookAtBool: 1
   initialRotation: {x: 0, y: 0, z: 0, w: 0}
   gameManager: {fileID: 0}

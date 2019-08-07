@@ -27,7 +27,7 @@ public class LevelManager : Singleton<LevelManager>
     public float nodeStep = 10.5f;
     
     public int levelDimention = 6;
-
+    public int tileCount = 0;
 
     public GameObject lastExit;
 
@@ -49,80 +49,75 @@ public class LevelManager : Singleton<LevelManager>
                 if(true/*Mathf.Abs(i - j) <= 2*/)
                 {
                     GameObject tmpNode = Instantiate(nodePref, new Vector3(nodeStep * j - nodeStep * (levelDimention / 2), 0, -nodeStep * i + nodeStep * (levelDimention / 2)), Quaternion.identity, transform);
-                    Instantiate(boardTilePref, tmpNode.transform.position, tmpNode.transform.rotation, boardHolder);
+                    
                     tmpNode.GetComponent<NodeController>().Row = i;
                     tmpNode.GetComponent<NodeController>().Column = j;
 
+                    //Corners
                     if (i == 0 ^ j == 0 ^ i == levelDimention - 1 ^ j == levelDimention - 1)
                     {
-
                         GameObject tmpSide = Instantiate(sidesPref, tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
                         tmpSide.transform.LookAt(Vector3.zero, Vector3.up);
                         //Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
 
                         tmpSide.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpSide.transform.eulerAngles.y / 90f) * 90f, 0);
 
+                        freeTiles.Add(tmpSide.transform);
+
                     }
-                    else if (i == 0 && j == 0 || i == levelDimention - 1 && j == levelDimention - 1 || i == 0 && j == levelDimention - 1 || j == 0 && i == levelDimention - 1)
+                    //Sides
+                    else if (i == 0 && j == 0 && i == levelDimention - 1 && j == levelDimention - 1 )
                     {
-                        continue;
+                        Instantiate(boardTilePref, tmpNode.transform.position, tmpNode.transform.rotation, boardHolder);
                     }
-                    //If center - or proc - Generate tile
-                    else
-                    if ((i == levelDimention / 2 && j == levelDimention / 2) || (Mathf.Abs(i - j) <= 2 && Random.Range(0, 100) < 40))
+                    else if (/*(i == levelDimention / 2 && j == levelDimention - 1) ||*/ (i < levelDimention -1 && j < levelDimention -1)  && i>0 && j>0)
                     {
-                        GameObject tmpTile = Instantiate(tilePref, tmpNode.transform.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform);
+                        Instantiate(boardTilePref, tmpNode.transform.position, tmpNode.transform.rotation, boardHolder);
 
-
-
-                        //If center - enable rocket and disable buildings
-                        if (i == levelDimention / 2 && j == levelDimention / 2)
+                        if (tileCount < (levelDimention - 2) * (levelDimention - 2) - 2)
                         {
-                            if (SceneManager.GetActiveScene().name == "Tittle")
+                            tileCount++;
+                            GameObject tmpTile = Instantiate(tilePref, tmpNode.transform.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform);
+                            //If center - enable rocket and disable buildings
+                            if (i == levelDimention / 2 && j == levelDimention-1)
                             {
-                                
-                                TittleManager.Instance.rocketAnim = tmpTile.transform.GetChild(1).GetComponent<Animator>();
-                                TittleManager.Instance.rocketAnim.Play("IdleRocket");
+                               
+
                             }
-                            //Disable moving
-                            tmpTile.GetComponent<TileManager>().Movable = false;
-                            tmpTile.transform.GetChild(1).gameObject.SetActive(true);
-                            tmpTile.transform.GetChild(1).GetComponent<Animator>().Play("IdleRocket");
-                            tmpTile.transform.GetChild(2).gameObject.SetActive(false);
+                            else
+                            {
+                                ////If procced - disable moving
+                                //if (PlayerPrefs.GetInt("Level", 1) > 4 && (Random.Range(0, 100) < 10 + Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) % 5, 1, 30)))
+                                //{
+                                //    tmpTile.GetComponent<TileManager>().Movable = false;
 
-                            //Set Rocket reference
-                            GameManager.Instance.rocketHolder = tmpTile.transform;
-                            GameManager.Instance.RocketFilling = 0;
-                            //Enable road layout
-                            tmpTile.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
 
+                                //}
+
+                                //Generate building layout
+                                int buildingIndex = Random.Range(0, tmpTile.transform.GetChild(2).childCount);
+                                tmpTile.transform.GetChild(2).GetChild(buildingIndex).gameObject.SetActive(true);
+                                //Generate road layout
+                                int roadIndex = Random.Range(0, tmpTile.transform.GetChild(0).childCount);
+                                tmpTile.transform.GetChild(0).GetChild(roadIndex).gameObject.SetActive(true);
+
+                            }
                         }
                         else
                         {
-                            //If procced - disable moving
-                            if (PlayerPrefs.GetInt("Level", 1) > 4 && (Random.Range(0, 100) < 10 + Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) % 5, 1, 30)))
-                            {
-                                tmpTile.GetComponent<TileManager>().Movable = false;
-
-
-                            }
-
-                            //Generate building layout
-                            int buildingIndex = Random.Range(0, tmpTile.transform.GetChild(2).childCount);
-                            tmpTile.transform.GetChild(2).GetChild(buildingIndex).gameObject.SetActive(true);
-                            //Generate road layout
-                            int roadIndex = Random.Range(0, tmpTile.transform.GetChild(0).childCount);
-                            tmpTile.transform.GetChild(0).GetChild(roadIndex).gameObject.SetActive(true);
+                            //Add empty tile
+                            GameObject tmpEmpty = Instantiate(emptyTilePref, tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
+                           
 
                         }
+
+
+
                     }
                     else
                     {
 
-                        //Add empty tile
-                        GameObject tmpEmpty = Instantiate(emptyTilePref, tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
-                        freeTiles.Add(tmpEmpty.transform);
-
+                       
 
                         //Generate exit
                         if (exits.Count<=0 || Random.Range(0,100)<10)
@@ -220,9 +215,11 @@ public class LevelManager : Singleton<LevelManager>
     //Spawn new rocket
     public void SpawnRocket()
     {
+       
+        //Set Rocket reference
+       
 
 
-      
         if (freeTiles.Count == 0)
         {
             FunctionHandler.Instance.GameOver();
@@ -231,19 +228,28 @@ public class LevelManager : Singleton<LevelManager>
 
         GameObject tmpTile = Instantiate(tilePref, tmpNode.transform.parent.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform.parent);
 
-        if (GameManager.Instance.nextRocket == null)
+        if (GameManager.Instance.rocketHolder != null)
         {
             GameManager.Instance.nextRocket = tmpTile.transform;
-           
+            //Enable cube disable rocket
+            tmpTile.transform.GetChild(1).gameObject.SetActive(true);
+            tmpTile.transform.GetChild(1).GetChild(1).gameObject.SetActive(false);
+            tmpTile.transform.GetChild(2).gameObject.SetActive(false);
+        }
+        else
+        {
+            GameManager.Instance.rocketHolder = tmpTile.transform;
+            //Enable cube disable rocket
+            tmpTile.transform.GetChild(1).gameObject.SetActive(true);
+            tmpTile.transform.GetChild(1).GetChild(1).gameObject.SetActive(true);
+            tmpTile.transform.GetChild(2).gameObject.SetActive(true);
+            tmpTile.transform.GetChild(1).GetComponent<Animator>().Play("IdleRocket");
         }
 
         //Disable moving
         tmpTile.GetComponent<TileManager>().Movable = false;
 
-        //Enable cube disable rocket
-        tmpTile.transform.GetChild(1).gameObject.SetActive(true);
-        tmpTile.transform.GetChild(1).GetChild(1).gameObject.SetActive(false);
-        tmpTile.transform.GetChild(2).gameObject.SetActive(false);
+       
 
        
      
@@ -259,29 +265,32 @@ public class LevelManager : Singleton<LevelManager>
     public void RandomizePrevious(Transform tmpTile)
     {
       
-        tmpTile.GetComponent<TileManager>().Movable = true;
+        //tmpTile.GetComponent<TileManager>().Movable = true;
 
-        //Enable roads/buildings
-        tmpTile.GetChild(0).gameObject.SetActive(true);
-        tmpTile.GetChild(2).gameObject.SetActive(true);
-        tmpTile.GetChild(3).gameObject.SetActive(true);
-        tmpTile.GetChild(4).gameObject.SetActive(true);
+        ////Enable roads/buildings
+        //tmpTile.GetChild(0).gameObject.SetActive(true);
+        //tmpTile.GetChild(2).gameObject.SetActive(true);
+        //tmpTile.GetChild(3).gameObject.SetActive(true);
+        //tmpTile.GetChild(4).gameObject.SetActive(true);
 
-        //Disable road layout
-        tmpTile.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
-        //Disable rocket - enable roads and buildings
-        tmpTile.transform.GetChild(1).gameObject.SetActive(false);
-        tmpTile.transform.GetChild(2).gameObject.SetActive(true);
-        //Generate building layout
-        int buildingIndex = Random.Range(0, tmpTile.transform.GetChild(2).childCount);
-        tmpTile.transform.GetChild(2).GetChild(buildingIndex).gameObject.SetActive(true);
-        //Generate road layout
-        int roadIndex = Random.Range(0, tmpTile.transform.GetChild(0).childCount);
-        tmpTile.transform.GetChild(0).GetChild(roadIndex).gameObject.SetActive(true);
+        ////Disable road layout
+        //tmpTile.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
+        ////Disable rocket - enable roads and buildings
+        //tmpTile.transform.GetChild(1).gameObject.SetActive(false);
+        //tmpTile.transform.GetChild(2).gameObject.SetActive(true);
+        ////Generate building layout
+        //int buildingIndex = Random.Range(0, tmpTile.transform.GetChild(2).childCount);
+        //tmpTile.transform.GetChild(2).GetChild(buildingIndex).gameObject.SetActive(true);
+        ////Generate road layout
+        //int roadIndex = Random.Range(0, tmpTile.transform.GetChild(0).childCount);
+        //tmpTile.transform.GetChild(0).GetChild(roadIndex).gameObject.SetActive(true);
 
         GameManager.Instance.rocketHolder = GameManager.Instance.nextRocket;
         GameManager.Instance.nextRocket = null;
 
+        GameObject tmpSide = Instantiate(sidesPref, tmpTile.parent);
+        freeTiles.Add(tmpSide.transform);
+        Destroy(tmpTile.gameObject);
     }
 
     public void DisableRocket(Transform tmpTile)

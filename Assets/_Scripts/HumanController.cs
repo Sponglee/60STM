@@ -64,7 +64,7 @@ public class HumanController : MonoBehaviour
             navMesh.speed = Random.Range(3f, 4f);
 
             //navMesh.enabled = true;
-            navMesh.CalculatePath(dest, navMeshPath);
+            navMesh.CalculatePath(toggleDesto, navMeshPath);
         }
 
 
