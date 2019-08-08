@@ -76,7 +76,22 @@ public class HumanController : MonoBehaviour
            
             StopAllCoroutines();
             StartCoroutine(StopShowMessage(":)"));
+
             AudioManager.Instance.PlaySound("Success");
+
+
+            if(PlayerPrefs.GetInt("HoldTutShown",0) == 0)
+            {
+                FunctionHandler.Instance.HoldTut.SetActive(true);
+
+                FunctionHandler.Instance.HoldTut.transform.parent.GetComponent<Animator>().SetTrigger("holdAnim");
+                PlayerPrefs.SetInt("HoldTutShown", 1);
+            }
+
+            if(GameManager.Instance.zoomTarget == null)
+            {
+                GameManager.Instance.zoomTarget = transform;
+            }
         }
         else if(navMeshPath.status == NavMeshPathStatus.PathPartial)
         {

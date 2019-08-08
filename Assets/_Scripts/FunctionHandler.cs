@@ -13,8 +13,10 @@ public class FunctionHandler : Singleton<FunctionHandler>
     //Tutorial
     public GameObject tutorialCanvas;
     public int tutorialStep = 0;
-    public string[] messages;
+    public string[] steps;
     public bool TutInProgress = false;
+
+    public GameObject HoldTut;
 
     public Transform muskReference;
     public Sprite[] muskImages;
@@ -81,8 +83,7 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
         uiCanvas.SetActive(false);
         endGamePanel.SetActive(true);
-        menuText.gameObject.SetActive(true);
-        menuText.text = "GAME OVER";
+  
         GameManager.Instance.turnCountText.gameObject.SetActive(false);
         //DIsable collider
         GameManager.Instance.rocketHolder.GetChild(1).GetChild(0).GetComponent<BoxCollider>().enabled = false;
@@ -105,8 +106,8 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
         uiCanvas.SetActive(false);
         endGamePanel.SetActive(true);
-        menuText.gameObject.SetActive(true);
-        menuText.text = "LEVEL COMPLETE";
+        //menuText.gameObject.SetActive(true);
+        //menuText.text = "LEVEL COMPLETE";
         GameManager.Instance.turnCountText.gameObject.SetActive(false);
         //DIsable collider
         GameManager.Instance.rocketHolder.GetChild(1).GetChild(0).GetComponent<BoxCollider>().enabled = false;
@@ -258,41 +259,41 @@ public class FunctionHandler : Singleton<FunctionHandler>
         if(!TutInProgress)
         {
             GameManager.Instance.GameOverBool = true;
-            TextMeshProUGUI tmpText = tutorialCanvas.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>();
-
-            tmpText.text = "";
-            StartCoroutine(StopTutStep(tmpText));
-
+            StartCoroutine(StopTutStep());
+            tutorialCanvas.transform.parent.GetComponent<Animator>().SetTrigger("moveAnim");
         }
        
     }
 
 
-    public IEnumerator StopTutStep(TextMeshProUGUI text)
+    public IEnumerator StopTutStep()
     {
         TutInProgress = true;
-        if(tutorialStep>messages.Length-1)
+        while(true)
         {
-           
-            if (tutorialStep > messages.Length-1)
+            if (tutorialStep > steps.Length - 1)
             {
-                GameManager.Instance.GameOverBool = false;
                 PlayerPrefs.SetInt("FirstLaunch", 0);
                 tutorialCanvas.SetActive(false);
+                TutInProgress = false;
                 yield break;
+
             }
+
+            GameManager.Instance.GameOverBool = false;
+            //for (int i = 0; i < messages[tutorialStep].Length; i++)
+            //{
+            //    text.text += messages[tutorialStep][i];
+            //    yield return new WaitForEndOfFrame();
+            //}
+            yield return new WaitForSeconds(2f);
+
+            tutorialStep++;
+
         }
 
-        for (int i = 0; i < messages[tutorialStep].Length; i++)
-        {
-            text.text += messages[tutorialStep][i];
-            yield return new WaitForEndOfFrame();
-        }
-
-        tutorialStep++;
-
-        TutInProgress = false;
-        yield return null;
+      
+       
     }
 
 

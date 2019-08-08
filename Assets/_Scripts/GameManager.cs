@@ -30,7 +30,11 @@ public class GameManager : Singleton<GameManager>
     public CinemachineVirtualCamera endCam;
     public CinemachineVirtualCamera vertCam;
     public CinemachineVirtualCamera horizCam;
+    public CinemachineVirtualCamera zoomInCam;
 
+    //Camera follow
+    public Transform zoomTarget;
+    public int zoomThreshold = 20;
     //Total spawned people
     public int spawnCount = 1;
     //How many different spawns there is
@@ -123,7 +127,19 @@ public class GameManager : Singleton<GameManager>
     private void Awake()
     {
         ArcadeMode = PlayerPrefs.GetInt("ArcadeMode",0) == 1 ? true : false;
-        spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1)/10,1,10);
+        if(PlayerPrefs.GetInt("Level", 1)<10 && PlayerPrefs.GetInt("Level", 1)>=5)
+        {
+            spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 10) + 1;
+        }
+        else if(PlayerPrefs.GetInt("Level", 1) >=10)
+        {
+            spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 10) + 1;
+        }
+        else
+        {
+            spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 10);
+        }
+      
         Debug.Log("SPAWNMOD " + spawnModifier);
         levelGoal = 15*spawnModifier;
         LevelText.text = string.Format("Level {0}", PlayerPrefs.GetInt("Level", 1).ToString());
@@ -178,18 +194,44 @@ public class GameManager : Singleton<GameManager>
 
     private void Update()
     {
-        if (Input.GetMouseButtonUp(0) && selectedTile != null)
+        if(Input.GetMouseButton(0))
         {
-            TileManager selectedTileManager = selectedTile.GetComponent<TileManager>();
-            selectedTileManager.CollidedBool = false;
-            selectedTileManager.GetComponent<TileManager>().Selected = false;
-            selectedTileManager.GetComponent<TileManager>().DragActive = false;
+           if (zoomInCam.m_Priority <= 61 && zoomTarget != null)
+           {
+                zoomInCam.m_Priority += 1;
+
+               
+                zoomInCam.m_LookAt = zoomTarget;
+                zoomInCam.m_Follow = zoomTarget;
+                
+                if(zoomInCam.m_Priority>=60)
+                {
+                    PlayerPrefs.SetInt("HoldTutShown", 1);
+                    FunctionHandler.Instance.HoldTut.SetActive(false);
+                }
+           }
+          
+
+        }
+        if (Input.GetMouseButtonUp(0) )
+        {
+
+            zoomInCam.m_Priority = zoomThreshold;
             
-            //Deselect transform
-            selectedTile = null;
-            //Enable Agent movement
-            if(!selectedTileManager.RotationInProgress)
-                selectedTileManager.AgentToggle(true, GameManager.Instance.rocketHolder.position);
+            if (selectedTile != null)
+            {
+                TileManager selectedTileManager = selectedTile.GetComponent<TileManager>();
+                selectedTileManager.CollidedBool = false;
+                selectedTileManager.GetComponent<TileManager>().Selected = false;
+                selectedTileManager.GetComponent<TileManager>().DragActive = false;
+
+                //Deselect transform
+                selectedTile = null;
+                //Enable Agent movement
+                if (!selectedTileManager.RotationInProgress)
+                    selectedTileManager.AgentToggle(true, GameManager.Instance.rocketHolder.position);
+            }
+           
             
         }
         else if(Input.GetMouseButtonDown(1))
@@ -198,7 +240,7 @@ public class GameManager : Singleton<GameManager>
         }
         else if(Input.GetMouseButtonDown(2))
         {
-            WinText.SetActive(true);
+            //WinText.SetActive(true);
             turnCountText.gameObject.SetActive(false);
             FunctionHandler.Instance.LevelComplete();
 
