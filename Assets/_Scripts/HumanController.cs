@@ -76,7 +76,7 @@ public class HumanController : MonoBehaviour
            
             StopAllCoroutines();
             StartCoroutine(StopShowMessage(":)"));
-
+            AudioManager.Instance.PlaySound("Success");
         }
         else if(navMeshPath.status == NavMeshPathStatus.PathPartial)
         {

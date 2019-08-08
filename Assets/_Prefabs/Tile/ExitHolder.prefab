@@ -520,7 +520,7 @@ MonoBehaviour:
   collidedBool: 0
   selected: 0
   dragActive: 0
-  movable: 1
+  movable: 0
   rotationCheck: 0
   rotationInProgress: 0
   tileAnim: {fileID: 0}

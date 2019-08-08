@@ -8,6 +8,7 @@ using TMPro;
 public class FunctionHandler : Singleton<FunctionHandler>
 {
     public Text menuText;
+    public GameObject endGamePanel;
 
     //Tutorial
     public GameObject tutorialCanvas;
@@ -78,10 +79,11 @@ public class FunctionHandler : Singleton<FunctionHandler>
         //Sad emote
         Instance.MuskEmote(0);
 
-
+        uiCanvas.SetActive(false);
+        endGamePanel.SetActive(true);
         menuText.gameObject.SetActive(true);
         menuText.text = "GAME OVER";
-        GameManager.Instance.timerText.gameObject.SetActive(false);
+        GameManager.Instance.turnCountText.gameObject.SetActive(false);
         //DIsable collider
         GameManager.Instance.rocketHolder.GetChild(1).GetChild(0).GetComponent<BoxCollider>().enabled = false;
         //Win sequence
@@ -100,9 +102,12 @@ public class FunctionHandler : Singleton<FunctionHandler>
         AudioManager.Instance.StopSound("All");
         AudioManager.Instance.PlaySound("Win");
         AudioManager.Instance.PlaySound("FireWall");
+
+        uiCanvas.SetActive(false);
+        endGamePanel.SetActive(true);
         menuText.gameObject.SetActive(true);
         menuText.text = "LEVEL COMPLETE";
-        GameManager.Instance.timerText.gameObject.SetActive(false);
+        GameManager.Instance.turnCountText.gameObject.SetActive(false);
         //DIsable collider
         GameManager.Instance.rocketHolder.GetChild(1).GetChild(0).GetComponent<BoxCollider>().enabled = false;
         //Win sequence

@@ -124,7 +124,7 @@ public class TileManager : MonoBehaviour
 
     void OnMouseDrag()
     {
-        if(transform.CompareTag("Tile") && Selected && !CollidedBool && Movable && !RotationInProgress)
+        if(transform.CompareTag("Tile") && Selected && !CollidedBool && !RotationInProgress)
         {
             //if (transform.GetChild(4).childCount == 0)
             //{
@@ -143,8 +143,12 @@ public class TileManager : MonoBehaviour
         //{
         if (/*transform.CompareTag("Tile") &&*/ Selected && !CollidedBool && !RotationInProgress && !DragActive)
         {
+            if(GameManager.Instance.TurnCount>0 )
+                StartCoroutine(StopRotate());
+            else
+            {
 
-            StartCoroutine(StopRotate());
+            }
         }
         else if(transform.CompareTag("Tile"))
             //Build navMesh
@@ -172,6 +176,10 @@ public class TileManager : MonoBehaviour
         float elapsed = 0;
         Vector3 startEul = transform.eulerAngles;
         Vector3 destEul = startEul + new Vector3(0, angle, 0);
+
+        if(Movable)
+        GameManager.Instance.TurnCount--;
+
         //Debug.Log("HH");
         while (elapsed < duration)
         {
@@ -188,6 +196,7 @@ public class TileManager : MonoBehaviour
         AgentToggle(true, GameManager.Instance.rocketHolder.position);
         //Build navMesh
         GameManager.Instance.BuildSurface();
+        
     }
 
 

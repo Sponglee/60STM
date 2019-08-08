@@ -87,7 +87,7 @@ public class LevelManager : Singleton<LevelManager>
                             else
                             {
                                 //If procced - disable moving
-                                if (PlayerPrefs.GetInt("Level", 1) > 4 && (Random.Range(0, 100) < 10 + Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) % 5, 1, 30)))
+                                if ((i != levelDimention / 2 && j != levelDimention/2) && PlayerPrefs.GetInt("Level", 1) > 4 && (Random.Range(0, 100) < 10 + Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) % 5, 1, 30)))
                                 {
                                     tmpTile.GetComponent<TileManager>().Movable = false;
 
@@ -155,6 +155,12 @@ public class LevelManager : Singleton<LevelManager>
         Transform tmpFreeTile = freeTiles[tmpFree];
         freeTiles.Remove(tmpFreeTile);
         GameObject tmpExit = Instantiate(exitPref, tmpFreeTile.parent.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpFreeTile.parent);
+
+        tmpExit.transform.LookAt(Vector3.zero, Vector3.up);
+        //Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
+
+        tmpExit.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpExit.transform.eulerAngles.y / 90f) * 90f, 0);
+
         tmpExit.transform.SetAsFirstSibling();
         Destroy(tmpFreeTile.gameObject);
         lastExit = tmpExit;

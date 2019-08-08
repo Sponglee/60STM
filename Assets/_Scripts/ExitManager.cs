@@ -39,7 +39,8 @@ public class ExitManager : TileManager
             //Excited emote
             FunctionHandler.Instance.MuskEmote(1);
 
-           
+            //if(!GameManager.Instance.ArcadeMode)
+            //    FunctionHandler.Instance.LevelComplete();
             
             Destroy(gameObject);
         }
