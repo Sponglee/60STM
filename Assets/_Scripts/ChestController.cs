@@ -165,6 +165,7 @@ public class ChestController : MonoBehaviour
 
         transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Collectable>().RandomizeCollectable();
         yield return new WaitForEndOfFrame();
+        AudioManager.Instance.PlaySound("Lootbox");
         int pow = transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Collectable>().PowerCol;
         //Debug.Log("pow " + pow);
         //GameManager.Instance.GrabCollectable(pow);

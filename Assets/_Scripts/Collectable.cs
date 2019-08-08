@@ -115,16 +115,19 @@ public class Collectable : MonoBehaviour
         if (PowerColRand >= 0 && PowerColRand < 40)
         {
             powerText.text = "10";
+            GameManager.Instance.Currency += 10;
         }
         //Magnet
         else if (PowerColRand >= 40 && PowerColRand < 60)
         {
             powerText.text = "100";
+            GameManager.Instance.Currency += 100;
         }
         //Powered Up
         else if (PowerColRand >= 60 && PowerColRand <= 100)
         {
             powerText.text = "50";
+            GameManager.Instance.Currency += 50;
         }
 
 

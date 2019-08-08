@@ -26,6 +26,7 @@ public class FunctionHandler : Singleton<FunctionHandler>
     public bool MenuActive = false;
     public GameObject menuCanvas;
     public GameObject uiCanvas;
+    public GameObject buyCanvas;
 
     public void StartLevel(bool TimedToggle)
     {
@@ -306,4 +307,27 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
 
 
+    public void BuyTurns()
+    {
+        buyCanvas.SetActive(true);
+
+    }
+
+    public void ConfirmBuy(int cost)
+    {
+        if (GameManager.Instance.Currency >= cost)
+        {
+            GameManager.Instance.Currency -= cost;
+            GameManager.Instance.TurnCount++;
+        }
+        else
+        {
+            AudioManager.Instance.PlaySound("Negative");
+        }
+    }
+
+    public  void CancelBuy()
+    {
+        buyCanvas.SetActive(false);
+    }
 }

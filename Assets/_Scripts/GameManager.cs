@@ -5,10 +5,29 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 using Cinemachine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class GameManager : Singleton<GameManager>
 {
+    public Text currencyText;
 
+    public int currency = 0;
+    public int Currency
+    {
+        get
+        {
+            return currency;
+        }
+        set
+        {
+            
+            currency = value;
+            currencyText.text = string.Format("{0}", value);
+
+            PlayerPrefs.SetInt("Currency", value);
+
+        }
+    }
     public ScreenOrientation currentOrientation;
 
     public bool ArcadeMode = false;
@@ -82,7 +101,7 @@ public class GameManager : Singleton<GameManager>
         set
         {
             humanCount = value;
-            humanText.text = string.Format("{0}/ {1}", value, levelGoal);
+            //humanText.text = string.Format("{0}/ {1}", value, levelGoal);
             progressSlider.value = (float)value / (float)levelGoal;
             
         }
@@ -126,6 +145,8 @@ public class GameManager : Singleton<GameManager>
 
     private void Awake()
     {
+        Currency = PlayerPrefs.GetInt("Currency", 0);
+
         ArcadeMode = PlayerPrefs.GetInt("ArcadeMode",0) == 1 ? true : false;
         if(PlayerPrefs.GetInt("Level", 1)<10 && PlayerPrefs.GetInt("Level", 1)>=5)
         {
@@ -172,7 +193,7 @@ public class GameManager : Singleton<GameManager>
             FunctionHandler.Instance.TutorialStep();
         }
 
-        humanText.text = string.Format("{0}/ {1}", HumanCount, levelGoal);
+        //humanText.text = string.Format("{0}/ {1}", HumanCount, levelGoal);
 
         if (SceneManager.GetActiveScene().name == "Main")
         {
@@ -807,7 +828,16 @@ public class GameManager : Singleton<GameManager>
     }
 
 
-
-    
-
+    // Is touching ui
+    public bool IsPointerOverUIObject(string obj)
+    {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        if (results.Count > 0)
+            return results[0].gameObject.CompareTag(obj);
+        else
+            return false;
+    }
 }

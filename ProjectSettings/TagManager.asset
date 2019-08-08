@@ -12,6 +12,9 @@ TagManager:
   - Human
   - Exit
   - Border
+  - Blank
+  - Collectable
+  - UI
   layers:
   - Default
   - TransparentFX
