@@ -177,8 +177,8 @@ public class TileManager : MonoBehaviour
         Vector3 startEul = transform.eulerAngles;
         Vector3 destEul = startEul + new Vector3(0, angle, 0);
 
-        if(Movable)
-        GameManager.Instance.TurnCount--;
+        //if(Movable)
+        //GameManager.Instance.TurnCount--;
 
         //Debug.Log("HH");
         while (elapsed < duration)

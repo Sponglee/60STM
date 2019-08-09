@@ -74,7 +74,7 @@ public class LevelManager : Singleton<LevelManager>
                     {
                         Instantiate(boardTilePref, tmpNode.transform.position, tmpNode.transform.rotation, boardHolder);
 
-                        if (tileCount < (levelDimention - 2) * (levelDimention - 2) - 2)
+                        if (/*tileCount < (levelDimention - 2) * (levelDimention - 2) - 2*/Random.Range(0,100)>=30)
                         {
                             tileCount++;
                             GameObject tmpTile = Instantiate(tilePref, tmpNode.transform.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform);
@@ -87,7 +87,8 @@ public class LevelManager : Singleton<LevelManager>
                             else
                             {
                                 //If procced - disable moving
-                                if ((i != levelDimention / 2 && j != levelDimention/2) && PlayerPrefs.GetInt("Level", 1) > 4 && (Random.Range(0, 100) < 10 + Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) % 5, 1, 30)))
+                                if (/*(i != levelDimention / 2 && j != levelDimention/2) && */PlayerPrefs.GetInt("Level", 1) > 4 
+                                    && (Random.Range(0, 100) < 10 + Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) % 5, 1, 30)))
                                 {
                                     tmpTile.GetComponent<TileManager>().Movable = false;
 

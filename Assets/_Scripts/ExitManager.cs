@@ -35,7 +35,7 @@ public class ExitManager : TileManager
             //    GameManager.Instance.SpawnAlreadyTrigger = false;
             //}
 
-            AudioManager.Instance.PlaySound("Success");
+            AudioManager.Instance.PlaySound("Despawn");
             //Excited emote
             FunctionHandler.Instance.MuskEmote(1);
 

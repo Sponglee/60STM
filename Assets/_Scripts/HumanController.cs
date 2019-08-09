@@ -77,7 +77,8 @@ public class HumanController : MonoBehaviour
             StopAllCoroutines();
             StartCoroutine(StopShowMessage(":)"));
 
-            AudioManager.Instance.PlaySound("Success");
+            if (GameManager.Instance.zoomTarget == null) 
+                AudioManager.Instance.PlaySound("Success");
 
 
             if(PlayerPrefs.GetInt("HoldTutShown",0) == 0)
