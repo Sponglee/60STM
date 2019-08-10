@@ -5,6 +5,8 @@ using UnityEngine;
 [System.Serializable]
 public class Sound
 {
+   
+
     public string name;
     public AudioClip clip;
     private AudioSource source;
@@ -26,16 +28,18 @@ public class Sound
         source.clip = clip;
     }
 
-    public void Play(bool powUp = false, bool gem = false)
+    public float starMultiplier = 10f;
+    public void Play(bool powUp = false, bool star = false)
     {
         source.volume = volume;
         source.pitch = pitch * (1 + Random.Range(-randomPitch / 2, randomPitch / 2));
        
         if (powUp)
         {
-            if(gem)
+            if(star)
             {
-                source.pitch = Mathf.Clamp(1 /*+ GameManager.Instance.gemMultiplier / 200f*/, 0, 3f);
+                source.pitch = Mathf.Clamp(1 + starMultiplier, 0, 3f);
+                
             }
             else
             {
@@ -104,8 +108,13 @@ public class AudioManager : Singleton<AudioManager>
         {
             if (sounds[i].name == _name)
             {
-               
-                sounds[i].Play();
+                if(sounds[i].name == "Lootbox")
+                {
+                    sounds[i].Play(false, true);
+
+                }
+                else
+                    sounds[i].Play();
 
                 return;
             }

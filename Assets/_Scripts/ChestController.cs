@@ -163,7 +163,7 @@ public class ChestController : MonoBehaviour
         GameObject tmpGlow = Instantiate(chestPowerUpPref, transform.GetChild(0));
         chestAnim.Play("PwrUp");
 
-        transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Collectable>().RandomizeCollectable();
+        //transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Collectable>().RandomizeCollectable();
         yield return new WaitForEndOfFrame();
         AudioManager.Instance.PlaySound("Lootbox");
         int pow = transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Collectable>().PowerCol;

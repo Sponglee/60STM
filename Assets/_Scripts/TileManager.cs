@@ -124,7 +124,7 @@ public class TileManager : MonoBehaviour
 
     void OnMouseDrag()
     {
-        if(!GameManager.Instance.IsPointerOverUIObject("UI") && transform.CompareTag("Tile") && Selected && !CollidedBool && !RotationInProgress)
+        if(!GameManager.Instance.IsPointerOverUIObject("UI") && Movable && transform.CompareTag("Tile") && Selected && !CollidedBool && !RotationInProgress)
         {
             //if (transform.GetChild(4).childCount == 0)
             //{

@@ -18,6 +18,9 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
     public GameObject HoldTut;
 
+    public Transform starsHolderUI;
+    public Transform starsHolderEnd;
+
     public Transform muskReference;
     public Sprite[] muskImages;
     public bool MuskInProgress = false;
@@ -107,13 +110,14 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
         uiCanvas.SetActive(false);
         endGamePanel.SetActive(true);
-        //menuText.gameObject.SetActive(true);
-        //menuText.text = "LEVEL COMPLETE";
+        menuText.gameObject.SetActive(true);
+        menuText.text = string.Format("LEVEL {0} COMPLETE",PlayerPrefs.GetInt("Level",1));
         GameManager.Instance.turnCountText.gameObject.SetActive(false);
         //DIsable collider
         GameManager.Instance.rocketHolder.GetChild(1).GetChild(0).GetComponent<BoxCollider>().enabled = false;
-        //Win sequence
 
+        //Win sequence
+        UpdateStars(starsHolderEnd, 0.5f, "Lootbox");
 
         //Win sequence
 
@@ -122,9 +126,14 @@ public class FunctionHandler : Singleton<FunctionHandler>
         GameManager.Instance.rocketHolder.GetChild(1).GetChild(3).gameObject.SetActive(false);
         //Launch rocket
         GameManager.Instance.rocketHolder.GetChild(1).GetComponent<Animator>().SetTrigger("TakeOff");
+
         PlayerPrefs.SetInt("Level", PlayerPrefs.GetInt("Level", 1) + 1);
 
+
     }
+
+
+
 
 
     public void MuskEmote(int index)
@@ -297,6 +306,31 @@ public class FunctionHandler : Singleton<FunctionHandler>
        
     }
 
+
+    public void UpdateStars(Transform starsHolder, float duration = 0f, string Audio = "Star")
+    {
+        StartCoroutine(StopUpdateStars(starsHolder, duration, Audio));
+    }
+
+
+    public IEnumerator StopUpdateStars(Transform starsHolder, float duration = 0f, string Audio = "Star")
+    {
+        yield return new WaitForSeconds(duration*2);
+        for (int i = 0; i < LevelManager.Instance.stars.Count; i++)
+        {
+            if(Audio != "Star")
+            {
+                AudioManager.Instance.PlaySound(Audio);
+            }
+            starsHolder.GetChild(i).GetComponent<Image>().color = Color.white;
+            yield return new WaitForSeconds(duration);
+        }
+
+        if(Audio == "Star")
+        {
+            AudioManager.Instance.PlaySound("Star");
+        }
+    }
 
 
     public void ResetPrefs()

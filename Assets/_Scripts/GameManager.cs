@@ -161,7 +161,7 @@ public class GameManager : Singleton<GameManager>
             spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 10);
         }
       
-        Debug.Log("SPAWNMOD " + spawnModifier);
+        //Debug.Log("SPAWNMOD " + spawnModifier);
         levelGoal = 15*spawnModifier;
         LevelText.text = string.Format("Level {0}", PlayerPrefs.GetInt("Level", 1).ToString());
         currentOrientation = Screen.orientation;

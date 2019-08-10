@@ -15,6 +15,7 @@ TagManager:
   - Blank
   - Collectable
   - UI
+  - Star
   layers:
   - Default
   - TransparentFX

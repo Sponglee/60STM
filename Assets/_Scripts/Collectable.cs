@@ -107,29 +107,29 @@ public class Collectable : MonoBehaviour
     //    //}
     //}
 
-    public void RandomizeCollectable()
-    {
-        int PowerColRand = Random.Range(0, 100);
+    //public void RandomizeCollectable()
+    //{
+    //    int PowerColRand = Random.Range(0, 100);
 
-        ////Shield
-        if (PowerColRand >= 0 && PowerColRand < 40)
-        {
-            powerText.text = "10";
-            GameManager.Instance.Currency += 10;
-        }
-        //Magnet
-        else if (PowerColRand >= 40 && PowerColRand < 60)
-        {
-            powerText.text = "100";
-            GameManager.Instance.Currency += 100;
-        }
-        //Powered Up
-        else if (PowerColRand >= 60 && PowerColRand <= 100)
-        {
-            powerText.text = "50";
-            GameManager.Instance.Currency += 50;
-        }
+    //    ////Shield
+    //    if (PowerColRand >= 0 && PowerColRand < 40)
+    //    {
+    //        powerText.text = "10";
+    //        GameManager.Instance.Currency += 10;
+    //    }
+    //    //Magnet
+    //    else if (PowerColRand >= 40 && PowerColRand < 60)
+    //    {
+    //        powerText.text = "100";
+    //        GameManager.Instance.Currency += 100;
+    //    }
+    //    //Powered Up
+    //    else if (PowerColRand >= 60 && PowerColRand <= 100)
+    //    {
+    //        powerText.text = "50";
+    //        GameManager.Instance.Currency += 50;
+    //    }
 
 
-    }
+    //}
 }

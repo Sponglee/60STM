@@ -43,15 +43,22 @@ public class HumanController : MonoBehaviour
             AudioManager.Instance.PlaySound("Human");
             Destroy(gameObject);
         }
-        else if(other.CompareTag("Human") && exitRef != other.GetComponent<HumanController>().exitRef)
+        else if (other.CompareTag("Human") && exitRef != other.GetComponent<HumanController>().exitRef)
         {
-            if(Random.Range(1, 100)>30)
+            if (Random.Range(1, 100) > 30)
                 StartCoroutine(StopShowMessage("!@#$%"));
         }
         else if (other.CompareTag("Tile") || other.CompareTag("Exit"))
         {
-            Debug.Log(other.gameObject.name);
+            //Debug.Log(other.gameObject.name);
             transform.SetParent(other.transform.GetChild(4));
+        }
+        else if(other.CompareTag("Star"))
+        {
+            LevelManager.Instance.stars.Add(other.transform.parent.parent);
+            Destroy(other.gameObject);
+            FunctionHandler.Instance.UpdateStars(FunctionHandler.Instance.starsHolderUI);
+           
         }
     }
 

@@ -11,6 +11,9 @@ public class LevelManager : Singleton<LevelManager>
     public GameObject sidesPref;
     public GameObject exitPref;
     public GameObject boardTilePref;
+    public GameObject starPref;
+
+    public List<Transform> stars;
     public List<Transform> exits;
     public List<Transform> freeTiles;
 
@@ -36,7 +39,7 @@ public class LevelManager : Singleton<LevelManager>
     {
         exits = new List<Transform>();
         freeTiles = new List<Transform>();
-
+        stars = new List<Transform>();
 
         //Randomize ground
         ground.eulerAngles = new Vector3(0, Random.Range(0, 360), 0);
@@ -141,6 +144,28 @@ public class LevelManager : Singleton<LevelManager>
             }
         }
 
+
+        //Randomize and populate stars
+        for (int i = 0; i < 3; i++)
+        {
+            Transform tmpTile;
+
+            do
+            {
+                tmpTile = transform.GetChild(Random.Range(0, transform.childCount));
+                //Debug.Log("CHECK" + tmpTile.GetChild(0).tag);
+            }
+            while (stars.Contains(tmpTile) || tmpTile.childCount== 0 || !tmpTile.GetChild(0).CompareTag("Tile"));
+
+            Debug.Log(tmpTile.GetChild(0).tag);
+            Instantiate(starPref, tmpTile.GetChild(0).GetChild(5));
+            //Add star to list
+            stars.Add(tmpTile);
+
+            
+        }
+        //Clear stars list for levelcomplete stars system later
+        stars.Clear();
      
     }
     
@@ -152,7 +177,7 @@ public class LevelManager : Singleton<LevelManager>
             FunctionHandler.Instance.GameOver();
         }
         int tmpFree = Random.Range(0, freeTiles.Count);
-        Debug.Log(">>>>" + tmpFree);
+        //Debug.Log(">>>>" + tmpFree);
         Transform tmpFreeTile = freeTiles[tmpFree];
         freeTiles.Remove(tmpFreeTile);
         GameObject tmpExit = Instantiate(exitPref, tmpFreeTile.parent.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpFreeTile.parent);
@@ -167,31 +192,31 @@ public class LevelManager : Singleton<LevelManager>
         lastExit = tmpExit;
         AudioManager.Instance.PlaySound("Bump");
 
-        //Shoot Ray to check if exit is blocked
-        RaycastHit hit;
+        ////Shoot Ray to check if exit is blocked
+        //RaycastHit hit;
 
        
-        if(Physics.Raycast(tmpExit.transform.position, tmpExit.transform.TransformPoint(Vector3.forward*100f), out hit))
-        {
+        //if(Physics.Raycast(tmpExit.transform.position, tmpExit.transform.TransformPoint(Vector3.forward*100f), out hit))
+        //{
 
-            Debug.DrawRay(tmpExit.transform.position, tmpExit.transform.TransformPoint(Vector3.forward * 100f), Color.blue, 3f);
-            //Debug.Log(hit.transform.parent.GetComponent<NodeController>().Column + " : " + hit.transform.parent.GetComponent<NodeController>().Row);
-            //Debug.Log("T: " + hit.transform.tag);
+        //    Debug.DrawRay(tmpExit.transform.position, tmpExit.transform.TransformPoint(Vector3.forward * 100f), Color.blue, 3f);
+        //    //Debug.Log(hit.transform.parent.GetComponent<NodeController>().Column + " : " + hit.transform.parent.GetComponent<NodeController>().Row);
+        //    //Debug.Log("T: " + hit.transform.tag);
             
-            if (hit.transform.CompareTag("Exit") || hit.transform.CompareTag("Border"))
-            {
-                Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
-                tmpExit.transform.LookAt(Vector3.zero, Vector3.up);
-                Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
+        //    if (hit.transform.CompareTag("Exit") || hit.transform.CompareTag("Border"))
+        //    {
+        //        Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
+        //        tmpExit.transform.LookAt(Vector3.zero, Vector3.up);
+        //        Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
 
-                tmpExit.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpExit.transform.eulerAngles.y / 90f) * 90f, 0);
-                Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
-            }
+        //        tmpExit.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpExit.transform.eulerAngles.y / 90f) * 90f, 0);
+        //        Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
+        //    }
 
           
 
 
-        }
+        //}
 
         //OR
         //look towards center
@@ -222,9 +247,8 @@ public class LevelManager : Singleton<LevelManager>
     //Spawn new rocket
     public void SpawnRocket()
     {
-       
+
         //Set Rocket reference
-       
 
 
         if (freeTiles.Count == 0)
@@ -235,6 +259,7 @@ public class LevelManager : Singleton<LevelManager>
 
         GameObject tmpTile = Instantiate(tilePref, tmpNode.transform.parent.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform.parent);
 
+        tmpTile.tag = "Rocket";
         if (GameManager.Instance.rocketHolder != null)
         {
             GameManager.Instance.nextRocket = tmpTile.transform;
@@ -253,6 +278,8 @@ public class LevelManager : Singleton<LevelManager>
             tmpTile.transform.GetChild(1).GetComponent<Animator>().Play("IdleRocket");
         }
 
+
+       
         //Disable moving
         tmpTile.GetComponent<TileManager>().Movable = false;
 
