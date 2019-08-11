@@ -51,6 +51,8 @@ public class GameManager : Singleton<GameManager>
     public CinemachineVirtualCamera horizCam;
     public CinemachineVirtualCamera zoomInCam;
 
+  
+
     //Camera follow
     public Transform zoomTarget;
     public int zoomThreshold = 20;

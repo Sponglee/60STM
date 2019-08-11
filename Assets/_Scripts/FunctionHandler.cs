@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using Cinemachine;
 
 public class FunctionHandler : Singleton<FunctionHandler>
 {
@@ -30,6 +31,49 @@ public class FunctionHandler : Singleton<FunctionHandler>
     public GameObject menuCanvas;
     public GameObject uiCanvas;
     public GameObject buyCanvas;
+
+
+    public CinemachineVirtualCamera horizCamOrth;
+    public CinemachineVirtualCamera verticCamOrth;
+    public CinemachineVirtualCamera horizCamPersp;
+    public CinemachineVirtualCamera verticCamPersp;
+
+    public Camera cameraOrth;
+    public Camera cameraPersp;
+
+    public bool PerspBool = false;
+
+
+
+    public void ChangeCameras()
+    {
+        if(PerspBool)
+        {
+        
+            cameraOrth.gameObject.SetActive(true);
+            cameraPersp.gameObject.SetActive(false);
+            GameManager.Instance.vertCam = verticCamOrth;
+            GameManager.Instance.horizCam = horizCamOrth;
+
+            verticCamPersp.gameObject.SetActive(false);
+            horizCamPersp.gameObject.SetActive(false);
+            verticCamOrth.gameObject.SetActive(true);
+            horizCamOrth.gameObject.SetActive(true);
+            PerspBool = !PerspBool;
+        }
+        else
+        {
+            cameraOrth.gameObject.SetActive(false);
+            cameraPersp.gameObject.SetActive(true);
+            GameManager.Instance.vertCam = verticCamPersp;
+            GameManager.Instance.horizCam = horizCamPersp;
+            verticCamOrth.gameObject.SetActive(false);
+            horizCamOrth.gameObject.SetActive(false);
+            verticCamPersp.gameObject.SetActive(true);
+            horizCamPersp.gameObject.SetActive(true);
+            PerspBool = !PerspBool;
+        }
+    }
 
     public void StartLevel(bool TimedToggle)
     {
