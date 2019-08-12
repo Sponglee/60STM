@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 using Cinemachine;
 using UnityEngine.SceneManagement;
-using UnityEngine.EventSystems;
+
 
 public class GameManager : Singleton<GameManager>
 {
@@ -152,15 +152,15 @@ public class GameManager : Singleton<GameManager>
         ArcadeMode = PlayerPrefs.GetInt("ArcadeMode",0) == 1 ? true : false;
         if(PlayerPrefs.GetInt("Level", 1)<10 && PlayerPrefs.GetInt("Level", 1)>=5)
         {
-            spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 10) + 1;
+            spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 5, 1, 10) + 1;
         }
-        else if(PlayerPrefs.GetInt("Level", 1) >=10)
+        else if(PlayerPrefs.GetInt("Level", 1) >=10 && PlayerPrefs.GetInt("Level", 1)< 50)
         {
             spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 10) + 1;
         }
         else
         {
-            spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 10);
+            spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 20, 1, 10);
         }
       
         //Debug.Log("SPAWNMOD " + spawnModifier);
@@ -830,16 +830,5 @@ public class GameManager : Singleton<GameManager>
     }
 
 
-    // Is touching ui
-    public bool IsPointerOverUIObject(string obj)
-    {
-        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
-        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-        List<RaycastResult> results = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
-        if (results.Count > 0)
-            return results[0].gameObject.CompareTag(obj);
-        else
-            return false;
-    }
+  
 }

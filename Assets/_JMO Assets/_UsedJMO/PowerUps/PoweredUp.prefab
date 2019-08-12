@@ -4741,7 +4741,7 @@ Light:
   m_BounceIntensity: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0.00390625, y: 0.25, z: 1e-45, w: 0}
+  m_BoundingSphereOverride: {x: 0.15558743, y: -3.7591887, z: 1.7121401, w: 3.123733}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -4896,7 +4896,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 15
+      scalar: 1
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -5387,7 +5387,7 @@ ParticleSystem:
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0
+      scalar: 1
       minScalar: 0
       maxCurve:
         serializedVersion: 2

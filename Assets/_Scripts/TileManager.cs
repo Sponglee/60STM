@@ -101,7 +101,7 @@ public class TileManager : MonoBehaviour
 
     void OnMouseDown()
     {
-        if(!GameManager.Instance.IsPointerOverUIObject("UI") && !FunctionHandler.Instance.MenuActive)
+        if(!FunctionHandler.Instance.IsPointerOverUIObject("UI") && !FunctionHandler.Instance.MenuActive)
         {
             Selected = true;
             GameManager.Instance.selectedTile = transform;
@@ -126,7 +126,7 @@ public class TileManager : MonoBehaviour
 
     void OnMouseDrag()
     {
-        if(!GameManager.Instance.IsPointerOverUIObject("UI") && Movable && transform.CompareTag("Tile") && Selected && !CollidedBool && !RotationInProgress)
+        if(!FunctionHandler.Instance.IsPointerOverUIObject("UI") && Movable && transform.CompareTag("Tile") && Selected && !CollidedBool && !RotationInProgress)
         {
             //if (transform.GetChild(4).childCount == 0)
             //{
@@ -143,7 +143,7 @@ public class TileManager : MonoBehaviour
     {
         //if (transform.GetChild(4).childCount == 0)
         //{
-        if (!GameManager.Instance.IsPointerOverUIObject("UI") &&  Selected && !CollidedBool && !RotationInProgress && !DragActive)
+        if (!FunctionHandler.Instance.IsPointerOverUIObject("UI") &&  Selected && !CollidedBool && !RotationInProgress && !DragActive)
         {
             if(GameManager.Instance.TurnCount>0 )
                 StartCoroutine(StopRotate());

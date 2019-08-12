@@ -8,6 +8,7 @@ public class TittleManager : Singleton<TittleManager>
 
     private void Start()
     {
+        rocketAnim.Play("IdleRocket");
         AudioManager.Instance.PlaySound("Music");
         StartCoroutine(StopTittleRocket());
     }
@@ -21,7 +22,7 @@ public class TittleManager : Singleton<TittleManager>
         while(true)
         {
             rocketAnim.SetTrigger("TakeOff");
-            yield return new WaitForSeconds(15f);
+            yield return new WaitForSeconds(35f);
             rocketAnim.SetTrigger("Return");
             yield return new WaitForSeconds(15f);
         }
