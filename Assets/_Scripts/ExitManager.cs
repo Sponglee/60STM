@@ -22,6 +22,8 @@ public class ExitManager : TileManager
             if(transform.parent != null)
             {
                 GameObject tmpEmpty = Instantiate(LevelManager.Instance.sidesPref, transform.parent);
+                //Set material
+                tmpEmpty.transform.GetChild(1).GetComponent<Renderer>().material = LevelManager.Instance.tileMats[LevelManager.Instance.randTileMat];
                 LevelManager.Instance.freeTiles.Add(tmpEmpty.transform);
             
                 LevelManager.Instance.exits.Remove(transform);

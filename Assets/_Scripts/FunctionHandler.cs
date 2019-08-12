@@ -154,6 +154,12 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
         uiCanvas.SetActive(false);
         endGamePanel.SetActive(true);
+        //Disable rays if no gems
+        if(LevelManager.Instance.stars.Count== 0)
+        {
+            endGamePanel.transform.GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(false);
+        }
+
         menuText.gameObject.SetActive(true);
         menuText.text = string.Format("LEVEL {0} COMPLETE",PlayerPrefs.GetInt("Level",1));
         GameManager.Instance.turnCountText.gameObject.SetActive(false);
@@ -182,55 +188,55 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
     public void MuskEmote(int index)
     {
-        if (!MuskInProgress && !tutorialCanvas.activeSelf)
-        {
-            switch (index)
-            {
-                //Sad
-                case 0:
-                    {
-                        muskReference.GetComponentInChildren<Image>().sprite = muskImages[Random.Range(0,3)];
+        //if (!MuskInProgress && !tutorialCanvas.activeSelf)
+        //{
+        //    switch (index)
+        //    {
+        //        //Sad
+        //        case 0:
+        //            {
+        //                muskReference.GetComponentInChildren<Image>().sprite = muskImages[Random.Range(0,3)];
 
-                        StartCoroutine(StopMusk(index,true));
-                    }
-                    break;
-                //Excited
-                case 1:
-                    {
-                        int muskRandomizer = Random.Range(0, 100);
-                        if(muskRandomizer<50)
-                        {
-                            muskReference.GetComponentInChildren<Image>().sprite = muskImages[Random.Range(3,7)];
+        //                StartCoroutine(StopMusk(index,true));
+        //            }
+        //            break;
+        //        //Excited
+        //        case 1:
+        //            {
+        //                int muskRandomizer = Random.Range(0, 100);
+        //                if(muskRandomizer<50)
+        //                {
+        //                    muskReference.GetComponentInChildren<Image>().sprite = muskImages[Random.Range(3,7)];
 
-                            StartCoroutine(StopMusk(index));
-                        }
+        //                    StartCoroutine(StopMusk(index));
+        //                }
                         
 
                       
-                    }
-                    break;
-                //Launch
-                case 2:
-                    {
-                        MuskInProgress = false;
-                        muskReference.GetComponentInChildren<Image>().sprite = muskImages[6];
+        //            }
+        //            break;
+        //        //Launch
+        //        case 2:
+        //            {
+        //                MuskInProgress = false;
+        //                muskReference.GetComponentInChildren<Image>().sprite = muskImages[6];
 
-                        StartCoroutine(StopMusk(index));
-                    }
-                    break;
-                //Mars hi
-                case 3:
-                    {
-                        MuskInProgress = false;
-                        muskReference.GetComponentInChildren<Image>().sprite = muskImages[7];
+        //                StartCoroutine(StopMusk(index));
+        //            }
+        //            break;
+        //        //Mars hi
+        //        case 3:
+        //            {
+        //                MuskInProgress = false;
+        //                muskReference.GetComponentInChildren<Image>().sprite = muskImages[7];
 
-                        StartCoroutine(StopMusk(index,true));
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
+        //                StartCoroutine(StopMusk(index,true));
+        //            }
+        //            break;
+        //        default:
+        //            break;
+        //    }
+        //}
 
     }
 

@@ -5,6 +5,8 @@ using UnityEngine.AI;
 
 public class TileManager : MonoBehaviour
 {
+
+    private Transform targetSpot;
     [SerializeField]
     private bool collidedBool = false;
     public bool CollidedBool { get => collidedBool; set => collidedBool = value; }
@@ -160,6 +162,7 @@ public class TileManager : MonoBehaviour
         if(DragActive)
         {
             AudioManager.Instance.PlaySound("Bump");
+            //PutTileDown();
         }
         //}
 
@@ -201,13 +204,10 @@ public class TileManager : MonoBehaviour
 
 
   
-
-
-    private void OnTriggerEnter(Collider other)
+    private void PutTileDown()
     {
-        if(this.CompareTag("Tile") && other.CompareTag("Empty") && !CollidedBool && Selected)
+        if(targetSpot != null)
         {
-           
             DragActive = true;
             CollidedBool = true;
             //Debug.Log("HERE");
@@ -216,13 +216,30 @@ public class TileManager : MonoBehaviour
             Transform tmpParent = transform.parent;
 
             //Swap positions and parents
-            transform.position = other.transform.parent.position;
-            transform.SetParent(other.transform.parent);
+            transform.position = targetSpot.transform.parent.position;
+            transform.SetParent(targetSpot.transform.parent);
 
-            other.transform.position = tmpPosition;
-            other.transform.SetParent(tmpParent);
+            targetSpot.transform.position = tmpPosition;
+            targetSpot.transform.SetParent(tmpParent);
             //Build navMesh
             GameManager.Instance.BuildSurface();
+        }
+        else
+        {
+            DragActive = true;
+            //Debug.Log("OLD " + other.name);
+            CollidedBool = true;
+            transform.position = oldPosition;
+        }
+       
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(this.CompareTag("Tile") && other.CompareTag("Empty") && !CollidedBool && Selected)
+        {
+           targetSpot = other.transform;
+            PutTileDown();
         }
         else if(!CollidedBool && Selected)
         {

@@ -20,12 +20,18 @@ public class LevelManager : Singleton<LevelManager>
     public Transform boardHolder;
     public Transform exitsHolder;
     public Transform ground;
-    public Material[] groundMats;
-    
+    public Transform trees;
 
+    public Mesh[] treeVariants;
+    public Material[] groundMats;
+
+    public Material[] tileMats;
     public Material[] materials;
 
-
+    //Randomize ground
+    public int randGroundIndex;
+    public int randTreeIndex;
+    public int randTileMat;
 
     public float nodeStep = 10.5f;
     
@@ -42,8 +48,44 @@ public class LevelManager : Singleton<LevelManager>
         stars = new List<Transform>();
 
         //Randomize ground
+        randGroundIndex = Random.Range(0, groundMats.Length);
+        randTreeIndex = Random.Range(0, treeVariants.Length);
+        randTileMat = Random.Range(0, tileMats.Length);
+
+
         ground.eulerAngles = new Vector3(0, Random.Range(0, 360), 0);
-        ground.GetChild(0).GetComponent<Renderer>().material = groundMats[Random.Range(0, groundMats.Length)];
+        ground.GetChild(0).GetComponent<Renderer>().material = groundMats[randGroundIndex];
+
+        //Disable trees on mars and moon
+        if(randGroundIndex == 2 || randGroundIndex == 1)
+        {
+            trees.gameObject.SetActive(false);
+        }
+        //If desert - palms
+        else if(randGroundIndex == 3)
+        {
+            foreach (Transform child in trees)
+            {
+                child.GetComponent<MeshFilter>().mesh = treeVariants[3];
+            }
+        }
+        //If winter - trees
+        else if (randGroundIndex == 4)
+        {
+            foreach (Transform child in trees)
+            {
+                child.GetComponent<MeshFilter>().mesh = treeVariants[0];
+            }
+        }
+        else 
+        {
+            foreach (Transform child in trees)
+            {
+                child.GetComponent<MeshFilter>().mesh = treeVariants[randTreeIndex];
+            }
+        }
+            trees.eulerAngles = new Vector3(0, Random.Range(0, 360), 0);
+
 
         for (int i = 0; i < levelDimention; i++)
         {
@@ -60,6 +102,9 @@ public class LevelManager : Singleton<LevelManager>
                     if (i == 0 ^ j == 0 ^ i == levelDimention - 1 ^ j == levelDimention - 1)
                     {
                         GameObject tmpSide = Instantiate(sidesPref, tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
+                        //Set material
+                        tmpSide.transform.GetChild(1).GetComponent<Renderer>().material = tileMats[randTileMat];
+
                         tmpSide.transform.LookAt(Vector3.zero, Vector3.up);
                         //Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
 
@@ -81,6 +126,8 @@ public class LevelManager : Singleton<LevelManager>
                         {
                             tileCount++;
                             GameObject tmpTile = Instantiate(tilePref, tmpNode.transform.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform);
+                            //Set material
+                            tmpTile.transform.GetChild(3).GetComponent<Renderer>().material = tileMats[randTileMat];
                             //If center - enable rocket and disable buildings
                             if (i == levelDimention / 2 && j == levelDimention-1)
                             {
@@ -242,7 +289,7 @@ public class LevelManager : Singleton<LevelManager>
     //    exits.Clear();
     //}
 
-
+        
 
     //Spawn new rocket
     public void SpawnRocket()
