@@ -91,7 +91,7 @@ public class LevelManager : Singleton<LevelManager>
         {
             for (int j = 0; j < levelDimention; j++)
             {
-                if(true/*Mathf.Abs(i - j) <= 2*/)
+                if(/*true*/Mathf.Abs(i - j) <= 3)
                 {
                     GameObject tmpNode = Instantiate(nodePref, new Vector3(nodeStep * j - nodeStep * (levelDimention / 2), 0, -nodeStep * i + nodeStep * (levelDimention / 2)), Quaternion.identity, transform);
                     
