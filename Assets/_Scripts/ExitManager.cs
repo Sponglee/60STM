@@ -24,6 +24,9 @@ public class ExitManager : TileManager
                 GameObject tmpEmpty = Instantiate(LevelManager.Instance.sidesPref, transform.parent);
                 //Set material
                 tmpEmpty.transform.GetChild(1).GetComponent<Renderer>().material = LevelManager.Instance.tileMats[LevelManager.Instance.randTileMat];
+                tmpEmpty.transform.GetChild(1).GetComponent<Renderer>().material.color = Color.gray;// new Color(0.2f, 0.2f, 0.2f);
+            
+             
                 LevelManager.Instance.freeTiles.Add(tmpEmpty.transform);
             
                 LevelManager.Instance.exits.Remove(transform);

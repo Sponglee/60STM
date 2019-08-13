@@ -91,21 +91,22 @@ public class LevelManager : Singleton<LevelManager>
         {
             for (int j = 0; j < levelDimention; j++)
             {
-                if(/*true*/Mathf.Abs(i - j) <= 3)
+                if (/*true*/Mathf.Abs(i - j) <= 3)
                 {
                     GameObject tmpNode = Instantiate(nodePref, new Vector3(nodeStep * j - nodeStep * (levelDimention / 2), 0, -nodeStep * i + nodeStep * (levelDimention / 2)), Quaternion.identity, transform);
-                    
+
                     tmpNode.GetComponent<NodeController>().Row = i;
                     tmpNode.GetComponent<NodeController>().Column = j;
 
                     //Corners
-                    if (i == 0 ^ j == 0 ^ i == levelDimention - 1 ^ j == levelDimention - 1)
+                    if ((i == 0 ^ j == 0 ^ i == levelDimention - 1 ^ j == levelDimention - 1) || Mathf.Abs(i - j) == 3)
                     {
                         GameObject tmpSide = Instantiate(sidesPref, tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
                         //Set material
                         tmpSide.transform.GetChild(1).GetComponent<Renderer>().material = tileMats[randTileMat];
-
+                        tmpSide.transform.GetChild(1).GetComponent<Renderer>().material.color = Color.gray;// new Color(0.2f, 0.2f, 0.2f);
                         tmpSide.transform.LookAt(Vector3.zero, Vector3.up);
+
                         //Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
 
                         tmpSide.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpSide.transform.eulerAngles.y / 90f) * 90f, 0);
@@ -114,7 +115,7 @@ public class LevelManager : Singleton<LevelManager>
 
                     }
                     //Sides
-                    else if (i == 0 && j == 0 && i == levelDimention - 1 && j == levelDimention - 1 )
+                    else if ((i == 0 && j == 0 && i == levelDimention - 1 && j == levelDimention - 1) || Mathf.Abs(i - j) == 3)
                     {
                         Instantiate(boardTilePref, tmpNode.transform.position, tmpNode.transform.rotation, boardHolder);
                     }
@@ -228,6 +229,10 @@ public class LevelManager : Singleton<LevelManager>
         Transform tmpFreeTile = freeTiles[tmpFree];
         freeTiles.Remove(tmpFreeTile);
         GameObject tmpExit = Instantiate(exitPref, tmpFreeTile.parent.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpFreeTile.parent);
+
+        //Set material
+        tmpExit.transform.GetChild(1).GetComponent<Renderer>().material = tileMats[randTileMat];
+        tmpExit.transform.GetChild(1).GetComponent<Renderer>().material.color = Color.gray;// new Color(0.2f, 0.2f, 0.2f);
 
         tmpExit.transform.LookAt(Vector3.zero, Vector3.up);
         //Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);

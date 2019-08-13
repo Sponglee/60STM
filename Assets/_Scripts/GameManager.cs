@@ -150,17 +150,34 @@ public class GameManager : Singleton<GameManager>
         Currency = PlayerPrefs.GetInt("Currency", 0);
 
         ArcadeMode = PlayerPrefs.GetInt("ArcadeMode",0) == 1 ? true : false;
-        if(PlayerPrefs.GetInt("Level", 1)<10 && PlayerPrefs.GetInt("Level", 1)>=5)
+        if (PlayerPrefs.GetInt("Level", 1) < 5 && PlayerPrefs.GetInt("Level", 1) >= 0)
         {
-            spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 5, 1, 10) + 1;
+            spawnModifier = 1;
+            LevelManager.Instance.levelDimention = 5;
+        }
+        else if (PlayerPrefs.GetInt("Level", 1)<10 && PlayerPrefs.GetInt("Level", 1)>=5)
+        {
+            spawnModifier = 2;
+            LevelManager.Instance.levelDimention = 6;
         }
         else if(PlayerPrefs.GetInt("Level", 1) >=10 && PlayerPrefs.GetInt("Level", 1)< 50)
         {
             spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 10) + 1;
+            LevelManager.Instance.levelDimention = 7;
+        }
+        else if(PlayerPrefs.GetInt("Level", 1) >= 50 && PlayerPrefs.GetInt("Level", 1) < 120)
+        {
+            spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10 +1, 1, 10);
+            LevelManager.Instance.levelDimention = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 5, 11);
+            if (LevelManager.Instance.levelDimention > 8)
+                LevelManager.Instance.trees.gameObject.SetActive(false);
         }
         else
         {
-            spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 20, 1, 10);
+            spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 10);
+            LevelManager.Instance.levelDimention = Random.Range(7, 11);
+            if (LevelManager.Instance.levelDimention > 8)
+                LevelManager.Instance.trees.gameObject.SetActive(false);
         }
       
         //Debug.Log("SPAWNMOD " + spawnModifier);

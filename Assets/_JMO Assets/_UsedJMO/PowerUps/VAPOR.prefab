@@ -4741,7 +4741,7 @@ Light:
   m_BounceIntensity: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 1.306e-41, y: 6e-44, z: 0, w: 8e-45}
+  m_BoundingSphereOverride: {x: 2.350989e-38, y: 0, z: 0, w: 0.00075666606}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -4755,7 +4755,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4507296660344586}
   m_Layer: 0
-  m_Name: PoweredUp
+  m_Name: VAPOR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4896,8 +4896,8 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 15
-      minScalar: 6
+      scalar: 1
+      minScalar: 1
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -5387,7 +5387,7 @@ ParticleSystem:
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0
+      scalar: 1
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -9457,8 +9457,8 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: aabf55f91e447f14c945d1251433c9d2, type: 2}
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 5d6930f0430369d4582bdbd32f7ae757, type: 2}
+  - {fileID: 2100000, guid: 5d6930f0430369d4582bdbd32f7ae757, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

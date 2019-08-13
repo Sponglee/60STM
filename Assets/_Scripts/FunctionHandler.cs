@@ -430,4 +430,17 @@ public class FunctionHandler : Singleton<FunctionHandler>
         else
             return false;
     }
+
+
+    public void DebugWin()
+    {
+        //WinText.SetActive(true);
+        GameManager.Instance.turnCountText.gameObject.SetActive(false);
+        FunctionHandler.Instance.LevelComplete();
+
+        //Win sequence
+        GameManager.Instance.endCam.gameObject.SetActive(true);
+        GameManager.Instance.endCam.m_Follow = GameManager.Instance.rocketHolder.GetChild(1).GetChild(1);
+        GameManager.Instance.endCam.m_LookAt = GameManager.Instance.rocketHolder.GetChild(1).GetChild(1);
+    }
 }

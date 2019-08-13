@@ -1953,7 +1953,7 @@ PrefabInstance:
     - target: {fileID: 198912781043867620, guid: 66c0e26bbecd8a04db1c2429485f09f0,
         type: 3}
       propertyPath: InitialModule.gravityModifier.scalar
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 198912781043867620, guid: 66c0e26bbecd8a04db1c2429485f09f0,
         type: 3}
