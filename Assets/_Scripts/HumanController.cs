@@ -41,6 +41,10 @@ public class HumanController : MonoBehaviour
             exitManager.DespawnCheck();
             exitManager.humansRef.Remove(transform);
             AudioManager.Instance.PlaySound("Human");
+            if (GameManager.Instance.zoomTargets.Contains(transform))
+            {
+                GameManager.Instance.zoomTargets.Remove(transform);
+            }
             Destroy(gameObject);
         }
         else if (other.CompareTag("Human") && exitRef != other.GetComponent<HumanController>().exitRef)
@@ -84,7 +88,7 @@ public class HumanController : MonoBehaviour
             StopAllCoroutines();
             StartCoroutine(StopShowMessage(":)"));
 
-            if (GameManager.Instance.zoomTarget == null) 
+            if (GameManager.Instance.zoomTargets.Count == 0) 
                 AudioManager.Instance.PlaySound("Success");
 
 
@@ -96,9 +100,9 @@ public class HumanController : MonoBehaviour
                 PlayerPrefs.SetInt("HoldTutShown", 1);
             }
 
-            if(GameManager.Instance.zoomTarget == null)
+            if(!GameManager.Instance.zoomTargets.Contains(transform))
             {
-                GameManager.Instance.zoomTarget = transform;
+                GameManager.Instance.zoomTargets.Add(transform);
             }
         }
         else if(navMeshPath.status == NavMeshPathStatus.PathPartial)

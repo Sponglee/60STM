@@ -54,7 +54,8 @@ public class GameManager : Singleton<GameManager>
   
 
     //Camera follow
-    public Transform zoomTarget;
+
+    public List<Transform> zoomTargets;
     public int zoomThreshold = 20;
     //Total spawned people
     public int spawnCount = 1;
@@ -89,6 +90,7 @@ public class GameManager : Singleton<GameManager>
     public Text turnCountText;
     public Text humanText;
     public Text LevelText;
+    public Text NextLevelText;
     public Slider progressSlider;
 
     public int levelGoal;
@@ -147,8 +149,8 @@ public class GameManager : Singleton<GameManager>
 
     private void Awake()
     {
+        zoomTargets = new List<Transform>();
         Currency = PlayerPrefs.GetInt("Currency", 0);
-
         ArcadeMode = PlayerPrefs.GetInt("ArcadeMode", 0) == 1 ? true : false;
 
 
@@ -164,15 +166,15 @@ public class GameManager : Singleton<GameManager>
         }
         else if(PlayerPrefs.GetInt("Level", 1) >=10 && PlayerPrefs.GetInt("Level", 1)< 50)
         {
-            spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 10) + 1;
-            LevelManager.Instance.levelDimention = 5 + Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 10);
+            spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 20, 1, 10) + 1;
+            LevelManager.Instance.levelDimention = 5 + Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 6);
             if (LevelManager.Instance.levelDimention > 8)
                 LevelManager.Instance.trees.gameObject.SetActive(false);
         }
         else if (PlayerPrefs.GetInt("Level", 1) >= 50 && PlayerPrefs.GetInt("Level", 1) < 120)
         {
-            spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 10) + 1;
-            LevelManager.Instance.levelDimention = Random.Range(6, 5 + Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 10));
+            spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 20, 1, 10) + 1;
+            LevelManager.Instance.levelDimention = Random.Range(6, 5 + Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 6));
             if (LevelManager.Instance.levelDimention > 8)
                 LevelManager.Instance.trees.gameObject.SetActive(false);
         }
@@ -186,7 +188,8 @@ public class GameManager : Singleton<GameManager>
       
         //Debug.Log("SPAWNMOD " + spawnModifier);
         levelGoal = 15*spawnModifier;
-        LevelText.text = string.Format("Level {0}", PlayerPrefs.GetInt("Level", 1).ToString());
+        LevelText.text = string.Format("{0}", PlayerPrefs.GetInt("Level", 1).ToString());
+        NextLevelText.text = string.Format("{0}", (1 + PlayerPrefs.GetInt("Level", 1)).ToString());
         currentOrientation = Screen.orientation;
         if (Screen.orientation == ScreenOrientation.Landscape || Screen.orientation == ScreenOrientation.LandscapeLeft || Screen.orientation == ScreenOrientation.LandscapeRight)
         {
@@ -240,13 +243,13 @@ public class GameManager : Singleton<GameManager>
     {
         if(Input.GetMouseButton(0))
         {
-           if (zoomInCam.m_Priority <= 61 && zoomTarget != null)
+           if (zoomInCam.m_Priority <= 61 && zoomTargets.Count != 0)
            {
                 zoomInCam.m_Priority += 1;
 
-               
-                zoomInCam.m_LookAt = zoomTarget;
-                zoomInCam.m_Follow = zoomTarget;
+
+                zoomInCam.m_LookAt = zoomTargets[zoomTargets.Count - 1];
+                zoomInCam.m_Follow = zoomTargets[zoomTargets.Count-1];
                 
                 if(zoomInCam.m_Priority>=60)
                 {
