@@ -32,6 +32,8 @@ public class LevelManager : Singleton<LevelManager>
     public int randGroundIndex;
     public int randTreeIndex;
     public int randTileMat;
+    public int randGroundEuler;
+    public int[] levelData;
 
     public float nodeStep = 10.5f;
     
@@ -46,14 +48,37 @@ public class LevelManager : Singleton<LevelManager>
         exits = new List<Transform>();
         freeTiles = new List<Transform>();
         stars = new List<Transform>();
+        levelData = new int[5];
 
-        //Randomize ground
-        randGroundIndex = Random.Range(0, groundMats.Length);
-        randTreeIndex = Random.Range(0, treeVariants.Length);
-        randTileMat = Random.Range(0, tileMats.Length);
+        //LOAD SYSTEM
+        string levelDataString = PlayerPrefs.GetString("LastLevel", "0,0,0,0,0");
+        string[] levelDataStrArr = levelDataString.Split(',');
+        for (int i = 0; i < levelDataStrArr.Length; i++)
+        {
+            Debug.Log("SS");
+            levelData[i] = int.Parse(levelDataStrArr[i]);
+        }
 
 
-        ground.eulerAngles = new Vector3(0, Random.Range(0, 360), 0);
+        if (PlayerPrefs.GetInt("Level",1)!= levelData[0])
+        {
+            //Randomize ground
+            randGroundIndex = Random.Range(0, groundMats.Length);
+            randGroundEuler = Random.Range(0, 360);
+            randTreeIndex = Random.Range(0, treeVariants.Length);
+            randTileMat = Random.Range(0, tileMats.Length);
+            PlayerPrefs.SetString("LastLevel", string.Format("{0},{1},{2},{3},{4}",PlayerPrefs.GetInt("Level",1),randGroundIndex,randGroundEuler,randTreeIndex, randTileMat));
+        }
+        else
+        {
+            randGroundIndex = levelData[1];
+            randGroundEuler = levelData[2];
+            randTreeIndex = levelData[3];
+            randTileMat = levelData[4];
+
+        }
+
+        ground.eulerAngles = new Vector3(0,randGroundEuler, 0);
         ground.GetChild(0).GetComponent<Renderer>().material = groundMats[randGroundIndex];
 
         //Disable trees on mars and moon
@@ -84,7 +109,7 @@ public class LevelManager : Singleton<LevelManager>
                 child.GetComponent<MeshFilter>().mesh = treeVariants[randTreeIndex];
             }
         }
-            trees.eulerAngles = new Vector3(0, Random.Range(0, 360), 0);
+            trees.eulerAngles = new Vector3(0, randGroundEuler, 0);
 
 
         for (int i = 0; i < levelDimention; i++)

@@ -2279,7 +2279,7 @@ GameObject:
   - component: {fileID: 2796843704202692124}
   m_Layer: 0
   m_Name: 4HumanHolder
-  m_TagString: Tile
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2901,7 +2901,7 @@ GameObject:
   - component: {fileID: 8320016579071767952}
   m_Layer: 0
   m_Name: 5StarHolder
-  m_TagString: Tile
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5236,6 +5236,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c783d09e736c7647ae574411b062bf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tileTutorialStep: -1
   collidedBool: 0
   selected: 0
   dragActive: 0

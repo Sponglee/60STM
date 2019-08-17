@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using Cinemachine;
 using UnityEngine.EventSystems;
-
+using GameAnalyticsSDK;
 
 public class FunctionHandler : Singleton<FunctionHandler>
 {
@@ -15,8 +15,8 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
     //Tutorial
     public GameObject tutorialCanvas;
-    public int tutorialStep = 0;
-    public string[] steps;
+    public int tutorialStep = -1;
+    public int steps;
     public bool TutInProgress = false;
 
     public GameObject HoldTut;
@@ -145,6 +145,7 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
     public void LevelComplete()
     {
+        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Start, Application.version, PlayerPrefs.GetInt("Level",1).ToString("00000"));
 
         //Hi mote
         Instance.MuskEmote(2);
@@ -316,15 +317,33 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
 
 
-    public void TutorialStep()
+    public void TutorialStep(string anim)
     {
-        if(!TutInProgress)
+        if(true/*!TutInProgress*/)
         {
-            GameManager.Instance.GameOverBool = true;
+            //Disable previous step
+            //if (tutorialStep>=0)
+            //    tutorialCanvas.transform.GetChild(tutorialStep).gameObject.SetActive(false);
+
+
+            //Add +1 to every tiles
+            GameObject[] tmpTiles = GameObject.FindGameObjectsWithTag("Tile");
+            Debug.Log( " TILES " + tmpTiles.Length);
+            foreach (GameObject tmpTile in tmpTiles)
+            {
+                tmpTile.GetComponent<TileManager>().TileTutorialStep++;
+            }
+
+            tutorialStep++;
+
+            //GameManager.Instance.GameOverBool = true;
             StartCoroutine(StopTutStep());
-            tutorialCanvas.transform.parent.GetComponent<Animator>().SetTrigger("moveAnim");
+            //tutorialCanvas.transform.GetChild(tutorialStep).gameObject.SetActive(true);
+            tutorialCanvas.transform.parent.GetComponent<Animator>().SetTrigger(anim);
+
+
         }
-       
+
     }
 
 
@@ -333,24 +352,24 @@ public class FunctionHandler : Singleton<FunctionHandler>
         TutInProgress = true;
         while(true)
         {
-            if (tutorialStep > steps.Length - 1)
+            if (tutorialStep >= steps)
             {
                 PlayerPrefs.SetInt("FirstLaunch", 0);
-                tutorialCanvas.SetActive(false);
+                tutorialCanvas.gameObject.SetActive(false);
                 TutInProgress = false;
                 yield break;
 
             }
 
-            GameManager.Instance.GameOverBool = false;
-            //for (int i = 0; i < messages[tutorialStep].Length; i++)
-            //{
-            //    text.text += messages[tutorialStep][i];
-            //    yield return new WaitForEndOfFrame();
-            //}
-            yield return new WaitForSeconds(2f);
+            //GameManager.Instance.GameOverBool = false;
+            ////for (int i = 0; i < messages[tutorialStep].Length; i++)
+            ////{
+            ////    text.text += messages[tutorialStep][i];
+            ////    yield return new WaitForEndOfFrame();
+            ////}
+            yield return new WaitForSeconds(1f);
 
-            tutorialStep++;
+            ////tutorialStep++;
 
         }
 

@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 using Cinemachine;
 using UnityEngine.SceneManagement;
-
+using GameAnalyticsSDK;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -209,6 +209,9 @@ public class GameManager : Singleton<GameManager>
 
     private void Start()
     {
+
+        GameAnalytics.Initialize();
+
         HumanCount = 0;
         TurnCount = PlayerPrefs.GetInt("TurnCount", 3);
        
@@ -216,7 +219,7 @@ public class GameManager : Singleton<GameManager>
         if(PlayerPrefs.GetInt("FirstLaunch", 1) == 1)
         {
             FunctionHandler.Instance.tutorialCanvas.SetActive(true);
-            FunctionHandler.Instance.TutorialStep();
+            FunctionHandler.Instance.TutorialStep("moveAnim");
         }
 
         //humanText.text = string.Format("{0}/ {1}", HumanCount, levelGoal);

@@ -5,7 +5,10 @@ using UnityEngine.AI;
 
 public class TileManager : MonoBehaviour
 {
-
+    [SerializeField]
+    private int tileTutorialStep = -1;
+    public int TileTutorialStep { get => tileTutorialStep; set => tileTutorialStep = value; }
+    
     private Transform targetSpot;
     [SerializeField]
     private bool collidedBool = false;
@@ -82,7 +85,10 @@ public class TileManager : MonoBehaviour
             }
         }
     }
-
+    private void Start()
+    {
+        TileTutorialStep = FunctionHandler.Instance.tutorialStep;
+    }
 
 
     private void Update()
@@ -134,6 +140,16 @@ public class TileManager : MonoBehaviour
                 Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(cursorScreenPoint) + offset;
                 transform.position = new Vector3(cursorPosition.x, transform.position.y, cursorPosition.z);
             //}
+
+            //TUTORIAL
+            if(TileTutorialStep == 0)
+            {
+
+              
+              
+               
+                FunctionHandler.Instance.TutorialStep("rotateAnim");
+            }
         }
       
     }
@@ -199,7 +215,13 @@ public class TileManager : MonoBehaviour
         AgentToggle(true, GameManager.Instance.rocketHolder.position);
         //Build navMesh
         GameManager.Instance.BuildSurface();
-        
+
+        if (TileTutorialStep == 1)
+        {
+            //FunctionHandler.Instance.tutorialStep++;
+            FunctionHandler.Instance.TutorialStep("cameraAnim");
+        }
+
     }
 
 
