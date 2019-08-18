@@ -30,7 +30,7 @@ MonoBehaviour:
   secretKey:
   - c6ba49f9b4a27107280a22f252b86d2cd32b9388
   Build:
-  - 0.8
+  - 1.0
   SelectedPlatformStudio:
   - Voodoo
   SelectedPlatformGame:

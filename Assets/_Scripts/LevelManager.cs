@@ -155,7 +155,7 @@ public class LevelManager : Singleton<LevelManager>
                             //Set material
                             tmpTile.transform.GetChild(3).GetComponent<Renderer>().material = tileMats[randTileMat];
                             //If center - enable rocket and disable buildings
-                            if (i == levelDimention / 2 && j == levelDimention-1)
+                            if (false || i == levelDimention / 2 && j == levelDimention-1)
                             {
                                
 

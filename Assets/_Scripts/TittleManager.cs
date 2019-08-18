@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GameAnalyticsSDK;
+
 
 public class TittleManager : Singleton<TittleManager>
 {
@@ -8,6 +10,7 @@ public class TittleManager : Singleton<TittleManager>
 
     private void Start()
     {
+        GameAnalytics.Initialize();
         rocketAnim.Play("IdleRocket");
         AudioManager.Instance.PlaySound("Music");
         StartCoroutine(StopTittleRocket());

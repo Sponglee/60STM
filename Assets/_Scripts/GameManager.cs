@@ -210,7 +210,7 @@ public class GameManager : Singleton<GameManager>
     private void Start()
     {
 
-        GameAnalytics.Initialize();
+        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Start, Application.version, PlayerPrefs.GetInt("Level", 1).ToString("00000"));
 
         HumanCount = 0;
         TurnCount = PlayerPrefs.GetInt("TurnCount", 3);
@@ -286,18 +286,18 @@ public class GameManager : Singleton<GameManager>
         }
         else if(Input.GetMouseButtonDown(1))
         {
-            FunctionHandler.Instance.MuskEmote(Random.Range(0, 4));
+            //FunctionHandler.Instance.MuskEmote(Random.Range(0, 4));
         }
         else if(Input.GetMouseButtonDown(2))
         {
             //WinText.SetActive(true);
-            turnCountText.gameObject.SetActive(false);
-            FunctionHandler.Instance.LevelComplete();
+            //turnCountText.gameObject.SetActive(false);
+            //FunctionHandler.Instance.LevelComplete();
 
-            //Win sequence
-            endCam.gameObject.SetActive(true);
-            endCam.m_Follow = rocketHolder.GetChild(1).GetChild(1);
-            endCam.m_LookAt = rocketHolder.GetChild(1).GetChild(1);
+            ////Win sequence
+            //endCam.gameObject.SetActive(true);
+            //endCam.m_Follow = rocketHolder.GetChild(1).GetChild(1);
+            //endCam.m_LookAt = rocketHolder.GetChild(1).GetChild(1);
 
 
         }

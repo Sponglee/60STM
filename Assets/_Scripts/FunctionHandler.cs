@@ -45,7 +45,10 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
     public bool PerspBool = false;
 
-
+    private void Start()
+    {
+         
+    }
 
     public void ChangeCameras()
     {
@@ -77,17 +80,18 @@ public class FunctionHandler : Singleton<FunctionHandler>
         }
     }
 
-    public void StartLevel(bool TimedToggle)
+    public void StartLevel(bool ReplayToggle)
     {
         Time.timeScale = 1;
         //Debug modes
-        if(TimedToggle || SceneManager.GetActiveScene().name == "Main")
+        if(ReplayToggle/* || SceneManager.GetActiveScene().name == "Main"*/)
         {
+            PlayerPrefs.SetInt("Level", PlayerPrefs.GetInt("Level", 1) - 1);
             SceneManager.LoadScene("Main");
         }
-        else if(!TimedToggle || SceneManager.GetActiveScene().name == "Relax")
+        else if(!ReplayToggle /*|| SceneManager.GetActiveScene().name == "Relax"*/)
         {
-            SceneManager.LoadScene("Relax");
+            SceneManager.LoadScene("Main");
         }
        
     }
@@ -145,7 +149,7 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
     public void LevelComplete()
     {
-        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Start, Application.version, PlayerPrefs.GetInt("Level",1).ToString("00000"));
+        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Complete, Application.version, PlayerPrefs.GetInt("Level",1).ToString("00000"));
 
         //Hi mote
         Instance.MuskEmote(2);
@@ -453,13 +457,13 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
     public void DebugWin()
     {
-        //WinText.SetActive(true);
-        GameManager.Instance.turnCountText.gameObject.SetActive(false);
-        FunctionHandler.Instance.LevelComplete();
+        ////WinText.SetActive(true);
+        //GameManager.Instance.turnCountText.gameObject.SetActive(false);
+        //FunctionHandler.Instance.LevelComplete();
 
-        //Win sequence
-        GameManager.Instance.endCam.gameObject.SetActive(true);
-        GameManager.Instance.endCam.m_Follow = GameManager.Instance.rocketHolder.GetChild(1).GetChild(1);
-        GameManager.Instance.endCam.m_LookAt = GameManager.Instance.rocketHolder.GetChild(1).GetChild(1);
+        ////Win sequence
+        //GameManager.Instance.endCam.gameObject.SetActive(true);
+        //GameManager.Instance.endCam.m_Follow = GameManager.Instance.rocketHolder.GetChild(1).GetChild(1);
+        //GameManager.Instance.endCam.m_LookAt = GameManager.Instance.rocketHolder.GetChild(1).GetChild(1);
     }
 }
