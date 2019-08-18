@@ -254,10 +254,15 @@ public class GameManager : Singleton<GameManager>
                 zoomInCam.m_LookAt = zoomTargets[zoomTargets.Count - 1];
                 zoomInCam.m_Follow = zoomTargets[zoomTargets.Count-1];
                 
-                if(zoomInCam.m_Priority>=60)
+                if(zoomInCam.m_Priority>=60 && zoomInCam.m_Priority <81)
                 {
-                    PlayerPrefs.SetInt("HoldTutShown", 1);
-                    FunctionHandler.Instance.HoldTut.SetActive(false);
+                    zoomInCam.m_Priority += 1;
+                    if(zoomInCam.m_Priority >= 80)
+                    {
+                        PlayerPrefs.SetInt("HoldTutShown", 1);
+                        FunctionHandler.Instance.HoldTut.SetActive(false);
+                    }
+                   
                 }
            }
           

@@ -24,6 +24,9 @@ public class FunctionHandler : Singleton<FunctionHandler>
     public Transform starsHolderUI;
     public Transform starsHolderEnd;
 
+    public Transform musicMuteRef;
+    public Transform soundMuteRef;
+
     public Transform muskReference;
     public Sprite[] muskImages;
     public bool MuskInProgress = false;
@@ -47,7 +50,15 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
     private void Start()
     {
-         
+        if(PlayerPrefs.GetInt("SoundMute",0) == 1)
+        {
+            MuteSound(soundMuteRef);
+            MuteSound(musicMuteRef);
+        }
+        else if(PlayerPrefs.GetInt("MusicMute",0) == 1)
+        {
+            MuteSound(musicMuteRef);
+        }
     }
 
     public void ChangeCameras()
@@ -304,6 +315,9 @@ public class FunctionHandler : Singleton<FunctionHandler>
         {
             musicMuted = !musicMuted;
             Debug.Log("MMMMMMMMMMMUUUUUUUUUUUUUUSIC");
+
+            PlayerPrefs.SetInt("MusicMute", musicMuted? 1:0);
+
             AudioManager.Instance.VolumeMute(musicMuted,true);
             reference.GetChild(0).GetChild(0).gameObject.SetActive(!musicMuted);
             reference.GetChild(0).GetChild(1).gameObject.SetActive(musicMuted);
@@ -311,6 +325,9 @@ public class FunctionHandler : Singleton<FunctionHandler>
         else
         {
             soundMuted = !soundMuted;
+
+            PlayerPrefs.SetInt("SoundMute", soundMuted ? 1 : 0);
+
             AudioManager.Instance.VolumeMute(soundMuted);
             reference.GetChild(0).GetChild(0).gameObject.SetActive(!soundMuted);
             reference.GetChild(0).GetChild(1).gameObject.SetActive(soundMuted);
@@ -318,6 +335,7 @@ public class FunctionHandler : Singleton<FunctionHandler>
        
 
     }
+
 
 
 

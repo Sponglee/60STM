@@ -165,7 +165,7 @@ public class LevelManager : Singleton<LevelManager>
                             //Set material
                             tmpTile.transform.GetChild(3).GetComponent<Renderer>().material = tileMats[randTileMat];
                         }
-                        else if (/*tileCount < (levelDimention - 2) * (levelDimention - 2) - 2*/Random.Range(0,100)>=30)
+                        else if (/*(tileCount < freeTiles.Count - 2) ^*/ Random.Range(0,100)>=30)
                         {
                             tileCount++;
                             GameObject tmpTile = Instantiate(tilePref, tmpNode.transform.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform);
