@@ -291,13 +291,13 @@ public class GameManager : Singleton<GameManager>
         else if(Input.GetMouseButtonDown(2))
         {
             //WinText.SetActive(true);
-            //turnCountText.gameObject.SetActive(false);
-            //FunctionHandler.Instance.LevelComplete();
+            turnCountText.gameObject.SetActive(false);
+            FunctionHandler.Instance.LevelComplete();
 
-            ////Win sequence
-            //endCam.gameObject.SetActive(true);
-            //endCam.m_Follow = rocketHolder.GetChild(1).GetChild(1);
-            //endCam.m_LookAt = rocketHolder.GetChild(1).GetChild(1);
+            //Win sequence
+            endCam.gameObject.SetActive(true);
+            endCam.m_Follow = rocketHolder.GetChild(1).GetChild(1);
+            endCam.m_LookAt = rocketHolder.GetChild(1).GetChild(1);
 
 
         }

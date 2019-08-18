@@ -147,21 +147,33 @@ public class LevelManager : Singleton<LevelManager>
                     else if (/*(i == levelDimention / 2 && j == levelDimention - 1) ||*/ (i < levelDimention -1 && j < levelDimention -1)  && i>0 && j>0)
                     {
                         Instantiate(boardTilePref, tmpNode.transform.position, tmpNode.transform.rotation, boardHolder);
-
-                        if (/*tileCount < (levelDimention - 2) * (levelDimention - 2) - 2*/Random.Range(0,100)>=30)
+                       
+                        
+                        //If center - enable rocket and disable buildings
+                        if (i == levelDimention / 2 && j == levelDimention / 2)
+                        {
+                            Debug.Log("REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+                            tileCount++;
+                            GameObject tmpTile = Instantiate(tilePref, tmpNode.transform.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform);
+                            //Generate building layout
+                            int buildingIndex = Random.Range(0, tmpTile.transform.GetChild(2).childCount);
+                            tmpTile.transform.GetChild(2).GetChild(buildingIndex).gameObject.SetActive(true);
+                            //Generate road layout
+                            int roadIndex = 0;
+                            tmpTile.transform.GetChild(0).GetChild(roadIndex).gameObject.SetActive(true);
+                           
+                            //Set material
+                            tmpTile.transform.GetChild(3).GetComponent<Renderer>().material = tileMats[randTileMat];
+                        }
+                        else if (/*tileCount < (levelDimention - 2) * (levelDimention - 2) - 2*/Random.Range(0,100)>=30)
                         {
                             tileCount++;
                             GameObject tmpTile = Instantiate(tilePref, tmpNode.transform.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform);
                             //Set material
                             tmpTile.transform.GetChild(3).GetComponent<Renderer>().material = tileMats[randTileMat];
-                            //If center - enable rocket and disable buildings
-                            if (false || i == levelDimention / 2 && j == levelDimention-1)
-                            {
-                               
-
-                            }
-                            else
-                            {
+                           
+                            //else
+                            //{
                                 //If procced - disable moving
                                 if (/*(i != levelDimention / 2 && j != levelDimention/2) && */PlayerPrefs.GetInt("Level", 1) > 4 
                                     && (Random.Range(0, 100) < 10 + Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) % 5, 1, 30)))
@@ -178,7 +190,7 @@ public class LevelManager : Singleton<LevelManager>
                                 int roadIndex = Random.Range(0, tmpTile.transform.GetChild(0).childCount);
                                 tmpTile.transform.GetChild(0).GetChild(roadIndex).gameObject.SetActive(true);
 
-                            }
+                            //}
                         }
                         else
                         {
