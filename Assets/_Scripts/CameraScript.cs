@@ -15,16 +15,35 @@ public class CameraScript : MonoBehaviour
 
 
         float screenRatio = (float)Screen.width / (float)Screen.height;
-        float targetRatio = rink.bounds.size.x / rink.bounds.size.y;
-
-        if (screenRatio >= targetRatio)
+       
+        if(screenRatio>1)
         {
-            camRef.m_Lens.OrthographicSize = rink.bounds.size.y / 2;
+            float targetRatio = rink.bounds.size.y / rink.bounds.size.x;
+            Debug.Log("<>>>>>>>" + screenRatio + " <<<<<< " + targetRatio);
+            if (screenRatio >= targetRatio)
+            {
+                camRef.m_Lens.OrthographicSize = rink.bounds.size.x / 2;
+            }
+            else
+            {
+                float differenceInSize = targetRatio / screenRatio;
+                camRef.m_Lens.OrthographicSize = rink.bounds.size.x / 2 * differenceInSize;
+            }
         }
         else
         {
-            float differenceInSize = targetRatio / screenRatio;
-            camRef.m_Lens.OrthographicSize = rink.bounds.size.y / 2 * differenceInSize;
+            float targetRatio = rink.bounds.size.x / rink.bounds.size.y;
+            Debug.Log("<>>>>>>>" + screenRatio + " <<<<<< " + targetRatio);
+            if (screenRatio >= targetRatio)
+            {
+                camRef.m_Lens.OrthographicSize = rink.bounds.size.y / 2;
+            }
+            else
+            {
+                float differenceInSize = targetRatio / screenRatio;
+                camRef.m_Lens.OrthographicSize = rink.bounds.size.y / 2 * differenceInSize;
+            }
         }
+        
     }
 }

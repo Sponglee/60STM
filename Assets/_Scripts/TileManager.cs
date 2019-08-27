@@ -161,7 +161,7 @@ public class TileManager : MonoBehaviour
         //{
         if (!FunctionHandler.Instance.IsPointerOverUIObject("UI") &&  Selected && !CollidedBool && !RotationInProgress && !DragActive)
         {
-            if(GameManager.Instance.TurnCount>0 )
+            if(true)
                 StartCoroutine(StopRotate());
             else
             {

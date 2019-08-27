@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 using Cinemachine;
 using UnityEngine.SceneManagement;
-using GameAnalyticsSDK;
+//using GameAnalyticsSDK;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -30,6 +30,7 @@ public class GameManager : Singleton<GameManager>
     }
     public ScreenOrientation currentOrientation;
 
+    
     public bool ArcadeMode = false;
 
     public Transform selectedTile;
@@ -68,26 +69,28 @@ public class GameManager : Singleton<GameManager>
     //Trigger To spawn
     public bool SpawnAlreadyTrigger = false;
 
+
+
+  
     [SerializeField]
-    private int turnCount = 0;
-    public int TurnCount
+    private int time = 0;
+    public int Time
     {
         get
         {
-            return turnCount;
+            return time;
         }
         set
         {
-            turnCount = value;
-            PlayerPrefs.SetInt("TurnCount", value);
-            turnCountText.text = value.ToString();
+            time = value;
+            timeText.text = value.ToString();
         }
     }
 
     public bool GameOverBool = false;
     public GameObject WinText;
 
-    public Text turnCountText;
+    public Text timeText;
     public Text humanText;
     public Text LevelText;
     public Text NextLevelText;
@@ -149,48 +152,70 @@ public class GameManager : Singleton<GameManager>
 
     private void Awake()
     {
+        ArcadeMode = (PlayerPrefs.GetInt("GameMode", 0) == 0) ? false : true;
+        Debug.Log("Arcade : " + ArcadeMode + " :" + PlayerPrefs.GetInt("GameMode",0));
+
+
         zoomTargets = new List<Transform>();
         Currency = PlayerPrefs.GetInt("Currency", 0);
-        ArcadeMode = PlayerPrefs.GetInt("ArcadeMode", 0) == 1 ? true : false;
+      
 
-
-        if (PlayerPrefs.GetInt("Level", 1) < 4 && PlayerPrefs.GetInt("Level", 1) >= 0)
+        if(ArcadeMode)
         {
+           
             spawnModifier = 1;
-            LevelManager.Instance.levelDimention = 5;
-        }
-        else if (PlayerPrefs.GetInt("Level", 1) >= 4 && PlayerPrefs.GetInt("Level", 1) < 10)
-        {
-            spawnModifier = 2;
-            LevelManager.Instance.levelDimention = 6;
-        }
-        else if(PlayerPrefs.GetInt("Level", 1) >=10 && PlayerPrefs.GetInt("Level", 1)< 50)
-        {
-            spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 20, 1, 10) + 1;
-            LevelManager.Instance.levelDimention = 5 + Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 6);
-            if (LevelManager.Instance.levelDimention > 8)
-                LevelManager.Instance.trees.gameObject.SetActive(false);
-        }
-        else if (PlayerPrefs.GetInt("Level", 1) >= 50 && PlayerPrefs.GetInt("Level", 1) < 120)
-        {
-            spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 20, 1, 10) + 1;
-            LevelManager.Instance.levelDimention = Random.Range(6, 5 + Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 6));
-            if (LevelManager.Instance.levelDimention > 8)
-                LevelManager.Instance.trees.gameObject.SetActive(false);
+            LevelManager.Instance.levelDimention = 8;
+            timeText = NextLevelText;
+            Time = 60;
+            LevelText.text = "";
+            //NextLevelText.text = string.Format("{0}", 60).ToString();
+            FunctionHandler.Instance.starsHolderUI.gameObject.SetActive(false);
         }
         else
         {
-            spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 10);
-            LevelManager.Instance.levelDimention = Random.Range(7, 11);
-            if (LevelManager.Instance.levelDimention > 8)
-                LevelManager.Instance.trees.gameObject.SetActive(false);
+            if (PlayerPrefs.GetInt("Level", 1) < 4 && PlayerPrefs.GetInt("Level", 1) >= 0)
+            {
+                spawnModifier = 1;
+                LevelManager.Instance.levelDimention = 5;
+                currentOrientation = Screen.orientation;
+            }
+            else if (PlayerPrefs.GetInt("Level", 1) >= 4 && PlayerPrefs.GetInt("Level", 1) < 10)
+            {
+                spawnModifier = 2;
+                LevelManager.Instance.levelDimention = 6;
+            }
+            else if (PlayerPrefs.GetInt("Level", 1) >= 10 && PlayerPrefs.GetInt("Level", 1) < 50)
+            {
+                spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 20, 1, 10) + 1;
+                LevelManager.Instance.levelDimention = 5 + Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 5);
+                if (LevelManager.Instance.levelDimention > 8)
+                    LevelManager.Instance.trees.gameObject.SetActive(false);
+            }
+            else if (PlayerPrefs.GetInt("Level", 1) >= 50 && PlayerPrefs.GetInt("Level", 1) < 120)
+            {
+                spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 20, 1, 10) + 1;
+                LevelManager.Instance.levelDimention = Random.Range(6, 5 + Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 5));
+                if (LevelManager.Instance.levelDimention > 8)
+                    LevelManager.Instance.trees.gameObject.SetActive(false);
+            }
+            else
+            {
+                spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 10);
+                LevelManager.Instance.levelDimention = Random.Range(7, 10);
+                if (LevelManager.Instance.levelDimention > 8)
+                    LevelManager.Instance.trees.gameObject.SetActive(false);
+            }
+
+            //Debug.Log("SPAWNMOD " + spawnModifier);
+            levelGoal = 15 * spawnModifier;
+            LevelText.text = string.Format("{0}", PlayerPrefs.GetInt("Level", 1).ToString());
+            NextLevelText.text = string.Format("{0}", (1 + PlayerPrefs.GetInt("Level", 1)).ToString());
+            currentOrientation = Screen.orientation;
+
         }
-      
-        //Debug.Log("SPAWNMOD " + spawnModifier);
-        levelGoal = 15*spawnModifier;
-        LevelText.text = string.Format("{0}", PlayerPrefs.GetInt("Level", 1).ToString());
-        NextLevelText.text = string.Format("{0}", (1 + PlayerPrefs.GetInt("Level", 1)).ToString());
-        currentOrientation = Screen.orientation;
+
+       
+        //Setup cameras
         if (Screen.orientation == ScreenOrientation.Landscape || Screen.orientation == ScreenOrientation.LandscapeLeft || Screen.orientation == ScreenOrientation.LandscapeRight)
         {
             currentOrientation = Screen.orientation;
@@ -210,10 +235,10 @@ public class GameManager : Singleton<GameManager>
     private void Start()
     {
 
-        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Start, Application.version, PlayerPrefs.GetInt("Level", 1).ToString("00000"));
+        //GameAnalytics.NewProgressionEvent(GAProgressionStatus.Start, Application.version, PlayerPrefs.GetInt("Level", 1).ToString("00000"));
 
         HumanCount = 0;
-        TurnCount = PlayerPrefs.GetInt("TurnCount", 3);
+        //TurnCount = PlayerPrefs.GetInt("TurnCount", 3);
        
 
         if(PlayerPrefs.GetInt("FirstLaunch", 1) == 1)
@@ -296,7 +321,7 @@ public class GameManager : Singleton<GameManager>
         else if(Input.GetMouseButtonDown(2))
         {
             //WinText.SetActive(true);
-            turnCountText.gameObject.SetActive(false);
+            timeText.gameObject.SetActive(false);
             FunctionHandler.Instance.LevelComplete();
 
             //Win sequence
