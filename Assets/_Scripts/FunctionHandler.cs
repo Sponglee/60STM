@@ -12,6 +12,7 @@ public class FunctionHandler : Singleton<FunctionHandler>
 {
     public Text menuText;
     public GameObject endGamePanel;
+    public GameObject gameOverCanvas;
 
     //Tutorial
     public GameObject tutorialCanvas;
@@ -95,25 +96,31 @@ public class FunctionHandler : Singleton<FunctionHandler>
     {
         Time.timeScale = 1;
         //Debug modes
-        if(ReplayToggle/* || SceneManager.GetActiveScene().name == "Main"*/)
-        {
-           
-            PlayerPrefs.SetInt("Level", PlayerPrefs.GetInt("Level", 1) - 1);
-            SceneManager.LoadScene("Main");
-        }
-        else if(!ReplayToggle /*|| SceneManager.GetActiveScene().name == "Relax"*/)
-        {
-         
-            SceneManager.LoadScene("Main");
-        }
-
-
         // Check if it was called from title screen and has arcade toggle on ( like replay in main)
-        if(SceneManager.GetActiveScene().name == "Tittle")
+        if (SceneManager.GetActiveScene().name == "Tittle")
         {
             PlayerPrefs.SetInt("GameMode", ReplayToggle ? 1 : 0);
-            
+            SceneManager.LoadScene("Main");
         }
+        else
+        {
+            if (ReplayToggle && !GameManager.Instance.ArcadeMode)
+            {
+
+                PlayerPrefs.SetInt("Level", PlayerPrefs.GetInt("Level", 1) - 1);
+                SceneManager.LoadScene("Main");
+            }
+            else if (!ReplayToggle /*|| SceneManager.GetActiveScene().name == "Relax"*/)
+            {
+
+                SceneManager.LoadScene("Main");
+            }
+        }
+
+        
+
+
+       
     }
 
 
@@ -150,7 +157,9 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
     public void GameOver()
     {
-        AudioManager.Instance.StopSound("All");
+        Debug.Log("GAMEOVER");
+        StopAllCoroutines();
+        //AudioManager.Instance.StopSound("All");
         AudioManager.Instance.PlaySound("GameOver");
         //Sad emote
         Instance.MuskEmote(0);
@@ -162,9 +171,14 @@ public class FunctionHandler : Singleton<FunctionHandler>
         //DIsable collider
         GameManager.Instance.rocketHolder.GetChild(1).GetChild(0).GetComponent<BoxCollider>().enabled = false;
         //Win sequence
+        //WinText.SetActive(true);
+      
+
+        //Win sequence
+        gameOverCanvas.SetActive(true);
+        
 
 
-       
     }
 
     public void LevelComplete()
@@ -204,7 +218,8 @@ public class FunctionHandler : Singleton<FunctionHandler>
         //Launch rocket
         GameManager.Instance.rocketHolder.GetChild(1).GetComponent<Animator>().SetTrigger("TakeOff");
 
-        PlayerPrefs.SetInt("Level", PlayerPrefs.GetInt("Level", 1) + 1);
+        if(!GameManager.Instance.ArcadeMode)
+            PlayerPrefs.SetInt("Level", PlayerPrefs.GetInt("Level", 1) + 1);
 
 
     }

@@ -45,6 +45,10 @@ public class HumanController : MonoBehaviour
             {
                 GameManager.Instance.zoomTargets.Remove(transform);
             }
+            //Show score
+            GameObject tmpFltText = Instantiate(LevelManager.Instance.fltTextPref, other.transform.position, Quaternion.identity);
+            tmpFltText.GetComponent<FltText>().scoreNumberText.text = "+1";
+
             Destroy(gameObject);
         }
         else if (other.CompareTag("Human") && exitRef != other.GetComponent<HumanController>().exitRef)
@@ -59,10 +63,64 @@ public class HumanController : MonoBehaviour
         }
         else if(other.CompareTag("Star"))
         {
-            LevelManager.Instance.stars.Add(other.transform.parent.parent);
-            Destroy(other.gameObject);
-            FunctionHandler.Instance.UpdateStars(FunctionHandler.Instance.starsHolderUI);
-           
+            //Add score if arcade
+            if(GameManager.Instance.ArcadeMode)
+            {
+                GameManager.Instance.HumanCount += 50;
+
+                if (GameManager.Instance.ArcadeMode)NavMeshBuildDebugFlags 
+                {
+                    //Show score
+                    GameObject tmpFltText = Instantiate(LevelManager.Instance.fltTextPref, other.transform.position, Quaternion.identity);
+                    tmpFltText.GetComponent<FltText>().scoreNumberText.text = "+50";
+
+                    Destroy(other.gameObject);
+
+                    int randomIndex = Random.Range(0, LevelManager.Instance.transform.childCount);
+                        
+                      Transform tmpTile = LevelManager.Instance.transform.GetChild(randomIndex);
+
+                    if (tmpTile.childCount != 0 && tmpTile.GetChild(0).CompareTag("Tile"));
+                    {
+                        //Debug.Log(tmpTile.GetChild(0).tag);
+                        Instantiate(LevelManager.Instance.starPref, tmpTile.GetChild(0).GetChild(5));
+                        //Add star to list
+                        LevelManager.Instance.stars.Add(tmpTile);
+                        AudioManager.Instance.PlaySound("Star");
+                    }
+
+                    // OR THIS: 
+
+                    ////Randomize and populate stars
+                    //Transform tmpTile;
+                    //do
+                    //{
+                    //    tmpTile = LevelManager.Instance.transform.GetChild(Random.Range(0, LevelManager.Instance.transform.childCount));
+                    //    //Debug.Log("CHECK" + tmpTile.GetChild(0).tag);
+                    //}
+                    //while (LevelManager.Instance.stars.Contains(tmpTile) || tmpTile.childCount == 0 || !tmpTile.GetChild(0).CompareTag("Tile"));
+
+
+                    ////Debug.Log(tmpTile.GetChild(0).tag);
+                    //Instantiate(LevelManager.Instance.starPref, tmpTile.GetChild(0).GetChild(5));
+                    ////Add star to list
+                    //LevelManager.Instance.stars.Add(tmpTile);
+                    //AudioManager.Instance.PlaySound("Star");
+                   
+                }
+
+
+
+            }
+            else
+            {
+                //Add Stars for LevelComplete Star sequence
+                LevelManager.Instance.stars.Add(other.transform.parent.parent);
+                Destroy(other.gameObject);
+                FunctionHandler.Instance.UpdateStars(FunctionHandler.Instance.starsHolderUI);
+
+            }
+
         }
     }
 

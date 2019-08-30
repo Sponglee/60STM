@@ -799,6 +799,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   menuText: {fileID: 345982928}
   endGamePanel: {fileID: 0}
+  gameOverCanvas: {fileID: 0}
   tutorialCanvas: {fileID: 0}
   tutorialStep: 0
   steps: 0
@@ -6030,16 +6031,18 @@ MonoBehaviour:
   spawnModifier: 1
   spawnHumanCount: 0
   SpawnAlreadyTrigger: 0
-  turnCount: 0
+  timer: 0
   GameOverBool: 0
   WinText: {fileID: 0}
-  turnCountText: {fileID: 0}
+  timeText: {fileID: 0}
   humanText: {fileID: 0}
+  highScoreText: {fileID: 0}
   LevelText: {fileID: 0}
   NextLevelText: {fileID: 0}
   progressSlider: {fileID: 0}
   levelGoal: 0
   humanCount: 0
+  highScore: 0
   exitCount: 0
   rocketCap: 50
   rocketSlider: {fileID: 0}

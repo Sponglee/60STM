@@ -12,6 +12,7 @@ public class LevelManager : Singleton<LevelManager>
     public GameObject exitPref;
     public GameObject boardTilePref;
     public GameObject starPref;
+    public GameObject fltTextPref;
 
     public List<Transform> stars;
     public List<Transform> exits;
@@ -61,7 +62,7 @@ public class LevelManager : Singleton<LevelManager>
         }
 
 
-        if (PlayerPrefs.GetInt("Level",1)!= levelData[0] || GameManager.Instance.ArcadeMode)
+        if (PlayerPrefs.GetInt("Level",1)!= levelData[0] || (GameManager.Instance != null && GameManager.Instance.ArcadeMode))
         {
            
             if (GameManager.Instance.ArcadeMode)
@@ -156,7 +157,9 @@ public class LevelManager : Singleton<LevelManager>
 
                         tmpSide.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpSide.transform.eulerAngles.y / 90f) * 90f, 0);
 
-                        freeTiles.Add(tmpSide.transform);
+                        //Add free tiles if it's normal mode
+                        if(GameManager.Instance != null && !GameManager.Instance.ArcadeMode)
+                            freeTiles.Add(tmpSide.transform);
 
                     }
                     //Sides
@@ -217,7 +220,8 @@ public class LevelManager : Singleton<LevelManager>
                             //Add empty tile
                             GameObject tmpEmpty = Instantiate(emptyTilePref, tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
                            
-
+                            if(GameManager.Instance != null && GameManager.Instance.ArcadeMode)
+                                    freeTiles.Add(tmpEmpty.transform);
                         }
 
 
@@ -277,66 +281,42 @@ public class LevelManager : Singleton<LevelManager>
     //Spawnpoint
     public Transform SpawnExit()
     {
-        if(freeTiles.Count == 0)
+        if (GameManager.Instance.ArcadeMode && freeTiles.Count == 0)
         {
             FunctionHandler.Instance.GameOver();
+            return null;
         }
-        int tmpFree = Random.Range(0, freeTiles.Count);
-        //Debug.Log(">>>>" + tmpFree);
-        Transform tmpFreeTile = freeTiles[tmpFree];
-        freeTiles.Remove(tmpFreeTile);
-        GameObject tmpExit = Instantiate(exitPref, tmpFreeTile.parent.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpFreeTile.parent);
+        else
+        {
+            int tmpFree = Random.Range(0, freeTiles.Count);
 
-        //Set material
-        tmpExit.transform.GetChild(1).GetComponent<Renderer>().material = tileMats[randTileMat];
-        tmpExit.transform.GetChild(1).GetComponent<Renderer>().material.color = Color.gray;// new Color(0.2f, 0.2f, 0.2f);
+            //Debug.Log(">>>>" + tmpFree);
+            Transform tmpFreeTile = freeTiles[tmpFree];
+            freeTiles.Remove(tmpFreeTile);
+            GameObject tmpExit = Instantiate(exitPref, tmpFreeTile.parent.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpFreeTile.parent);
 
-        tmpExit.transform.LookAt(Vector3.zero, Vector3.up);
-        //Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
+            //Set material
+            tmpExit.transform.GetChild(1).GetComponent<Renderer>().material = tileMats[randTileMat];
+            tmpExit.transform.GetChild(1).GetComponent<Renderer>().material.color = Color.gray;// new Color(0.2f, 0.2f, 0.2f);
 
-        tmpExit.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpExit.transform.eulerAngles.y / 90f) * 90f, 0);
+            tmpExit.transform.LookAt(Vector3.zero, Vector3.up);
+            //Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
 
-        tmpExit.transform.SetAsFirstSibling();
-        Destroy(tmpFreeTile.gameObject);
-        lastExit = tmpExit;
-        AudioManager.Instance.PlaySound("Bump");
+            tmpExit.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpExit.transform.eulerAngles.y / 90f) * 90f, 0);
 
-        ////Shoot Ray to check if exit is blocked
-        //RaycastHit hit;
+            tmpExit.transform.SetAsFirstSibling();
+            Destroy(tmpFreeTile.gameObject);
+            lastExit = tmpExit;
+            AudioManager.Instance.PlaySound("Bump");
+            exits.Add(tmpExit.transform);
+
+            GameManager.Instance.BuildSurface();
+            return tmpExit.transform;
+        }
+
 
        
-        //if(Physics.Raycast(tmpExit.transform.position, tmpExit.transform.TransformPoint(Vector3.forward*100f), out hit))
-        //{
 
-        //    Debug.DrawRay(tmpExit.transform.position, tmpExit.transform.TransformPoint(Vector3.forward * 100f), Color.blue, 3f);
-        //    //Debug.Log(hit.transform.parent.GetComponent<NodeController>().Column + " : " + hit.transform.parent.GetComponent<NodeController>().Row);
-        //    //Debug.Log("T: " + hit.transform.tag);
-            
-        //    if (hit.transform.CompareTag("Exit") || hit.transform.CompareTag("Border"))
-        //    {
-        //        Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
-        //        tmpExit.transform.LookAt(Vector3.zero, Vector3.up);
-        //        Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
-
-        //        tmpExit.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpExit.transform.eulerAngles.y / 90f) * 90f, 0);
-        //        Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
-        //    }
-
-          
-
-
-        //}
-
-        //OR
-        //look towards center
-        //tmpExit.transform.LookAt(Vector3.zero, Vector3.up);
-        //tmpExit.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpExit.transform.eulerAngles.y / 90f) * 90f, 0);
-
-        exits.Add(tmpExit.transform);
-
-        GameManager.Instance.BuildSurface();
-
-        return tmpExit.transform;
     }
 
     ////Despawn all exits
@@ -360,7 +340,7 @@ public class LevelManager : Singleton<LevelManager>
         //Set Rocket reference
 
 
-        if (freeTiles.Count == 0)
+        if (GameManager.Instance.ArcadeMode && freeTiles.Count == 0)
         {
             FunctionHandler.Instance.GameOver();
         }
@@ -431,9 +411,8 @@ public class LevelManager : Singleton<LevelManager>
         GameManager.Instance.rocketHolder = GameManager.Instance.nextRocket;
         GameManager.Instance.nextRocket = null;
 
-        GameObject tmpSide = Instantiate(sidesPref, tmpTile.parent);
-        freeTiles.Add(tmpSide.transform);
-        Destroy(tmpTile.gameObject);
+        DeletePrevious(tmpTile);
+       
     }
 
     public void DisableRocket(Transform tmpTile)

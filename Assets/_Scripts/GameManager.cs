@@ -73,17 +73,20 @@ public class GameManager : Singleton<GameManager>
 
   
     [SerializeField]
-    private int time = 0;
-    public int Time
+
+    private float timer = 0;
+    public float Timer
     {
         get
         {
-            return time;
+            return timer;
         }
         set
         {
-            time = value;
+            timer = value;
             timeText.text = value.ToString();
+            if(ArcadeMode)
+                progressSlider.value = (float)value / 60f;
         }
     }
 
@@ -92,11 +95,14 @@ public class GameManager : Singleton<GameManager>
 
     public Text timeText;
     public Text humanText;
+    public Text highScoreText;
     public Text LevelText;
     public Text NextLevelText;
     public Slider progressSlider;
 
     public int levelGoal;
+
+    //Also Score for arcade
     [SerializeField]
     private int humanCount = 0;
     public int HumanCount
@@ -108,12 +114,39 @@ public class GameManager : Singleton<GameManager>
         set
         {
             humanCount = value;
-            //humanText.text = string.Format("{0}/ {1}", value, levelGoal);
-            progressSlider.value = (float)value / (float)levelGoal;
-            
+            humanText.text = string.Format("{0}", value);
+
+            //Remember the score
+            if(ArcadeMode)
+            {
+                if(value> PlayerPrefs.GetInt("ArcadeScore",0))
+                {
+                    highScoreText.gameObject.SetActive(false);
+                    PlayerPrefs.SetInt("ArcadeScore", value);
+                }
+                
+            }
+            else
+                progressSlider.value = (float)value / (float)levelGoal;
+
         }
     }
 
+    [SerializeField]
+    private int highScore = 0;
+    public int HighScore
+    {
+        get
+        {
+            return highScore;
+        }
+        set
+        {
+            highScore = value;
+            highScoreText.text = string.Format("{0}", value);
+
+        }
+    }
     public int exitCount = 0;
 
     //Rocket capacity
@@ -152,6 +185,7 @@ public class GameManager : Singleton<GameManager>
 
     private void Awake()
     {
+        //Set up Game Mode
         ArcadeMode = (PlayerPrefs.GetInt("GameMode", 0) == 0) ? false : true;
         Debug.Log("Arcade : " + ArcadeMode + " :" + PlayerPrefs.GetInt("GameMode",0));
 
@@ -166,10 +200,14 @@ public class GameManager : Singleton<GameManager>
             spawnModifier = 1;
             LevelManager.Instance.levelDimention = 8;
             timeText = NextLevelText;
-            Time = 60;
+            Timer = 60;
             LevelText.text = "";
             //NextLevelText.text = string.Format("{0}", 60).ToString();
             FunctionHandler.Instance.starsHolderUI.gameObject.SetActive(false);
+            humanText.gameObject.SetActive(true);
+
+            highScoreText.gameObject.SetActive(true);
+            highScoreText.text = PlayerPrefs.GetInt("ArcadeScore", 0).ToString();
         }
         else
         {
@@ -214,22 +252,26 @@ public class GameManager : Singleton<GameManager>
 
         }
 
-       
-        //Setup cameras
-        if (Screen.orientation == ScreenOrientation.Landscape || Screen.orientation == ScreenOrientation.LandscapeLeft || Screen.orientation == ScreenOrientation.LandscapeRight)
-        {
-            currentOrientation = Screen.orientation;
-            levelCam = horizCam;
-            horizCam.Priority = 60;
-            vertCam.Priority = 40;
-        }
-        else if (Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.PortraitUpsideDown)
-        {
-            currentOrientation = Screen.orientation;
-            levelCam = vertCam;
-            vertCam.Priority = 60;
-            horizCam.Priority = 40;
-        }
+        currentOrientation = Screen.orientation;
+        levelCam = vertCam;
+        vertCam.Priority = 60;
+        horizCam.Priority = 40;
+
+        ////Setup cameras
+        //if (Screen.orientation == ScreenOrientation.Landscape || Screen.orientation == ScreenOrientation.LandscapeLeft || Screen.orientation == ScreenOrientation.LandscapeRight)
+        //{
+        //    currentOrientation = Screen.orientation;
+        //    levelCam = horizCam;
+        //    horizCam.Priority = 60;
+        //    vertCam.Priority = 40;
+        //}
+        //else if (Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.PortraitUpsideDown)
+        //{
+        //    currentOrientation = Screen.orientation;
+        //    levelCam = vertCam;
+        //    vertCam.Priority = 60;
+        //    horizCam.Priority = 40;
+        //}
     }
 
     private void Start()
@@ -253,7 +295,7 @@ public class GameManager : Singleton<GameManager>
         {
             //StartCoroutine(LevelSpawnerTimed());
             if (ArcadeMode)
-                StartCoroutine(LevelSpawnerArcade());
+                StartCoroutine(LevelSpawnerTimed());
             else
             {
                 StartCoroutine(LevelSpawner());
@@ -364,11 +406,11 @@ public class GameManager : Singleton<GameManager>
     //    while (Timer>0)
     //    {
     //        //Debug.Log(">>>>>>>>>>>" + levelGoal / LevelManager.Instance.freeTiles.Count);
-            
+
     //        if(!SpawnAlreadyTrigger && !GameOverBool)
     //        {
-              
-               
+
+
     //            //Set reference for goal count
     //            spawnHumanCount = humanCount;
     //            //Set reference to spawnCOunt
@@ -392,7 +434,7 @@ public class GameManager : Singleton<GameManager>
     //            BuildSurface();
     //            //foreach (Transform exit in LevelManager.Instance.exits)
     //            //{
-                  
+
     //            //    for (int i = 0; i < 15f; i++)
     //            //    {
     //            //       GameObject tmpHuman =  Instantiate(humanPref, exit.GetChild(2));
@@ -404,7 +446,7 @@ public class GameManager : Singleton<GameManager>
     //            SpawnAlreadyTrigger = true;
 
     //        }
-           
+
 
     //        yield return new WaitForSeconds(1f);
     //        if(!GameOverBool )
@@ -414,7 +456,7 @@ public class GameManager : Singleton<GameManager>
     //                AudioManager.Instance.PlaySound("TickTock");
     //        }
 
-           
+
 
     //        if (Timer == 11)
     //        {
@@ -425,17 +467,17 @@ public class GameManager : Singleton<GameManager>
     //            BuildSurface();
     //        }
 
-           
+
     //        if ( Timer % 10 == 0)
     //        {
-               
+
     //            SpawnAlreadyTrigger = false;
     //        }
     //        //Debug.Log(humanCount + "- " + spawnHumanCount + " ( " + spawnCount + ")");
-           
 
 
-           
+
+
 
     //        //Check to spawn new Exits
     //        //if (humanCount - spawnHumanCount >= spawnCount && Timer >0)
@@ -454,7 +496,7 @@ public class GameManager : Singleton<GameManager>
     //            endCam.gameObject.SetActive(true);
     //            endCam.m_Follow = rocketHolder.GetChild(1).GetChild(1);
     //            endCam.m_LookAt = rocketHolder.GetChild(1).GetChild(1);
-                
+
     //            FunctionHandler.Instance.LevelComplete();
     //            //LevelManager.Instance.DisableNextRocket(previousRocket);
     //            BuildSurface(true);
@@ -509,24 +551,20 @@ public class GameManager : Singleton<GameManager>
 
     //}
 
-
-
-    public IEnumerator LevelSpawnerArcade()
+    public IEnumerator LevelSpawnerTimed()
     {
         List<int> randomExits = new List<int>();
 
-        //spawn rocket
-
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 3; i++)
         {
 
             randomExits.Add(Random.Range(0, LevelManager.Instance.exits.Count));
         }
 
         yield return new WaitForSeconds(2f);
-         
 
-        while (rocketFilling<rocketCap)
+
+        while (Timer > 0)
         {
             //Debug.Log(">>>>>>>>>>>" + levelGoal / LevelManager.Instance.freeTiles.Count);
 
@@ -539,7 +577,7 @@ public class GameManager : Singleton<GameManager>
                 //Set reference to spawnCOunt
                 spawnCount = 0;
 
-                for (int i = 0; i < Mathf.Clamp(spawnModifier, 0, 2); i++)
+                for (int i = 0; i < Mathf.Clamp(spawnModifier, 0, 1); i++)
                 {
                     Transform thisExit = LevelManager.Instance.SpawnExit();
                     for (int j = 0; j < 15f; j++)
@@ -572,26 +610,26 @@ public class GameManager : Singleton<GameManager>
 
 
             yield return new WaitForSeconds(1f);
-            //if (!GameOverBool)
-            //{
-            //    Timer -= 1f;
-            //    if (Timer <= 20 || (Timer <= 60 && Timer > 56))
-            //        AudioManager.Instance.PlaySound("TickTock");
-            //}
-
-
-
-            if (RocketFilling >= rocketCap - 15 && nextRocket == null)
+            if (!GameOverBool)
             {
-                //AudioManager.Instance.PlaySound("Countdown");`
+                Timer -= 1f;
+                if (Timer <= 20 || (Timer <= 60 && Timer > 50))
+                    AudioManager.Instance.PlaySound("TickTock");
+            }
+
+
+
+            if (Timer == 11)
+            {
+                AudioManager.Instance.PlaySound("Countdown");
                 LevelManager.Instance.SpawnRocket();
                 LevelManager.Instance.DisableRocket(nextRocket);
                 //Build navMesh
                 BuildSurface();
             }
 
-            ////Debug.Log(RocketFilling);
-            if (LevelManager.Instance.exits.Count < 2 && RocketFilling != 0 && SpawnAlreadyTrigger)
+
+            if (Timer % 10 == 0)
             {
 
                 SpawnAlreadyTrigger = false;
@@ -603,39 +641,38 @@ public class GameManager : Singleton<GameManager>
 
 
             //Check to spawn new Exits
-            if (humanCount - spawnHumanCount >= spawnCount /*&& Timer > 0*/)
-            {
-                SpawnAlreadyTrigger = false;
-                //LevelManager.Instance.DespawnExits();
-            }
+            //if (humanCount - spawnHumanCount >= spawnCount && Timer >0)
+            //{
+            //    SpawnAlreadyTrigger = false;
+            //    //LevelManager.Instance.DespawnExits();
+            //}
 
-            if (HumanCount >= levelGoal)
-            {
-                HumanCount = levelGoal;
-                AudioManager.Instance.StopSound("All");
-                AudioManager.Instance.PlaySound("FireWall");
-                AudioManager.Instance.PlaySound("FlareUp");
-                //Win sequence
-                endCam.gameObject.SetActive(true);
-                endCam.m_Follow = rocketHolder.GetChild(1).GetChild(1);
-                endCam.m_LookAt = rocketHolder.GetChild(1).GetChild(1);
+            //if (HumanCount >= levelGoal)
+            //{
+            //    HumanCount = levelGoal;
+            //    AudioManager.Instance.StopSound("All");
+            //    AudioManager.Instance.PlaySound("FireWall");
+            //    AudioManager.Instance.PlaySound("FlareUp");
+            //    //Win sequence
+            //    endCam.gameObject.SetActive(true);
+            //    endCam.m_Follow = rocketHolder.GetChild(1).GetChild(1);
+            //    endCam.m_LookAt = rocketHolder.GetChild(1).GetChild(1);
 
-                FunctionHandler.Instance.LevelComplete();
-                
-                //LevelManager.Instance.DisableNextRocket(previousRocket);
-                BuildSurface(true);
-                GameOverBool = true;
-                StopAllCoroutines();
+            //    FunctionHandler.Instance.LevelComplete();
+            //    //LevelManager.Instance.DisableNextRocket(previousRocket);
+            //    BuildSurface(true);
+            //    GameOverBool = true;
+            //    StopAllCoroutines();
 
-                yield break;
-            }
+            //    yield break;
+            //}
         }
 
         //Launch emote
         FunctionHandler.Instance.MuskEmote(0);
 
         //Reset the timer and spawn new rocket
-        
+        Timer = 60f;
         spawnModifier++;
 
         //Disable Tower
@@ -670,11 +707,13 @@ public class GameManager : Singleton<GameManager>
         BuildSurface();
         //LevelManager.Instance.DeletePrevious(previousRocket);
         randomExits.Clear();
-        StartCoroutine(LevelSpawnerArcade());
+        StartCoroutine(LevelSpawnerTimed());
 
 
     }
 
+
+  
 
     public IEnumerator LevelSpawner()
     {
