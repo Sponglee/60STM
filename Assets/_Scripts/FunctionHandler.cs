@@ -284,6 +284,7 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
     public IEnumerator StopMusk(int index, bool stay = false)
     {
+        muskReference.GetChild(0).position = new Vector3(85f,-447f,0);
         MuskInProgress = true;
         Vector3 from = muskReference.GetChild(0).localPosition;
 

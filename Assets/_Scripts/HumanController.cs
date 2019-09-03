@@ -68,7 +68,7 @@ public class HumanController : MonoBehaviour
             {
                 GameManager.Instance.HumanCount += 50;
 
-                if (GameManager.Instance.ArcadeMode)NavMeshBuildDebugFlags 
+                if (GameManager.Instance.ArcadeMode) 
                 {
                     //Show score
                     GameObject tmpFltText = Instantiate(LevelManager.Instance.fltTextPref, other.transform.position, Quaternion.identity);
@@ -76,18 +76,8 @@ public class HumanController : MonoBehaviour
 
                     Destroy(other.gameObject);
 
-                    int randomIndex = Random.Range(0, LevelManager.Instance.transform.childCount);
-                        
-                      Transform tmpTile = LevelManager.Instance.transform.GetChild(randomIndex);
-
-                    if (tmpTile.childCount != 0 && tmpTile.GetChild(0).CompareTag("Tile"));
-                    {
-                        //Debug.Log(tmpTile.GetChild(0).tag);
-                        Instantiate(LevelManager.Instance.starPref, tmpTile.GetChild(0).GetChild(5));
-                        //Add star to list
-                        LevelManager.Instance.stars.Add(tmpTile);
-                        AudioManager.Instance.PlaySound("Star");
-                    }
+                    //LevelManager.Instance.stars.Remove(other.transform.parent.parent);
+                    LevelManager.Instance.RespawnGem();
 
                     // OR THIS: 
 

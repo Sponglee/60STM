@@ -65,7 +65,7 @@ public class LevelManager : Singleton<LevelManager>
         if (PlayerPrefs.GetInt("Level",1)!= levelData[0] || (GameManager.Instance != null && GameManager.Instance.ArcadeMode))
         {
            
-            if (GameManager.Instance.ArcadeMode)
+            if (GameManager.Instance != null && GameManager.Instance.ArcadeMode)
             {
                 Debug.Log("RANDOM");
                 //Randomize ground
@@ -281,12 +281,17 @@ public class LevelManager : Singleton<LevelManager>
     //Spawnpoint
     public Transform SpawnExit()
     {
+        if (GameManager.Instance.ArcadeMode && Instance.stars.Count >= 3)
+        {
+            RespawnGem();
+        }
+
         if (GameManager.Instance.ArcadeMode && freeTiles.Count == 0)
         {
             FunctionHandler.Instance.GameOver();
             return null;
         }
-        else
+       else
         {
             int tmpFree = Random.Range(0, freeTiles.Count);
 
@@ -331,7 +336,23 @@ public class LevelManager : Singleton<LevelManager>
     //    exits.Clear();
     //}
 
-        
+
+    public void RespawnGem()
+    {
+        int randomIndex = Random.Range(0, LevelManager.Instance.transform.childCount);
+
+        Transform tmpTile = LevelManager.Instance.transform.GetChild(randomIndex);
+
+        if (tmpTile.childCount != 0 && tmpTile.GetChild(0).CompareTag("Tile"))
+        {
+            //Debug.Log(tmpTile.GetChild(0).tag);
+            Instantiate(LevelManager.Instance.starPref, tmpTile.GetChild(0).GetChild(5));
+            //Add star to list
+            LevelManager.Instance.stars.Add(tmpTile);
+            AudioManager.Instance.PlaySound("Star");
+        }
+    }
+
 
     //Spawn new rocket
     public void SpawnRocket()

@@ -1885,7 +1885,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: START
+  m_Text: STORY MODE
 --- !u!222 &499264985
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5242,6 +5242,7 @@ MonoBehaviour:
     type: 3}
   starPref: {fileID: 6298235874111026970, guid: 4a4eb8eb0e1f0a84885550430a6bfa63,
     type: 3}
+  fltTextPref: {fileID: 0}
   stars: []
   exits: []
   freeTiles: []
