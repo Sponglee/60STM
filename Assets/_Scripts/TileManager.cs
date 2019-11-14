@@ -123,7 +123,7 @@ public class TileManager : MonoBehaviour
 
 
         //Disable agents for movement
-        AgentToggle(false, GameManager.Instance.rocketHolder.position);
+        //AgentToggle(false, GameManager.Instance.rocketHolder.position);
 
 
     }
@@ -132,55 +132,58 @@ public class TileManager : MonoBehaviour
 
     void OnMouseDrag()
     {
-        if(!FunctionHandler.Instance.IsPointerOverUIObject("UI") && Movable && transform.CompareTag("Tile") && Selected && !CollidedBool && !RotationInProgress)
+        if (GameManager.Instance.BuildActive)
         {
-            //if (transform.GetChild(4).childCount == 0)
-            //{
+            if (!FunctionHandler.Instance.IsPointerOverUIObject("UI") && Movable && transform.CompareTag("Tile") && Selected && !CollidedBool && !RotationInProgress)
+            {
+                //if (transform.GetChild(4).childCount == 0)
+                //{
                 Vector3 cursorScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z);
                 Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(cursorScreenPoint) + offset;
                 transform.position = new Vector3(cursorPosition.x, transform.position.y, cursorPosition.z);
-            //}
+                //}
 
-            //TUTORIAL
-            if(TileTutorialStep == 0)
-            {
-
-              
-              
-               
-                FunctionHandler.Instance.TutorialStep("rotateAnim");
+                //TUTORIAL
+                if (TileTutorialStep == 0)
+                {
+                    FunctionHandler.Instance.TutorialStep("rotateAnim");
+                }
             }
         }
+      
       
     }
 
 
     private void OnMouseUp()
     {
-        //if (transform.GetChild(4).childCount == 0)
-        //{
-        if (!FunctionHandler.Instance.IsPointerOverUIObject("UI") &&  Selected && !CollidedBool && !RotationInProgress && !DragActive)
+        if (GameManager.Instance.BuildActive)
         {
-            if(true)
-                StartCoroutine(StopRotate());
-            else
+            if (!FunctionHandler.Instance.IsPointerOverUIObject("UI") && Selected && !CollidedBool && !RotationInProgress && !DragActive)
             {
-                FunctionHandler.Instance.BuyTurns();
+                if (true)
+                    StartCoroutine(StopRotate());
+                else
+                {
+                    FunctionHandler.Instance.BuyTurns();
+                }
             }
+            else if (transform.CompareTag("Tile"))
+                //Build navMesh
+                //GameManager.Instance.BuildSurface();
+
+
+
+
+                if (DragActive)
+                {
+                    AudioManager.Instance.PlaySound("Bump");
+                    //PutTileDown();
+                }
+            //}
+
         }
-        else if(transform.CompareTag("Tile"))
-            //Build navMesh
-            //GameManager.Instance.BuildSurface();
 
-
-
-
-        if(DragActive)
-        {
-            AudioManager.Instance.PlaySound("Bump");
-            //PutTileDown();
-        }
-        //}
 
     }
 
@@ -211,8 +214,11 @@ public class TileManager : MonoBehaviour
         transform.eulerAngles = destEul;
         RotationInProgress = false;
 
+
         //Enable agents for movement
-        AgentToggle(true, GameManager.Instance.rocketHolder.position);
+        //AgentToggle(true, GameManager.Instance.rocketHolder.position);
+        
+        
         //Build navMesh
         GameManager.Instance.BuildSurface();
 

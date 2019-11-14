@@ -62,35 +62,35 @@ public class FunctionHandler : Singleton<FunctionHandler>
         }
     }
 
-    public void ChangeCameras()
-    {
-        if(PerspBool)
-        {
+    //public void ChangeCameras()
+    //{
+    //    if(PerspBool)
+    //    {
         
-            cameraOrth.gameObject.SetActive(true);
-            cameraPersp.gameObject.SetActive(false);
-            GameManager.Instance.vertCam = verticCamOrth;
-            GameManager.Instance.horizCam = horizCamOrth;
+    //        cameraOrth.gameObject.SetActive(true);
+    //        cameraPersp.gameObject.SetActive(false);
+    //        GameManager.Instance.vertCam = verticCamOrth;
+    //        GameManager.Instance.horizCam = horizCamOrth;
 
-            verticCamPersp.gameObject.SetActive(false);
-            horizCamPersp.gameObject.SetActive(false);
-            verticCamOrth.gameObject.SetActive(true);
-            horizCamOrth.gameObject.SetActive(true);
-            PerspBool = !PerspBool;
-        }
-        else
-        {
-            cameraOrth.gameObject.SetActive(false);
-            cameraPersp.gameObject.SetActive(true);
-            GameManager.Instance.vertCam = verticCamPersp;
-            GameManager.Instance.horizCam = horizCamPersp;
-            verticCamOrth.gameObject.SetActive(false);
-            horizCamOrth.gameObject.SetActive(false);
-            verticCamPersp.gameObject.SetActive(true);
-            horizCamPersp.gameObject.SetActive(true);
-            PerspBool = !PerspBool;
-        }
-    }
+    //        verticCamPersp.gameObject.SetActive(false);
+    //        horizCamPersp.gameObject.SetActive(false);
+    //        verticCamOrth.gameObject.SetActive(true);
+    //        horizCamOrth.gameObject.SetActive(true);
+    //        PerspBool = !PerspBool;
+    //    }
+    //    else
+    //    {
+    //        cameraOrth.gameObject.SetActive(false);
+    //        cameraPersp.gameObject.SetActive(true);
+    //        GameManager.Instance.vertCam = verticCamPersp;
+    //        GameManager.Instance.horizCam = horizCamPersp;
+    //        verticCamOrth.gameObject.SetActive(false);
+    //        horizCamOrth.gameObject.SetActive(false);
+    //        verticCamPersp.gameObject.SetActive(true);
+    //        horizCamPersp.gameObject.SetActive(true);
+    //        PerspBool = !PerspBool;
+    //    }
+    //}
 
     public void StartLevel(bool ReplayToggle)
     {

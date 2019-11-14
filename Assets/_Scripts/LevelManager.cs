@@ -38,7 +38,7 @@ public class LevelManager : Singleton<LevelManager>
 
     public float nodeStep = 10.5f;
     
-    public int levelDimention = 6;
+    public int levelDimention = 25;
     public int levelDimentionCutOff = 5;
     public int tileCount = 0;
 
@@ -136,145 +136,39 @@ public class LevelManager : Singleton<LevelManager>
         {
             for (int j = 0; j < levelDimention; j++)
             {
-                //Randomize "CUTT OFF 3-5"
-                if (/*true*/ Mathf.Abs(i - j) <= levelDimentionCutOff)
-                {
-                    GameObject tmpNode = Instantiate(nodePref, new Vector3(nodeStep * j - nodeStep * (levelDimention / 2), 0, -nodeStep * i + nodeStep * (levelDimention / 2)), Quaternion.identity, transform);
+                GameObject tmpNode = Instantiate(nodePref, new Vector3(nodeStep * j - nodeStep * (levelDimention / 2), 0, -nodeStep * i + nodeStep * (levelDimention / 2)), Quaternion.identity, transform);
 
-                    tmpNode.GetComponent<NodeController>().Row = i;
-                    tmpNode.GetComponent<NodeController>().Column = j;
-
-                    //Corners
-                    if ((i == 0 ^ j == 0 ^ i == levelDimention - 1 ^ j == levelDimention - 1) || Mathf.Abs(i - j) == levelDimentionCutOff)
-                    {
-                        GameObject tmpSide = Instantiate(sidesPref, tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
-                        //Set material
-                        tmpSide.transform.GetChild(1).GetComponent<Renderer>().material = tileMats[randTileMat];
-                        tmpSide.transform.GetChild(1).GetComponent<Renderer>().material.color = Color.gray;// new Color(0.2f, 0.2f, 0.2f);
-                        tmpSide.transform.LookAt(Vector3.zero, Vector3.up);
-
-                        //Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
-
-                        tmpSide.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpSide.transform.eulerAngles.y / 90f) * 90f, 0);
-
-                        //Add free tiles if it's normal mode
-                        if(GameManager.Instance != null && !GameManager.Instance.ArcadeMode)
-                            freeTiles.Add(tmpSide.transform);
-
-                    }
-                    //Sides
-                    else if ((i == 0 && j == 0 && i == levelDimention - 1 && j == levelDimention - 1) || Mathf.Abs(i - j) == levelDimentionCutOff)
-                    {
-                        Instantiate(boardTilePref, tmpNode.transform.position, tmpNode.transform.rotation, boardHolder);
-                    }
-                    else if (/*(i == levelDimention / 2 && j == levelDimention - 1) ||*/ (i < levelDimention -1 && j < levelDimention -1)  && i>0 && j>0)
-                    {
-                        Instantiate(boardTilePref, tmpNode.transform.position, tmpNode.transform.rotation, boardHolder);
-                       
-                        
-                        //If center - enable rocket and disable buildings
-                        if (i == levelDimention / 2 && j == levelDimention / 2)
-                        {
-                            //Debug.Log("REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-                            tileCount++;
-                            GameObject tmpTile = Instantiate(tilePref, tmpNode.transform.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform);
-                            //Generate building layout
-                            int buildingIndex = Random.Range(0, tmpTile.transform.GetChild(2).childCount);
-                            tmpTile.transform.GetChild(2).GetChild(buildingIndex).gameObject.SetActive(true);
-                            //Generate road layout
-                            int roadIndex = 0;
-                            tmpTile.transform.GetChild(0).GetChild(roadIndex).gameObject.SetActive(true);
-                           
-                            //Set material
-                            tmpTile.transform.GetChild(3).GetComponent<Renderer>().material = tileMats[randTileMat];
-                        }
-                        else if (/*(tileCount < freeTiles.Count - 2) ^*/ Random.Range(0,100)>=30)
-                        {
-                            tileCount++;
-                            GameObject tmpTile = Instantiate(tilePref, tmpNode.transform.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform);
-                            //Set material
-                            tmpTile.transform.GetChild(3).GetComponent<Renderer>().material = tileMats[randTileMat];
-                           
-                            //else
-                            //{
-                                //If procced - disable moving
-                                if (/*(i != levelDimention / 2 && j != levelDimention/2) && */PlayerPrefs.GetInt("Level", 1) > 4 
-                                    && (Random.Range(0, 100) < 10 + Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) % 5, 1, 30)))
-                                {
-                                    tmpTile.GetComponent<TileManager>().Movable = false;
+                tmpNode.GetComponent<NodeController>().Row = i;
+                tmpNode.GetComponent<NodeController>().Column = j;
 
 
-                                }
-
-                                //Generate building layout
-                                int buildingIndex = Random.Range(0, tmpTile.transform.GetChild(2).childCount);
-                                tmpTile.transform.GetChild(2).GetChild(buildingIndex).gameObject.SetActive(true);
-                                //Generate road layout
-                                int roadIndex = Random.Range(0, tmpTile.transform.GetChild(0).childCount);
-                                tmpTile.transform.GetChild(0).GetChild(roadIndex).gameObject.SetActive(true);
-
-                            //}
-                        }
-                        else
-                        {
-                            //Add empty tile
-                            GameObject tmpEmpty = Instantiate(emptyTilePref, tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
-                           
-                            if(GameManager.Instance != null && GameManager.Instance.ArcadeMode)
-                                    freeTiles.Add(tmpEmpty.transform);
-                        }
-
-
-
-                    }
-                    else
-                    {
-
-                       
-
-                        //Generate exit
-                        if (exits.Count<=0 || Random.Range(0,100)<10)
-                        {
-
-                        }
-                        //Or leave blank
-                        else
-                        {
-                        }
-                    }
-                   
-
-                    
-               
-
-
-                }
+              
 
             }
         }
 
 
-        //Randomize and populate stars
-        for (int i = 0; i < 3; i++)
-        {
-            Transform tmpTile;
+        ////Randomize and populate stars
+        //for (int i = 0; i < 3; i++)
+        //{
+        //    Transform tmpTile;
 
-            do
-            {
-                tmpTile = transform.GetChild(Random.Range(0, transform.childCount));
-                //Debug.Log("CHECK" + tmpTile.GetChild(0).tag);
-            }
-            while (stars.Contains(tmpTile) || tmpTile.childCount== 0 || !tmpTile.GetChild(0).CompareTag("Tile"));
+        //    do
+        //    {
+        //        tmpTile = transform.GetChild(Random.Range(0, transform.childCount));
+        //        //Debug.Log("CHECK" + tmpTile.GetChild(0).tag);
+        //    }
+        //    while (stars.Contains(tmpTile) || tmpTile.childCount== 0 || !tmpTile.GetChild(0).CompareTag("Tile"));
 
-            //Debug.Log(tmpTile.GetChild(0).tag);
-            Instantiate(starPref, tmpTile.GetChild(0).GetChild(5));
-            //Add star to list
-            stars.Add(tmpTile);
+        //    //Debug.Log(tmpTile.GetChild(0).tag);
+        //    Instantiate(starPref, tmpTile.GetChild(0).GetChild(5));
+        //    //Add star to list
+        //    stars.Add(tmpTile);
 
             
-        }
-        //Clear stars list for levelcomplete stars system later
-        stars.Clear();
+        //}
+        ////Clear stars list for levelcomplete stars system later
+        //stars.Clear();
      
     }
     
