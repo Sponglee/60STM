@@ -6,12 +6,13 @@ using UnityEngine.UI;
 using TMPro;
 using Cinemachine;
 using UnityEngine.EventSystems;
-using GameAnalyticsSDK;
+//using GameAnalyticsSDK;
 
 public class FunctionHandler : Singleton<FunctionHandler>
 {
     public Text menuText;
     public GameObject endGamePanel;
+    public GameObject gameOverCanvas;
 
     //Tutorial
     public GameObject tutorialCanvas;
@@ -94,22 +95,36 @@ public class FunctionHandler : Singleton<FunctionHandler>
     public void StartLevel(bool ReplayToggle)
     {
         Time.timeScale = 1;
+
+        if(AdManager.Instance != null)
+            AdManager.Instance.PlayAd();
+
         //Debug modes
-        if(ReplayToggle/* || SceneManager.GetActiveScene().name == "Main"*/)
+        // Check if it was called from title screen and has arcade toggle on ( like replay in main)
+        if (SceneManager.GetActiveScene().name == "Tittle")
         {
-            PlayerPrefs.SetInt("Level", PlayerPrefs.GetInt("Level", 1) - 1);
+            PlayerPrefs.SetInt("GameMode", ReplayToggle ? 1 : 0);
             SceneManager.LoadScene("Main");
         }
-        else if(!ReplayToggle /*|| SceneManager.GetActiveScene().name == "Relax"*/)
+        else
         {
-            SceneManager.LoadScene("Main");
+            if (ReplayToggle && !GameManager.Instance.ArcadeMode)
+            {
+
+                PlayerPrefs.SetInt("Level", PlayerPrefs.GetInt("Level", 1) - 1);
+                SceneManager.LoadScene("Main");
+            }
+            else if (!ReplayToggle /*|| SceneManager.GetActiveScene().name == "Relax"*/)
+            {
+              
+                SceneManager.LoadScene("Main");
+            }
         }
-       
     }
 
 
     public void Exit()
-    {
+    {   
         Application.Quit();
     }
 
@@ -129,6 +144,8 @@ public class FunctionHandler : Singleton<FunctionHandler>
         {
             MenuActive = false;
             Time.timeScale = 1;
+            if (AdManager.Instance != null)
+                AdManager.Instance.PlayAd();
         }
 
 
@@ -141,7 +158,9 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
     public void GameOver()
     {
-        AudioManager.Instance.StopSound("All");
+        Debug.Log("GAMEOVER");
+        StopAllCoroutines();
+        //AudioManager.Instance.StopSound("All");
         AudioManager.Instance.PlaySound("GameOver");
         //Sad emote
         Instance.MuskEmote(0);
@@ -149,18 +168,23 @@ public class FunctionHandler : Singleton<FunctionHandler>
         uiCanvas.SetActive(false);
         endGamePanel.SetActive(true);
   
-        GameManager.Instance.turnCountText.gameObject.SetActive(false);
+        GameManager.Instance.timeText.gameObject.SetActive(false);
         //DIsable collider
         GameManager.Instance.rocketHolder.GetChild(1).GetChild(0).GetComponent<BoxCollider>().enabled = false;
         //Win sequence
+        //WinText.SetActive(true);
+      
+
+        //Win sequence
+        gameOverCanvas.SetActive(true);
+        
 
 
-       
     }
 
     public void LevelComplete()
     {
-        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Complete, Application.version, PlayerPrefs.GetInt("Level",1).ToString("00000"));
+        //GameAnalytics.NewProgressionEvent(GAProgressionStatus.Complete, Application.version, PlayerPrefs.GetInt("Level",1).ToString("00000"));
 
         //Hi mote
         Instance.MuskEmote(2);
@@ -180,7 +204,7 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
         menuText.gameObject.SetActive(true);
         menuText.text = string.Format("LEVEL {0} COMPLETE",PlayerPrefs.GetInt("Level",1));
-        GameManager.Instance.turnCountText.gameObject.SetActive(false);
+        GameManager.Instance.timeText.gameObject.SetActive(false);
         //DIsable collider
         GameManager.Instance.rocketHolder.GetChild(1).GetChild(0).GetComponent<BoxCollider>().enabled = false;
 
@@ -195,7 +219,8 @@ public class FunctionHandler : Singleton<FunctionHandler>
         //Launch rocket
         GameManager.Instance.rocketHolder.GetChild(1).GetComponent<Animator>().SetTrigger("TakeOff");
 
-        PlayerPrefs.SetInt("Level", PlayerPrefs.GetInt("Level", 1) + 1);
+        if(!GameManager.Instance.ArcadeMode)
+            PlayerPrefs.SetInt("Level", PlayerPrefs.GetInt("Level", 1) + 1);
 
 
     }
@@ -206,60 +231,61 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
     public void MuskEmote(int index)
     {
-        //if (!MuskInProgress && !tutorialCanvas.activeSelf)
-        //{
-        //    switch (index)
-        //    {
-        //        //Sad
-        //        case 0:
-        //            {
-        //                muskReference.GetComponentInChildren<Image>().sprite = muskImages[Random.Range(0,3)];
+        if (!MuskInProgress && !tutorialCanvas.activeSelf)
+        {
+            switch (index)
+            {
+                //Sad
+                case 0:
+                    {
+                        muskReference.GetComponentInChildren<Image>().sprite = muskImages[Random.Range(0, 3)];
 
-        //                StartCoroutine(StopMusk(index,true));
-        //            }
-        //            break;
-        //        //Excited
-        //        case 1:
-        //            {
-        //                int muskRandomizer = Random.Range(0, 100);
-        //                if(muskRandomizer<50)
-        //                {
-        //                    muskReference.GetComponentInChildren<Image>().sprite = muskImages[Random.Range(3,7)];
+                        StartCoroutine(StopMusk(index, true));
+                    }
+                    break;
+                //Excited
+                case 1:
+                    {
+                        int muskRandomizer = Random.Range(0, 100);
+                        if (muskRandomizer < 50)
+                        {
+                            muskReference.GetComponentInChildren<Image>().sprite = muskImages[Random.Range(3, 7)];
 
-        //                    StartCoroutine(StopMusk(index));
-        //                }
-                        
+                            StartCoroutine(StopMusk(index));
+                        }
 
-                      
-        //            }
-        //            break;
-        //        //Launch
-        //        case 2:
-        //            {
-        //                MuskInProgress = false;
-        //                muskReference.GetComponentInChildren<Image>().sprite = muskImages[6];
 
-        //                StartCoroutine(StopMusk(index));
-        //            }
-        //            break;
-        //        //Mars hi
-        //        case 3:
-        //            {
-        //                MuskInProgress = false;
-        //                muskReference.GetComponentInChildren<Image>().sprite = muskImages[7];
 
-        //                StartCoroutine(StopMusk(index,true));
-        //            }
-        //            break;
-        //        default:
-        //            break;
-        //    }
-        //}
+                    }
+                    break;
+                //Launch
+                case 2:
+                    {
+                        MuskInProgress = false;
+                        muskReference.GetComponentInChildren<Image>().sprite = muskImages[6];
+
+                        StartCoroutine(StopMusk(index));
+                    }
+                    break;
+                //Mars hi
+                case 3:
+                    {
+                        MuskInProgress = false;
+                        muskReference.GetComponentInChildren<Image>().sprite = muskImages[7];
+
+                        StartCoroutine(StopMusk(index, true));
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
 
     }
 
     public IEnumerator StopMusk(int index, bool stay = false)
     {
+        muskReference.GetChild(0).position = new Vector3(85f,-447f,0);
         MuskInProgress = true;
         Vector3 from = muskReference.GetChild(0).localPosition;
 
@@ -445,7 +471,7 @@ public class FunctionHandler : Singleton<FunctionHandler>
         if (GameManager.Instance.Currency >= cost)
         {
             GameManager.Instance.Currency -= cost;
-            GameManager.Instance.TurnCount++;
+            //GameManager.Instance.TurnCount++;
         }
         else
         {

@@ -12,6 +12,7 @@ public class LevelManager : Singleton<LevelManager>
     public GameObject exitPref;
     public GameObject boardTilePref;
     public GameObject starPref;
+    public GameObject fltTextPref;
 
     public List<Transform> stars;
     public List<Transform> exits;
@@ -38,6 +39,7 @@ public class LevelManager : Singleton<LevelManager>
     public float nodeStep = 10.5f;
     
     public int levelDimention = 6;
+    public int levelDimentionCutOff = 5;
     public int tileCount = 0;
 
     public GameObject lastExit;
@@ -48,26 +50,44 @@ public class LevelManager : Singleton<LevelManager>
         exits = new List<Transform>();
         freeTiles = new List<Transform>();
         stars = new List<Transform>();
-        levelData = new int[5];
+        levelData = new int[6];
 
         //LOAD SYSTEM
-        string levelDataString = PlayerPrefs.GetString("LastLevel", "0,0,0,0,0");
+        string levelDataString = PlayerPrefs.GetString("LastLevel", "0,0,0,0,0,0");
         string[] levelDataStrArr = levelDataString.Split(',');
         for (int i = 0; i < levelDataStrArr.Length; i++)
         {
-            Debug.Log("SS");
+            //Debug.Log("SS");
             levelData[i] = int.Parse(levelDataStrArr[i]);
         }
 
 
-        if (PlayerPrefs.GetInt("Level",1)!= levelData[0])
+        if (PlayerPrefs.GetInt("Level",1)!= levelData[0] || (GameManager.Instance != null && GameManager.Instance.ArcadeMode))
         {
-            //Randomize ground
-            randGroundIndex = Random.Range(0, groundMats.Length);
-            randGroundEuler = Random.Range(0, 360);
-            randTreeIndex = Random.Range(0, treeVariants.Length);
-            randTileMat = Random.Range(0, tileMats.Length);
-            PlayerPrefs.SetString("LastLevel", string.Format("{0},{1},{2},{3},{4}",PlayerPrefs.GetInt("Level",1),randGroundIndex,randGroundEuler,randTreeIndex, randTileMat));
+           
+            if (GameManager.Instance != null && GameManager.Instance.ArcadeMode)
+            {
+                Debug.Log("RANDOM");
+                //Randomize ground
+                randGroundIndex = Random.Range(0, groundMats.Length);
+                randGroundEuler = Random.Range(0, 360);
+                randTreeIndex = Random.Range(0, treeVariants.Length);
+                randTileMat = Random.Range(0, tileMats.Length);
+                levelDimentionCutOff = 8;
+            }
+            else
+            {
+                //Randomize ground
+                randGroundIndex = Random.Range(0, groundMats.Length);
+                randGroundEuler = Random.Range(0, 360);
+                randTreeIndex = Random.Range(0, treeVariants.Length);
+                randTileMat = Random.Range(0, tileMats.Length);
+                levelDimentionCutOff = Random.Range(3, 5);
+                PlayerPrefs.SetString("LastLevel", string.Format("{0},{1},{2},{3},{4},{5}", PlayerPrefs.GetInt("Level", 1), randGroundIndex, randGroundEuler, randTreeIndex, randTileMat, levelDimentionCutOff));
+            }
+
+
+           
         }
         else
         {
@@ -75,7 +95,7 @@ public class LevelManager : Singleton<LevelManager>
             randGroundEuler = levelData[2];
             randTreeIndex = levelData[3];
             randTileMat = levelData[4];
-
+            levelDimentionCutOff = levelData[5];
         }
 
         ground.eulerAngles = new Vector3(0,randGroundEuler, 0);
@@ -116,7 +136,8 @@ public class LevelManager : Singleton<LevelManager>
         {
             for (int j = 0; j < levelDimention; j++)
             {
-                if (/*true*/Mathf.Abs(i - j) <= 3)
+                //Randomize "CUTT OFF 3-5"
+                if (/*true*/ Mathf.Abs(i - j) <= levelDimentionCutOff)
                 {
                     GameObject tmpNode = Instantiate(nodePref, new Vector3(nodeStep * j - nodeStep * (levelDimention / 2), 0, -nodeStep * i + nodeStep * (levelDimention / 2)), Quaternion.identity, transform);
 
@@ -124,7 +145,7 @@ public class LevelManager : Singleton<LevelManager>
                     tmpNode.GetComponent<NodeController>().Column = j;
 
                     //Corners
-                    if ((i == 0 ^ j == 0 ^ i == levelDimention - 1 ^ j == levelDimention - 1) || Mathf.Abs(i - j) == 3)
+                    if ((i == 0 ^ j == 0 ^ i == levelDimention - 1 ^ j == levelDimention - 1) || Mathf.Abs(i - j) == levelDimentionCutOff)
                     {
                         GameObject tmpSide = Instantiate(sidesPref, tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
                         //Set material
@@ -136,11 +157,13 @@ public class LevelManager : Singleton<LevelManager>
 
                         tmpSide.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpSide.transform.eulerAngles.y / 90f) * 90f, 0);
 
-                        freeTiles.Add(tmpSide.transform);
+                        //Add free tiles if it's normal mode
+                        if(GameManager.Instance != null && !GameManager.Instance.ArcadeMode)
+                            freeTiles.Add(tmpSide.transform);
 
                     }
                     //Sides
-                    else if ((i == 0 && j == 0 && i == levelDimention - 1 && j == levelDimention - 1) || Mathf.Abs(i - j) == 3)
+                    else if ((i == 0 && j == 0 && i == levelDimention - 1 && j == levelDimention - 1) || Mathf.Abs(i - j) == levelDimentionCutOff)
                     {
                         Instantiate(boardTilePref, tmpNode.transform.position, tmpNode.transform.rotation, boardHolder);
                     }
@@ -152,7 +175,7 @@ public class LevelManager : Singleton<LevelManager>
                         //If center - enable rocket and disable buildings
                         if (i == levelDimention / 2 && j == levelDimention / 2)
                         {
-                            Debug.Log("REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+                            //Debug.Log("REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
                             tileCount++;
                             GameObject tmpTile = Instantiate(tilePref, tmpNode.transform.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpNode.transform);
                             //Generate building layout
@@ -197,7 +220,8 @@ public class LevelManager : Singleton<LevelManager>
                             //Add empty tile
                             GameObject tmpEmpty = Instantiate(emptyTilePref, tmpNode.transform.position, Quaternion.identity, tmpNode.transform);
                            
-
+                            if(GameManager.Instance != null && GameManager.Instance.ArcadeMode)
+                                    freeTiles.Add(tmpEmpty.transform);
                         }
 
 
@@ -242,7 +266,7 @@ public class LevelManager : Singleton<LevelManager>
             }
             while (stars.Contains(tmpTile) || tmpTile.childCount== 0 || !tmpTile.GetChild(0).CompareTag("Tile"));
 
-            Debug.Log(tmpTile.GetChild(0).tag);
+            //Debug.Log(tmpTile.GetChild(0).tag);
             Instantiate(starPref, tmpTile.GetChild(0).GetChild(5));
             //Add star to list
             stars.Add(tmpTile);
@@ -257,66 +281,47 @@ public class LevelManager : Singleton<LevelManager>
     //Spawnpoint
     public Transform SpawnExit()
     {
-        if(freeTiles.Count == 0)
+        if (GameManager.Instance.ArcadeMode && Instance.stars.Count >= 3)
+        {
+            RespawnGem();
+        }
+
+        if (GameManager.Instance.ArcadeMode && freeTiles.Count == 0)
         {
             FunctionHandler.Instance.GameOver();
+            return null;
         }
-        int tmpFree = Random.Range(0, freeTiles.Count);
-        //Debug.Log(">>>>" + tmpFree);
-        Transform tmpFreeTile = freeTiles[tmpFree];
-        freeTiles.Remove(tmpFreeTile);
-        GameObject tmpExit = Instantiate(exitPref, tmpFreeTile.parent.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpFreeTile.parent);
+       else
+        {
+            int tmpFree = Random.Range(0, freeTiles.Count);
 
-        //Set material
-        tmpExit.transform.GetChild(1).GetComponent<Renderer>().material = tileMats[randTileMat];
-        tmpExit.transform.GetChild(1).GetComponent<Renderer>().material.color = Color.gray;// new Color(0.2f, 0.2f, 0.2f);
+            //Debug.Log(">>>>" + tmpFree);
+            Transform tmpFreeTile = freeTiles[tmpFree];
+            freeTiles.Remove(tmpFreeTile);
+            GameObject tmpExit = Instantiate(exitPref, tmpFreeTile.parent.position, Quaternion.Euler(0, Random.Range(0, 360) / 90 * 90, 0), tmpFreeTile.parent);
 
-        tmpExit.transform.LookAt(Vector3.zero, Vector3.up);
-        //Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
+            //Set material
+            tmpExit.transform.GetChild(1).GetComponent<Renderer>().material = tileMats[randTileMat];
+            tmpExit.transform.GetChild(1).GetComponent<Renderer>().material.color = Color.gray;// new Color(0.2f, 0.2f, 0.2f);
 
-        tmpExit.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpExit.transform.eulerAngles.y / 90f) * 90f, 0);
+            tmpExit.transform.LookAt(Vector3.zero, Vector3.up);
+            //Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
 
-        tmpExit.transform.SetAsFirstSibling();
-        Destroy(tmpFreeTile.gameObject);
-        lastExit = tmpExit;
-        AudioManager.Instance.PlaySound("Bump");
+            tmpExit.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpExit.transform.eulerAngles.y / 90f) * 90f, 0);
 
-        ////Shoot Ray to check if exit is blocked
-        //RaycastHit hit;
+            tmpExit.transform.SetAsFirstSibling();
+            Destroy(tmpFreeTile.gameObject);
+            lastExit = tmpExit;
+            AudioManager.Instance.PlaySound("Bump");
+            exits.Add(tmpExit.transform);
+
+            GameManager.Instance.BuildSurface();
+            return tmpExit.transform;
+        }
+
 
        
-        //if(Physics.Raycast(tmpExit.transform.position, tmpExit.transform.TransformPoint(Vector3.forward*100f), out hit))
-        //{
 
-        //    Debug.DrawRay(tmpExit.transform.position, tmpExit.transform.TransformPoint(Vector3.forward * 100f), Color.blue, 3f);
-        //    //Debug.Log(hit.transform.parent.GetComponent<NodeController>().Column + " : " + hit.transform.parent.GetComponent<NodeController>().Row);
-        //    //Debug.Log("T: " + hit.transform.tag);
-            
-        //    if (hit.transform.CompareTag("Exit") || hit.transform.CompareTag("Border"))
-        //    {
-        //        Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
-        //        tmpExit.transform.LookAt(Vector3.zero, Vector3.up);
-        //        Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
-
-        //        tmpExit.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpExit.transform.eulerAngles.y / 90f) * 90f, 0);
-        //        Debug.Log(" EULER " + tmpExit.transform.eulerAngles.y);
-        //    }
-
-          
-
-
-        //}
-
-        //OR
-        //look towards center
-        //tmpExit.transform.LookAt(Vector3.zero, Vector3.up);
-        //tmpExit.transform.rotation = Quaternion.Euler(0, Mathf.Round(tmpExit.transform.eulerAngles.y / 90f) * 90f, 0);
-
-        exits.Add(tmpExit.transform);
-
-        GameManager.Instance.BuildSurface();
-
-        return tmpExit.transform;
     }
 
     ////Despawn all exits
@@ -331,7 +336,23 @@ public class LevelManager : Singleton<LevelManager>
     //    exits.Clear();
     //}
 
-        
+
+    public void RespawnGem()
+    {
+        int randomIndex = Random.Range(0, LevelManager.Instance.transform.childCount);
+
+        Transform tmpTile = LevelManager.Instance.transform.GetChild(randomIndex);
+
+        if (tmpTile.childCount != 0 && tmpTile.GetChild(0).CompareTag("Tile"))
+        {
+            //Debug.Log(tmpTile.GetChild(0).tag);
+            Instantiate(LevelManager.Instance.starPref, tmpTile.GetChild(0).GetChild(5));
+            //Add star to list
+            LevelManager.Instance.stars.Add(tmpTile);
+            AudioManager.Instance.PlaySound("Star");
+        }
+    }
+
 
     //Spawn new rocket
     public void SpawnRocket()
@@ -340,7 +361,7 @@ public class LevelManager : Singleton<LevelManager>
         //Set Rocket reference
 
 
-        if (freeTiles.Count == 0)
+        if (GameManager.Instance.ArcadeMode && freeTiles.Count == 0)
         {
             FunctionHandler.Instance.GameOver();
         }
@@ -411,9 +432,8 @@ public class LevelManager : Singleton<LevelManager>
         GameManager.Instance.rocketHolder = GameManager.Instance.nextRocket;
         GameManager.Instance.nextRocket = null;
 
-        GameObject tmpSide = Instantiate(sidesPref, tmpTile.parent);
-        freeTiles.Add(tmpSide.transform);
-        Destroy(tmpTile.gameObject);
+        DeletePrevious(tmpTile);
+       
     }
 
     public void DisableRocket(Transform tmpTile)

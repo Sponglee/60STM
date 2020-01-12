@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class TileManager : MonoBehaviour
 {
@@ -107,7 +108,7 @@ public class TileManager : MonoBehaviour
 
     void OnMouseDown()
     {
-        if(!FunctionHandler.Instance.IsPointerOverUIObject("UI") && !FunctionHandler.Instance.MenuActive)
+        if(SceneManager.GetActiveScene().name != "Tittle" && !FunctionHandler.Instance.IsPointerOverUIObject("UI") && !FunctionHandler.Instance.MenuActive)
         {
             Selected = true;
             GameManager.Instance.selectedTile = transform;
@@ -118,12 +119,13 @@ public class TileManager : MonoBehaviour
             screenPoint = Camera.main.WorldToScreenPoint(gameObject.transform.position);
 
             offset = gameObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
+            //Disable agents for movement
+            AgentToggle(false, GameManager.Instance.rocketHolder.position);
         }
           
 
 
-        //Disable agents for movement
-        AgentToggle(false, GameManager.Instance.rocketHolder.position);
+      
 
 
     }
@@ -161,7 +163,7 @@ public class TileManager : MonoBehaviour
         //{
         if (!FunctionHandler.Instance.IsPointerOverUIObject("UI") &&  Selected && !CollidedBool && !RotationInProgress && !DragActive)
         {
-            if(GameManager.Instance.TurnCount>0 )
+            if(true)
                 StartCoroutine(StopRotate());
             else
             {

@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 using Cinemachine;
 using UnityEngine.SceneManagement;
-using GameAnalyticsSDK;
+//using GameAnalyticsSDK;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -30,6 +30,7 @@ public class GameManager : Singleton<GameManager>
     }
     public ScreenOrientation currentOrientation;
 
+    
     public bool ArcadeMode = false;
 
     public Transform selectedTile;
@@ -68,32 +69,40 @@ public class GameManager : Singleton<GameManager>
     //Trigger To spawn
     public bool SpawnAlreadyTrigger = false;
 
+
+
+  
     [SerializeField]
-    private int turnCount = 0;
-    public int TurnCount
+
+    private float timer = 0;
+    public float Timer
     {
         get
         {
-            return turnCount;
+            return timer;
         }
         set
         {
-            turnCount = value;
-            PlayerPrefs.SetInt("TurnCount", value);
-            turnCountText.text = value.ToString();
+            timer = value;
+            timeText.text = value.ToString();
+            if(ArcadeMode)
+                progressSlider.value = (float)value / 60f;
         }
     }
 
     public bool GameOverBool = false;
     public GameObject WinText;
 
-    public Text turnCountText;
+    public Text timeText;
     public Text humanText;
+    public Text highScoreText;
     public Text LevelText;
     public Text NextLevelText;
     public Slider progressSlider;
 
     public int levelGoal;
+
+    //Also Score for arcade
     [SerializeField]
     private int humanCount = 0;
     public int HumanCount
@@ -105,12 +114,39 @@ public class GameManager : Singleton<GameManager>
         set
         {
             humanCount = value;
-            //humanText.text = string.Format("{0}/ {1}", value, levelGoal);
-            progressSlider.value = (float)value / (float)levelGoal;
-            
+            humanText.text = string.Format("{0}", value);
+
+            //Remember the score
+            if(ArcadeMode)
+            {
+                if(value> PlayerPrefs.GetInt("ArcadeScore",0))
+                {
+                    highScoreText.gameObject.SetActive(false);
+                    PlayerPrefs.SetInt("ArcadeScore", value);
+                }
+                
+            }
+            else
+                progressSlider.value = (float)value / (float)levelGoal;
+
         }
     }
 
+    [SerializeField]
+    private int highScore = 0;
+    public int HighScore
+    {
+        get
+        {
+            return highScore;
+        }
+        set
+        {
+            highScore = value;
+            highScoreText.text = string.Format("{0}", value);
+
+        }
+    }
     public int exitCount = 0;
 
     //Rocket capacity
@@ -149,71 +185,102 @@ public class GameManager : Singleton<GameManager>
 
     private void Awake()
     {
+        //Set up Game Mode
+        ArcadeMode = (PlayerPrefs.GetInt("GameMode", 0) == 0) ? false : true;
+        Debug.Log("Arcade : " + ArcadeMode + " :" + PlayerPrefs.GetInt("GameMode",0));
+
+
         zoomTargets = new List<Transform>();
         Currency = PlayerPrefs.GetInt("Currency", 0);
-        ArcadeMode = PlayerPrefs.GetInt("ArcadeMode", 0) == 1 ? true : false;
+      
 
-
-        if (PlayerPrefs.GetInt("Level", 1) < 4 && PlayerPrefs.GetInt("Level", 1) >= 0)
+        if(ArcadeMode)
         {
+           
             spawnModifier = 1;
-            LevelManager.Instance.levelDimention = 5;
-        }
-        else if (PlayerPrefs.GetInt("Level", 1) >= 4 && PlayerPrefs.GetInt("Level", 1) < 10)
-        {
-            spawnModifier = 2;
-            LevelManager.Instance.levelDimention = 6;
-        }
-        else if(PlayerPrefs.GetInt("Level", 1) >=10 && PlayerPrefs.GetInt("Level", 1)< 50)
-        {
-            spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 20, 1, 10) + 1;
-            LevelManager.Instance.levelDimention = 5 + Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 6);
-            if (LevelManager.Instance.levelDimention > 8)
-                LevelManager.Instance.trees.gameObject.SetActive(false);
-        }
-        else if (PlayerPrefs.GetInt("Level", 1) >= 50 && PlayerPrefs.GetInt("Level", 1) < 120)
-        {
-            spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 20, 1, 10) + 1;
-            LevelManager.Instance.levelDimention = Random.Range(6, 5 + Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 6));
-            if (LevelManager.Instance.levelDimention > 8)
-                LevelManager.Instance.trees.gameObject.SetActive(false);
+            LevelManager.Instance.levelDimention = 8;
+            timeText = NextLevelText;
+            Timer = 60;
+            LevelText.text = "";
+            //NextLevelText.text = string.Format("{0}", 60).ToString();
+            FunctionHandler.Instance.starsHolderUI.gameObject.SetActive(false);
+            humanText.gameObject.SetActive(true);
+
+            highScoreText.gameObject.SetActive(true);
+            highScoreText.text = PlayerPrefs.GetInt("ArcadeScore", 0).ToString();
         }
         else
         {
-            spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 10);
-            LevelManager.Instance.levelDimention = Random.Range(7, 11);
-            if (LevelManager.Instance.levelDimention > 8)
-                LevelManager.Instance.trees.gameObject.SetActive(false);
+            if (PlayerPrefs.GetInt("Level", 1) < 4 && PlayerPrefs.GetInt("Level", 1) >= 0)
+            {
+                spawnModifier = 1;
+                LevelManager.Instance.levelDimention = 5;
+                currentOrientation = Screen.orientation;
+            }
+            else if (PlayerPrefs.GetInt("Level", 1) >= 4 && PlayerPrefs.GetInt("Level", 1) < 10)
+            {
+                spawnModifier = 2;
+                LevelManager.Instance.levelDimention = 6;
+            }
+            else if (PlayerPrefs.GetInt("Level", 1) >= 10 && PlayerPrefs.GetInt("Level", 1) < 50)
+            {
+                spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 20, 1, 10) + 1;
+                LevelManager.Instance.levelDimention = 5 + Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 5);
+                if (LevelManager.Instance.levelDimention > 8)
+                    LevelManager.Instance.trees.gameObject.SetActive(false);
+            }
+            else if (PlayerPrefs.GetInt("Level", 1) >= 50 && PlayerPrefs.GetInt("Level", 1) < 120)
+            {
+                spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 20, 1, 10) + 1;
+                LevelManager.Instance.levelDimention = Random.Range(6, 5 + Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 5));
+                if (LevelManager.Instance.levelDimention > 8)
+                    LevelManager.Instance.trees.gameObject.SetActive(false);
+            }
+            else
+            {
+                spawnModifier = Mathf.Clamp(PlayerPrefs.GetInt("Level", 1) / 10, 1, 10);
+                LevelManager.Instance.levelDimention = Random.Range(7, 10);
+                if (LevelManager.Instance.levelDimention > 8)
+                    LevelManager.Instance.trees.gameObject.SetActive(false);
+            }
+
+            //Debug.Log("SPAWNMOD " + spawnModifier);
+            levelGoal = 15 * spawnModifier;
+            LevelText.text = string.Format("{0}", PlayerPrefs.GetInt("Level", 1).ToString());
+            NextLevelText.text = string.Format("{0}", (1 + PlayerPrefs.GetInt("Level", 1)).ToString());
+            currentOrientation = Screen.orientation;
+
         }
-      
-        //Debug.Log("SPAWNMOD " + spawnModifier);
-        levelGoal = 15*spawnModifier;
-        LevelText.text = string.Format("{0}", PlayerPrefs.GetInt("Level", 1).ToString());
-        NextLevelText.text = string.Format("{0}", (1 + PlayerPrefs.GetInt("Level", 1)).ToString());
+
         currentOrientation = Screen.orientation;
-        if (Screen.orientation == ScreenOrientation.Landscape || Screen.orientation == ScreenOrientation.LandscapeLeft || Screen.orientation == ScreenOrientation.LandscapeRight)
-        {
-            currentOrientation = Screen.orientation;
-            levelCam = horizCam;
-            horizCam.Priority = 60;
-            vertCam.Priority = 40;
-        }
-        else if (Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.PortraitUpsideDown)
-        {
-            currentOrientation = Screen.orientation;
-            levelCam = vertCam;
-            vertCam.Priority = 60;
-            horizCam.Priority = 40;
-        }
+        levelCam = vertCam;
+        vertCam.Priority = 60;
+        horizCam.Priority = 40;
+
+        ////Setup cameras
+        //if (Screen.orientation == ScreenOrientation.Landscape || Screen.orientation == ScreenOrientation.LandscapeLeft || Screen.orientation == ScreenOrientation.LandscapeRight)
+        //{
+        //    currentOrientation = Screen.orientation;
+        //    levelCam = horizCam;
+        //    horizCam.Priority = 60;
+        //    vertCam.Priority = 40;
+        //}
+        //else if (Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.PortraitUpsideDown)
+        //{
+        //    currentOrientation = Screen.orientation;
+        //    levelCam = vertCam;
+        //    vertCam.Priority = 60;
+        //    horizCam.Priority = 40;
+        //}
     }
 
     private void Start()
     {
 
-        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Start, Application.version, PlayerPrefs.GetInt("Level", 1).ToString("00000"));
+        //GameAnalytics.NewProgressionEvent(GAProgressionStatus.Start, Application.version, PlayerPrefs.GetInt("Level", 1).ToString("00000"));
 
         HumanCount = 0;
-        TurnCount = PlayerPrefs.GetInt("TurnCount", 3);
+        //TurnCount = PlayerPrefs.GetInt("TurnCount", 3);
        
 
         if(PlayerPrefs.GetInt("FirstLaunch", 1) == 1)
@@ -228,7 +295,7 @@ public class GameManager : Singleton<GameManager>
         {
             //StartCoroutine(LevelSpawnerTimed());
             if (ArcadeMode)
-                StartCoroutine(LevelSpawnerArcade());
+                StartCoroutine(LevelSpawnerTimed());
             else
             {
                 StartCoroutine(LevelSpawner());
@@ -296,7 +363,7 @@ public class GameManager : Singleton<GameManager>
         else if(Input.GetMouseButtonDown(2))
         {
             //WinText.SetActive(true);
-            turnCountText.gameObject.SetActive(false);
+            timeText.gameObject.SetActive(false);
             FunctionHandler.Instance.LevelComplete();
 
             //Win sequence
@@ -339,11 +406,11 @@ public class GameManager : Singleton<GameManager>
     //    while (Timer>0)
     //    {
     //        //Debug.Log(">>>>>>>>>>>" + levelGoal / LevelManager.Instance.freeTiles.Count);
-            
+
     //        if(!SpawnAlreadyTrigger && !GameOverBool)
     //        {
-              
-               
+
+
     //            //Set reference for goal count
     //            spawnHumanCount = humanCount;
     //            //Set reference to spawnCOunt
@@ -367,7 +434,7 @@ public class GameManager : Singleton<GameManager>
     //            BuildSurface();
     //            //foreach (Transform exit in LevelManager.Instance.exits)
     //            //{
-                  
+
     //            //    for (int i = 0; i < 15f; i++)
     //            //    {
     //            //       GameObject tmpHuman =  Instantiate(humanPref, exit.GetChild(2));
@@ -379,7 +446,7 @@ public class GameManager : Singleton<GameManager>
     //            SpawnAlreadyTrigger = true;
 
     //        }
-           
+
 
     //        yield return new WaitForSeconds(1f);
     //        if(!GameOverBool )
@@ -389,7 +456,7 @@ public class GameManager : Singleton<GameManager>
     //                AudioManager.Instance.PlaySound("TickTock");
     //        }
 
-           
+
 
     //        if (Timer == 11)
     //        {
@@ -400,17 +467,17 @@ public class GameManager : Singleton<GameManager>
     //            BuildSurface();
     //        }
 
-           
+
     //        if ( Timer % 10 == 0)
     //        {
-               
+
     //            SpawnAlreadyTrigger = false;
     //        }
     //        //Debug.Log(humanCount + "- " + spawnHumanCount + " ( " + spawnCount + ")");
-           
 
 
-           
+
+
 
     //        //Check to spawn new Exits
     //        //if (humanCount - spawnHumanCount >= spawnCount && Timer >0)
@@ -429,7 +496,7 @@ public class GameManager : Singleton<GameManager>
     //            endCam.gameObject.SetActive(true);
     //            endCam.m_Follow = rocketHolder.GetChild(1).GetChild(1);
     //            endCam.m_LookAt = rocketHolder.GetChild(1).GetChild(1);
-                
+
     //            FunctionHandler.Instance.LevelComplete();
     //            //LevelManager.Instance.DisableNextRocket(previousRocket);
     //            BuildSurface(true);
@@ -484,24 +551,20 @@ public class GameManager : Singleton<GameManager>
 
     //}
 
-
-
-    public IEnumerator LevelSpawnerArcade()
+    public IEnumerator LevelSpawnerTimed()
     {
         List<int> randomExits = new List<int>();
 
-        //spawn rocket
-
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 3; i++)
         {
 
             randomExits.Add(Random.Range(0, LevelManager.Instance.exits.Count));
         }
 
         yield return new WaitForSeconds(2f);
-         
 
-        while (rocketFilling<rocketCap)
+
+        while (Timer > 0)
         {
             //Debug.Log(">>>>>>>>>>>" + levelGoal / LevelManager.Instance.freeTiles.Count);
 
@@ -514,7 +577,7 @@ public class GameManager : Singleton<GameManager>
                 //Set reference to spawnCOunt
                 spawnCount = 0;
 
-                for (int i = 0; i < Mathf.Clamp(spawnModifier, 0, 2); i++)
+                for (int i = 0; i < Mathf.Clamp(spawnModifier, 0, 1); i++)
                 {
                     Transform thisExit = LevelManager.Instance.SpawnExit();
                     for (int j = 0; j < 15f; j++)
@@ -547,26 +610,26 @@ public class GameManager : Singleton<GameManager>
 
 
             yield return new WaitForSeconds(1f);
-            //if (!GameOverBool)
-            //{
-            //    Timer -= 1f;
-            //    if (Timer <= 20 || (Timer <= 60 && Timer > 56))
-            //        AudioManager.Instance.PlaySound("TickTock");
-            //}
-
-
-
-            if (RocketFilling >= rocketCap - 15 && nextRocket == null)
+            if (!GameOverBool)
             {
-                //AudioManager.Instance.PlaySound("Countdown");`
+                Timer -= 1f;
+                if (Timer <= 20 || (Timer <= 60 && Timer > 50))
+                    AudioManager.Instance.PlaySound("TickTock");
+            }
+
+
+
+            if (Timer == 11)
+            {
+                AudioManager.Instance.PlaySound("Countdown");
                 LevelManager.Instance.SpawnRocket();
                 LevelManager.Instance.DisableRocket(nextRocket);
                 //Build navMesh
                 BuildSurface();
             }
 
-            ////Debug.Log(RocketFilling);
-            if (LevelManager.Instance.exits.Count < 2 && RocketFilling != 0 && SpawnAlreadyTrigger)
+
+            if (Timer % 10 == 0)
             {
 
                 SpawnAlreadyTrigger = false;
@@ -578,39 +641,38 @@ public class GameManager : Singleton<GameManager>
 
 
             //Check to spawn new Exits
-            if (humanCount - spawnHumanCount >= spawnCount /*&& Timer > 0*/)
-            {
-                SpawnAlreadyTrigger = false;
-                //LevelManager.Instance.DespawnExits();
-            }
+            //if (humanCount - spawnHumanCount >= spawnCount && Timer >0)
+            //{
+            //    SpawnAlreadyTrigger = false;
+            //    //LevelManager.Instance.DespawnExits();
+            //}
 
-            if (HumanCount >= levelGoal)
-            {
-                HumanCount = levelGoal;
-                AudioManager.Instance.StopSound("All");
-                AudioManager.Instance.PlaySound("FireWall");
-                AudioManager.Instance.PlaySound("FlareUp");
-                //Win sequence
-                endCam.gameObject.SetActive(true);
-                endCam.m_Follow = rocketHolder.GetChild(1).GetChild(1);
-                endCam.m_LookAt = rocketHolder.GetChild(1).GetChild(1);
+            //if (HumanCount >= levelGoal)
+            //{
+            //    HumanCount = levelGoal;
+            //    AudioManager.Instance.StopSound("All");
+            //    AudioManager.Instance.PlaySound("FireWall");
+            //    AudioManager.Instance.PlaySound("FlareUp");
+            //    //Win sequence
+            //    endCam.gameObject.SetActive(true);
+            //    endCam.m_Follow = rocketHolder.GetChild(1).GetChild(1);
+            //    endCam.m_LookAt = rocketHolder.GetChild(1).GetChild(1);
 
-                FunctionHandler.Instance.LevelComplete();
-                
-                //LevelManager.Instance.DisableNextRocket(previousRocket);
-                BuildSurface(true);
-                GameOverBool = true;
-                StopAllCoroutines();
+            //    FunctionHandler.Instance.LevelComplete();
+            //    //LevelManager.Instance.DisableNextRocket(previousRocket);
+            //    BuildSurface(true);
+            //    GameOverBool = true;
+            //    StopAllCoroutines();
 
-                yield break;
-            }
+            //    yield break;
+            //}
         }
 
         //Launch emote
         FunctionHandler.Instance.MuskEmote(0);
 
         //Reset the timer and spawn new rocket
-        
+        Timer = 60f;
         spawnModifier++;
 
         //Disable Tower
@@ -645,11 +707,13 @@ public class GameManager : Singleton<GameManager>
         BuildSurface();
         //LevelManager.Instance.DeletePrevious(previousRocket);
         randomExits.Clear();
-        StartCoroutine(LevelSpawnerArcade());
+        StartCoroutine(LevelSpawnerTimed());
 
 
     }
 
+
+  
 
     public IEnumerator LevelSpawner()
     {
