@@ -184,7 +184,7 @@ public class FunctionHandler : Singleton<FunctionHandler>
 
     public void LevelComplete()
     {
-        //GameAnalytics.NewProgressionEvent(GAProgressionStatus.Complete, Application.version, PlayerPrefs.GetInt("Level",1).ToString("00000"));
+        //xytics.NewProgressionEvent(GAProgressionStatus.Complete, Application.version, PlayerPrefs.GetInt("Level",1).ToString("00000"));
 
         //Hi mote
         Instance.MuskEmote(2);
