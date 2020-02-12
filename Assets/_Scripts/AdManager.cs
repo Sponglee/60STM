@@ -9,6 +9,9 @@ public class AdManager : Singleton<AdManager>
     public int levelsToAd = 1;
     private void Start()
     {
+        //Initialize ads
+        Advertisement.Initialize("3429110");
+
         DontDestroyOnLoad(gameObject);
 
         if (managerInstance == null)

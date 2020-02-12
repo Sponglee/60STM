@@ -257,21 +257,21 @@ public class GameManager : Singleton<GameManager>
         vertCam.Priority = 60;
         horizCam.Priority = 40;
 
-        ////Setup cameras
-        //if (Screen.orientation == ScreenOrientation.Landscape || Screen.orientation == ScreenOrientation.LandscapeLeft || Screen.orientation == ScreenOrientation.LandscapeRight)
-        //{
-        //    currentOrientation = Screen.orientation;
-        //    levelCam = horizCam;
-        //    horizCam.Priority = 60;
-        //    vertCam.Priority = 40;
-        //}
-        //else if (Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.PortraitUpsideDown)
-        //{
-        //    currentOrientation = Screen.orientation;
-        //    levelCam = vertCam;
-        //    vertCam.Priority = 60;
-        //    horizCam.Priority = 40;
-        //}
+        //Setup cameras
+        if (Screen.orientation == ScreenOrientation.Landscape || Screen.orientation == ScreenOrientation.LandscapeLeft || Screen.orientation == ScreenOrientation.LandscapeRight)
+        {
+            currentOrientation = Screen.orientation;
+            levelCam = horizCam;
+            horizCam.Priority = 60;
+            vertCam.Priority = 40;
+        }
+        else if (Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.PortraitUpsideDown)
+        {
+            currentOrientation = Screen.orientation;
+            levelCam = vertCam;
+            vertCam.Priority = 60;
+            horizCam.Priority = 40;
+        }
     }
 
     private void Start()

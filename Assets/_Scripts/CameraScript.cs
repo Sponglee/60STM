@@ -22,12 +22,12 @@ public class CameraScript : MonoBehaviour
             Debug.Log("<>>>>>>>" + screenRatio + " <<<<<< " + targetRatio);
             if (screenRatio >= targetRatio)
             {
-                camRef.m_Lens.OrthographicSize = rink.bounds.size.x / 2;
+                camRef.m_Lens.OrthographicSize = rink.bounds.size.x / 2  -2f;
             }
             else
             {
                 float differenceInSize = targetRatio / screenRatio;
-                camRef.m_Lens.OrthographicSize = rink.bounds.size.x / 2 * differenceInSize;
+                camRef.m_Lens.OrthographicSize = rink.bounds.size.x / 2 * differenceInSize -2f;
             }
         }
         else
@@ -36,14 +36,16 @@ public class CameraScript : MonoBehaviour
             Debug.Log("<>>>>>>>" + screenRatio + " <<<<<< " + targetRatio);
             if (screenRatio >= targetRatio)
             {
-                camRef.m_Lens.OrthographicSize = rink.bounds.size.y / 2;
+                camRef.m_Lens.OrthographicSize = rink.bounds.size.y / 2 - 2f;
             }
             else
             {
                 float differenceInSize = targetRatio / screenRatio;
-                camRef.m_Lens.OrthographicSize = rink.bounds.size.y / 2 * differenceInSize;
+                camRef.m_Lens.OrthographicSize = rink.bounds.size.y / 2 * differenceInSize - 2f;
             }
         }
+
+
         
     }
 }
