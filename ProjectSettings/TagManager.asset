@@ -3,19 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - Rocket
-  - Office
-  - ExtraRocket
-  - Tile
-  - Empty
-  - Human
-  - Exit
-  - Border
-  - Blank
-  - Collectable
-  - UI
-  - Star
+  tags: []
   layers:
   - Default
   - TransparentFX
@@ -25,7 +13,7 @@ TagManager:
   - UI
   - 
   - 
-  - Roads
+  - 
   - 
   - 
   - 

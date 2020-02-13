@@ -12,7 +12,8 @@ public class CameraScript : MonoBehaviour
     {
         camRef = GameManager.Instance.levelCam;
 
-
+        //Set up zoom reference
+        rink.transform.localScale = Vector3.one * (LevelManager.Instance.levelDimention + 1)* 10f;
 
         float screenRatio = (float)Screen.width / (float)Screen.height;
        

@@ -30,7 +30,7 @@ public class AdManager : Singleton<AdManager>
         if(Advertisement.IsReady() && adCount>=levelsToAd)
         {
 
-            Advertisement.Show();
+            Advertisement.Show("Inter60STM");
             adCount = 0;
         }
         else

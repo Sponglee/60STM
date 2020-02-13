@@ -4,7 +4,7 @@
 PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 20
-  productGUID: 9af8290ab9d57954187172382ceb19d6
+  productGUID: 1b217deb33d5a19429d3bb3fcde4ce0e
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   AndroidEnableSustainedPerformanceMode: 0
@@ -13,17 +13,17 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: SolidHinken
-  productName: Spaceport 3D
+  productName: SpacePort3D
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
-  m_SplashScreenBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
+  m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
   m_ShowUnitySplashScreen: 1
   m_ShowUnitySplashLogo: 1
-  m_SplashScreenOverlayOpacity: 1
-  m_SplashScreenAnimation: 0
+  m_SplashScreenOverlayOpacity: 0.5
+  m_SplashScreenAnimation: 1
   m_SplashScreenLogoStyle: 1
   m_SplashScreenDrawMode: 0
-  m_SplashScreenBackgroundAnimationZoom: 0
+  m_SplashScreenBackgroundAnimationZoom: 1
   m_SplashScreenLogoAnimationZoom: 1
   m_SplashScreenBackgroundLandscapeAspect: 1
   m_SplashScreenBackgroundPortraitAspect: 1
@@ -40,8 +40,7 @@ PlayerSettings:
     width: 1
     height: 1
   m_SplashScreenLogos: []
-  m_VirtualRealitySplashScreen: {fileID: 2800000, guid: 42b6fb44b7dfd6642aa4b827c498c7c6,
-    type: 3}
+  m_VirtualRealitySplashScreen: {fileID: 0}
   m_HolographicTrackingLossScreen: {fileID: 0}
   defaultScreenWidth: 1024
   defaultScreenHeight: 768
@@ -69,7 +68,7 @@ PlayerSettings:
   androidBlitType: 0
   defaultIsNativeResolution: 1
   macRetinaSupport: 1
-  runInBackground: 0
+  runInBackground: 1
   captureSingleScreen: 0
   muteOtherAudioSources: 0
   Prepare IOS For Recording: 0
@@ -92,7 +91,7 @@ PlayerSettings:
   xboxEnableFitness: 0
   visibleInBackground: 1
   allowFullscreenSwitch: 1
-  fullscreenMode: 2
+  fullscreenMode: 1
   xboxSpeechDB: 0
   xboxEnableHeadOrientation: 0
   xboxEnableGuest: 0
@@ -119,7 +118,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 1.0.6
+  bundleVersion: 1.0.7
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -164,14 +163,10 @@ PlayerSettings:
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
     Android: com.SolidHinken.Seconds
-    Standalone: com.SolidHinken.60SecondsToMars
-    iPhone: com.SolidHinken.60Seconds
-  buildNumber:
-    Standalone: 1
-    iPhone: 4
-  AndroidBundleVersionCode: 13
+  buildNumber: {}
+  AndroidBundleVersionCode: 18
   AndroidMinSdkVersion: 19
-  AndroidTargetSdkVersion: 28
+  AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
   aotOptions: 
   stripEngineCode: 1
@@ -247,24 +242,24 @@ PlayerSettings:
   metalEditorSupport: 1
   metalAPIValidation: 1
   iOSRenderExtraFrameOnPause: 0
-  appleDeveloperTeamID: VT32CB5D4A
+  appleDeveloperTeamID: 
   iOSManualSigningProvisioningProfileID: 
   tvOSManualSigningProvisioningProfileID: 
   iOSManualSigningProvisioningProfileType: 0
   tvOSManualSigningProvisioningProfileType: 0
-  appleEnableAutomaticSigning: 1
+  appleEnableAutomaticSigning: 0
   iOSRequireARKit: 0
   iOSAutomaticallyDetectAndAddCapabilities: 1
   appleEnableProMotion: 0
   clonedFromGUID: c0afd0d1d80e3634a9dac47e8a0426ea
-  templatePackageId: com.unity.template.3d@2.3.1
+  templatePackageId: com.unity.template.3d@4.2.5
   templateDefaultScene: Assets/Scenes/SampleScene.unity
   AndroidTargetArchitectures: 3
   AndroidSplashScreenScale: 0
-  androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: '{inproject}: _Elements/userKeystore.keystore'
+  androidSplashScreen: {fileID: 2800000, guid: 7531ee5749d7b3c41a9c675fd9e784e9, type: 3}
+  AndroidKeystoreName: '{inproject}: userKeystore.keystore'
   AndroidKeyaliasName: spaceport
-  AndroidBuildApkPerCpuArchitecture: 1
+  AndroidBuildApkPerCpuArchitecture: 0
   AndroidTVCompatibility: 0
   AndroidIsGame: 1
   AndroidEnableTango: 0
@@ -289,6 +284,66 @@ PlayerSettings:
   m_BuildTargetPlatformIcons:
   - m_BuildTarget: Android
     m_Icons:
+    - m_Textures: []
+      m_Width: 192
+      m_Height: 192
+      m_Kind: 1
+      m_SubKind: 
+    - m_Textures: []
+      m_Width: 144
+      m_Height: 144
+      m_Kind: 1
+      m_SubKind: 
+    - m_Textures: []
+      m_Width: 96
+      m_Height: 96
+      m_Kind: 1
+      m_SubKind: 
+    - m_Textures: []
+      m_Width: 72
+      m_Height: 72
+      m_Kind: 1
+      m_SubKind: 
+    - m_Textures: []
+      m_Width: 48
+      m_Height: 48
+      m_Kind: 1
+      m_SubKind: 
+    - m_Textures: []
+      m_Width: 36
+      m_Height: 36
+      m_Kind: 1
+      m_SubKind: 
+    - m_Textures: []
+      m_Width: 192
+      m_Height: 192
+      m_Kind: 0
+      m_SubKind: 
+    - m_Textures: []
+      m_Width: 144
+      m_Height: 144
+      m_Kind: 0
+      m_SubKind: 
+    - m_Textures: []
+      m_Width: 96
+      m_Height: 96
+      m_Kind: 0
+      m_SubKind: 
+    - m_Textures: []
+      m_Width: 72
+      m_Height: 72
+      m_Kind: 0
+      m_SubKind: 
+    - m_Textures: []
+      m_Width: 48
+      m_Height: 48
+      m_Kind: 0
+      m_SubKind: 
+    - m_Textures: []
+      m_Width: 36
+      m_Height: 36
+      m_Kind: 0
+      m_SubKind: 
     - m_Textures: []
       m_Width: 432
       m_Height: 432
@@ -319,163 +374,6 @@ PlayerSettings:
       m_Height: 81
       m_Kind: 2
       m_SubKind: 
-    - m_Textures: []
-      m_Width: 192
-      m_Height: 192
-      m_Kind: 0
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 144
-      m_Height: 144
-      m_Kind: 0
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 96
-      m_Height: 96
-      m_Kind: 0
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 72
-      m_Height: 72
-      m_Kind: 0
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 48
-      m_Height: 48
-      m_Kind: 0
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 36
-      m_Height: 36
-      m_Kind: 0
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 192
-      m_Height: 192
-      m_Kind: 1
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 144
-      m_Height: 144
-      m_Kind: 1
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 96
-      m_Height: 96
-      m_Kind: 1
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 72
-      m_Height: 72
-      m_Kind: 1
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 48
-      m_Height: 48
-      m_Kind: 1
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 36
-      m_Height: 36
-      m_Kind: 1
-      m_SubKind: 
-  - m_BuildTarget: iPhone
-    m_Icons:
-    - m_Textures: []
-      m_Width: 180
-      m_Height: 180
-      m_Kind: 0
-      m_SubKind: iPhone
-    - m_Textures: []
-      m_Width: 120
-      m_Height: 120
-      m_Kind: 0
-      m_SubKind: iPhone
-    - m_Textures: []
-      m_Width: 167
-      m_Height: 167
-      m_Kind: 0
-      m_SubKind: iPad
-    - m_Textures: []
-      m_Width: 152
-      m_Height: 152
-      m_Kind: 0
-      m_SubKind: iPad
-    - m_Textures: []
-      m_Width: 76
-      m_Height: 76
-      m_Kind: 0
-      m_SubKind: iPad
-    - m_Textures: []
-      m_Width: 120
-      m_Height: 120
-      m_Kind: 3
-      m_SubKind: iPhone
-    - m_Textures: []
-      m_Width: 80
-      m_Height: 80
-      m_Kind: 3
-      m_SubKind: iPhone
-    - m_Textures: []
-      m_Width: 80
-      m_Height: 80
-      m_Kind: 3
-      m_SubKind: iPad
-    - m_Textures: []
-      m_Width: 40
-      m_Height: 40
-      m_Kind: 3
-      m_SubKind: iPad
-    - m_Textures: []
-      m_Width: 87
-      m_Height: 87
-      m_Kind: 1
-      m_SubKind: iPhone
-    - m_Textures: []
-      m_Width: 58
-      m_Height: 58
-      m_Kind: 1
-      m_SubKind: iPhone
-    - m_Textures: []
-      m_Width: 29
-      m_Height: 29
-      m_Kind: 1
-      m_SubKind: iPhone
-    - m_Textures: []
-      m_Width: 58
-      m_Height: 58
-      m_Kind: 1
-      m_SubKind: iPad
-    - m_Textures: []
-      m_Width: 29
-      m_Height: 29
-      m_Kind: 1
-      m_SubKind: iPad
-    - m_Textures: []
-      m_Width: 60
-      m_Height: 60
-      m_Kind: 2
-      m_SubKind: iPhone
-    - m_Textures: []
-      m_Width: 40
-      m_Height: 40
-      m_Kind: 2
-      m_SubKind: iPhone
-    - m_Textures: []
-      m_Width: 40
-      m_Height: 40
-      m_Kind: 2
-      m_SubKind: iPad
-    - m_Textures: []
-      m_Width: 20
-      m_Height: 20
-      m_Kind: 2
-      m_SubKind: iPad
-    - m_Textures: []
-      m_Width: 1024
-      m_Height: 1024
-      m_Kind: 4
-      m_SubKind: App Store
   m_BuildTargetBatching:
   - m_BuildTarget: Standalone
     m_StaticBatching: 1
@@ -496,23 +394,23 @@ PlayerSettings:
   - m_BuildTarget: MacStandaloneSupport
     m_GraphicsJobs: 0
   - m_BuildTarget: Switch
-    m_GraphicsJobs: 0
+    m_GraphicsJobs: 1
   - m_BuildTarget: MetroSupport
-    m_GraphicsJobs: 0
+    m_GraphicsJobs: 1
   - m_BuildTarget: AppleTVSupport
     m_GraphicsJobs: 0
   - m_BuildTarget: BJMSupport
-    m_GraphicsJobs: 0
+    m_GraphicsJobs: 1
   - m_BuildTarget: LinuxStandaloneSupport
-    m_GraphicsJobs: 0
+    m_GraphicsJobs: 1
   - m_BuildTarget: PS4Player
-    m_GraphicsJobs: 0
+    m_GraphicsJobs: 1
   - m_BuildTarget: iOSSupport
     m_GraphicsJobs: 0
   - m_BuildTarget: WindowsStandaloneSupport
-    m_GraphicsJobs: 0
+    m_GraphicsJobs: 1
   - m_BuildTarget: XboxOnePlayer
-    m_GraphicsJobs: 0
+    m_GraphicsJobs: 1
   - m_BuildTarget: LuminSupport
     m_GraphicsJobs: 0
   - m_BuildTarget: AndroidPlayer
@@ -551,11 +449,7 @@ PlayerSettings:
     Android: 1
     iPhone: 1
     tvOS: 1
-  m_BuildTargetGroupLightmapEncodingQuality:
-  - m_BuildTarget: iPhone
-    m_EncodingQuality: 0
-  - m_BuildTarget: Android
-    m_EncodingQuality: 2
+  m_BuildTargetGroupLightmapEncodingQuality: []
   m_BuildTargetGroupLightmapSettings: []
   playModeTestRunnerEnabled: 0
   runPlayModeTestAsEditModeTest: 0
@@ -681,7 +575,7 @@ PlayerSettings:
   switchDataLossConfirmation: 0
   switchUserAccountLockEnabled: 0
   switchSystemResourceMemory: 16777216
-  switchSupportedNpadStyles: 3
+  switchSupportedNpadStyles: 22
   switchNativeFsCacheSize: 32
   switchIsHoldTypeHorizontal: 0
   switchSupportedNpadCount: 8
@@ -767,7 +661,8 @@ PlayerSettings:
   ps4IncludedModules: []
   ps4attribVROutputEnabled: 0
   monoEnv: 
-  splashScreenBackgroundSourceLandscape: {fileID: 0}
+  splashScreenBackgroundSourceLandscape: {fileID: 21300000, guid: 7531ee5749d7b3c41a9c675fd9e784e9,
+    type: 3}
   splashScreenBackgroundSourcePortrait: {fileID: 0}
   blurSplashScreenBackground: 1
   spritePackerPolicy: 
@@ -797,8 +692,7 @@ PlayerSettings:
   scriptingRuntimeVersion: 1
   gcIncremental: 0
   gcWBarrierValidation: 0
-  apiCompatibilityLevelPerPlatform:
-    Android: 3
+  apiCompatibilityLevelPerPlatform: {}
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: Template_3D
@@ -878,4 +772,4 @@ PlayerSettings:
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
-  legacyClampBlendShapeWeights: 1
+  legacyClampBlendShapeWeights: 0

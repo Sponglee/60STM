@@ -82,7 +82,7 @@ public class LevelManager : Singleton<LevelManager>
                 randGroundEuler = Random.Range(0, 360);
                 randTreeIndex = Random.Range(0, treeVariants.Length);
                 randTileMat = Random.Range(0, tileMats.Length);
-                levelDimentionCutOff = Random.Range(3, 5);
+                levelDimentionCutOff = Random.Range(5, 7);
                 PlayerPrefs.SetString("LastLevel", string.Format("{0},{1},{2},{3},{4},{5}", PlayerPrefs.GetInt("Level", 1), randGroundIndex, randGroundEuler, randTreeIndex, randTileMat, levelDimentionCutOff));
             }
 
@@ -137,8 +137,9 @@ public class LevelManager : Singleton<LevelManager>
             for (int j = 0; j < levelDimention; j++)
             {
                 //Randomize "CUTT OFF 3-5"
-                if (/*true*/ Mathf.Abs(i - j) <= levelDimentionCutOff)
+                if (Mathf.Abs(i - j) < levelDimentionCutOff)
                 {
+                    Debug.Log(i + " : " + j + " dim cut : " + levelDimentionCutOff);
                     GameObject tmpNode = Instantiate(nodePref, new Vector3(nodeStep * j - nodeStep * (levelDimention / 2), 0, -nodeStep * i + nodeStep * (levelDimention / 2)), Quaternion.identity, transform);
 
                     tmpNode.GetComponent<NodeController>().Row = i;
